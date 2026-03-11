@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from .models import Classifier
+from .serializers import ClassifierSerializer
+
+
+class ClassifierView(viewsets.ModelViewSet):
+    serializer_class = ClassifierSerializer
+    queryset = Classifier.objects.all()
