@@ -21,7 +21,7 @@ from api import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register('classifier', views.ClassifierView, 'classifier')
+router.register('classifier', views.ClassifierNodeView, 'classifier')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

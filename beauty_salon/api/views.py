@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 
-from .models import Classifier
-from .serializers import ClassifierSerializer
+from .models import ClassifierNode
+from .serializers import ClassifierNodeSerializer
 
 
-class ClassifierView(viewsets.ModelViewSet):
-    serializer_class = ClassifierSerializer
-    queryset = Classifier.objects.all()
+class ClassifierNodeView(viewsets.ModelViewSet):
+    serializer_class = ClassifierNodeSerializer
+    queryset = ClassifierNode.objects.all()

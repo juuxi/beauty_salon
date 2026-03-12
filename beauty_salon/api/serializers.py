@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from .models import Classifier
+from .models import ClassifierNode
 
 
-class ClassifierSerializer(serializers.ModelSerializer):
+class ClassifierNodeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Classifier
+        model = ClassifierNode
         fields = ('id', 'name', 'parent', 'is_terminal')
