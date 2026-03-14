@@ -11,7 +11,10 @@ app_name = 'api'
 
 urlpatterns = [
     path('classifier/<int:node_id>/list_parents/',
-         views.ListParentsView.as_view(),
+         views.ListParentsChildrenView.as_view(),
          name='list_parents'),
+    path('classifier/<int:node_id>/list_children/',
+         views.ListParentsChildrenView.as_view(),
+         name='list_children'),
     path('', include(router.urls)),
 ]

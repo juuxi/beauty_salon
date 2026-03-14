@@ -14,7 +14,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
     queryset = ClassifierNode.objects.all()
 
 
-class ListParentsView(APIView):
+class ListParentsChildrenView(APIView):
 
     def get(self, request, node_id=None):
         if node_id is None:
@@ -25,10 +25,16 @@ class ListParentsView(APIView):
 
         try:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    'SELECT * FROM get_node_parents(%s)',
-                    [node_id]
-                )
+                if request.path.find('list_parent') != -1:
+                    cursor.execute(
+                        'SELECT * FROM get_node_parents(%s)',
+                        [node_id]
+                    )
+                else:
+                    cursor.execute(
+                        'SELECT * FROM get_node_children(%s)',
+                        [node_id]
+                    )
 
                 columns = [col[0] for col in cursor.description]
 

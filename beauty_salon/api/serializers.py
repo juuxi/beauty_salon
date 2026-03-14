@@ -6,4 +6,4 @@ from .models import ClassifierNode
 class ClassifierNodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassifierNode
-        fields = ('id', 'name', 'parent', 'is_terminal')
+        fields = ('id', 'name', 'parent_id', 'is_terminal')
