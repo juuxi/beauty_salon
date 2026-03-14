@@ -7,6 +7,7 @@ from django.db import connection
 
 from .models import ClassifierNode
 from .serializers import ClassifierNodeSerializer
+from .serializers import ClassifierNodeFunctionSerializer
 
 
 class ClassifierNodeView(viewsets.ModelViewSet):
@@ -43,7 +44,7 @@ class ListParentsChildrenView(APIView):
                     for row in cursor.fetchall()
                 ]
 
-            serializer = ClassifierNodeSerializer(results, many=True)
+            serializer = ClassifierNodeFunctionSerializer(results, many=True)
 
             return Response(serializer.data)
 
@@ -68,7 +69,7 @@ class ListTerminalNodes(APIView):
                     for row in cursor.fetchall()
                 ]
 
-            serializer = ClassifierNodeSerializer(results, many=True)
+            serializer = ClassifierNodeFunctionSerializer(results, many=True)
 
             return Response(serializer.data)
 
