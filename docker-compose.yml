@@ -2,16 +2,10 @@ volumes:
   pg_data:
 
 services:
-  db:
-    image: postgres:14
-    env_file: ./beauty_salon/.env
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-  
   beauty_salon:
     build: ./beauty_salon/
     env_file: ./beauty_salon/.env
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
