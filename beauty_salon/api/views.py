@@ -52,3 +52,28 @@ class ListParentsChildrenView(APIView):
                 {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class ListTerminalNodes(APIView):
+    def get(self, request):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    'SELECT * FROM get_terminal_nodes()',
+                )
+                columns = [col[0] for col in cursor.description]
+
+                results = [
+                    dict(zip(columns, row))
+                    for row in cursor.fetchall()
+                ]
+
+            serializer = ClassifierNodeSerializer(results, many=True)
+
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

@@ -16,5 +16,6 @@ urlpatterns = [
     path('classifier/<int:node_id>/list_children/',
          views.ListParentsChildrenView.as_view(),
          name='list_children'),
+    path('classifier/list_terminal_nodes/', views.ListTerminalNodes.as_view()),
     path('', include(router.urls)),
 ]
