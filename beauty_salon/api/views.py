@@ -12,7 +12,7 @@ from .serializers import ClassifierNodeFunctionSerializer
 
 class ClassifierNodeView(viewsets.ModelViewSet):
     serializer_class = ClassifierNodeSerializer
-    queryset = ClassifierNode.objects.all()
+    queryset = ClassifierNode.objects.all().order_by('id')
 
 
 class ListParentsChildrenView(APIView):
@@ -43,6 +43,7 @@ class ListParentsChildrenView(APIView):
                     dict(zip(columns, row))
                     for row in cursor.fetchall()
                 ]
+                results = sorted(results, key=lambda result: result['id'])
 
             serializer = ClassifierNodeFunctionSerializer(results, many=True)
 
