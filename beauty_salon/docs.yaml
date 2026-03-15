@@ -1,0 +1,223 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/classifier/{node_id}/list_parents/:
+    get:
+      operationId: listListParentsChildren
+      description: ''
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+      - api
+  /api/classifier/{node_id}/list_children/:
+    get:
+      operationId: listListParentsChildren
+      description: ''
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+      - api
+  /api/classifier/list_terminal_nodes/:
+    get:
+      operationId: listListTerminalNodes
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+      - api
+  /api/classifier/:
+    get:
+      operationId: listClassifierNodes
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassifierNode'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createClassifierNode
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassifierNode'
+          description: ''
+      tags:
+      - api
+  /api/classifier/{id}/:
+    get:
+      operationId: retrieveClassifierNode
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
+          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
+          \u0440\u0430."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassifierNode'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateClassifierNode
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
+          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
+          \u0440\u0430."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassifierNode'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateClassifierNode
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
+          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
+          \u0440\u0430."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassifierNode'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassifierNode'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyClassifierNode
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
+          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
+          \u0440\u0430."
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
+components:
+  schemas:
+    ClassifierNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        parent:
+          type: integer
+          nullable: true
+        is_terminal:
+          type: boolean
+      required:
+      - name
