@@ -21,6 +21,13 @@ class ClassifierNode(models.Model):
         verbose_name='Является листом'
     )
 
+    measuring_unit = models.CharField(
+        max_length=50,
+        verbose_name='Единица измерения',
+        null=True,
+        blank=True,
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания'
