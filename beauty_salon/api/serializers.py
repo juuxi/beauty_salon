@@ -4,9 +4,12 @@ from .models import ClassifierNode
 
 
 class ClassifierNodeSerializer(serializers.ModelSerializer):
+    children = serializers.ListField(write_only=True, required=False)
+
     class Meta:
         model = ClassifierNode
-        fields = ('id', 'name', 'parent', 'is_terminal', 'measuring_unit')
+        fields = ('id', 'name', 'parent', 'is_terminal',
+                  'measuring_unit', 'children')
 
 
 class ClassifierNodeFunctionSerializer(serializers.Serializer):

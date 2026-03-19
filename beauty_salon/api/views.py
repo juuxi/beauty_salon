@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 
 from django.db import connection
 
@@ -13,6 +14,41 @@ from .serializers import ClassifierNodeFunctionSerializer
 class ClassifierNodeView(viewsets.ModelViewSet):
     serializer_class = ClassifierNodeSerializer
     queryset = ClassifierNode.objects.all().order_by('id')
+
+    def create(self, request, *args, **kwargs):
+        children_data = request.data.pop('children', [])
+
+        if children_data:
+            existing_children = ClassifierNode.objects.filter(
+                id__in=children_data
+            )
+            existing_ids = set(existing_children.values_list('id', flat=True))
+            provided_ids = set(children_data)
+
+            missing_ids = provided_ids - existing_ids
+            if missing_ids:
+                raise ValidationError({
+                    'children': f'Следующие узлы не существуют: \
+                    {list(missing_ids)}'
+                })
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        node = serializer.instance
+
+        if children_data:
+            ClassifierNode.objects.filter(
+                id__in=children_data
+            ).update(parent=node)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            ClassifierNodeSerializer(node).data,
+            status=201,
+            headers=headers
+        )
 
 
 class ListParentsChildrenView(APIView):
