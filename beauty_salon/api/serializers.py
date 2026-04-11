@@ -17,4 +17,4 @@ class ClassifierNodeFunctionSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=200)
     parent_id = serializers.IntegerField(allow_null=True)
     is_terminal = serializers.BooleanField()
-    measuring_unit = serializers.CharField(max_length=50)
+    measuring_unit_id = serializers.IntegerField()

@@ -33,11 +33,12 @@ class ClassifierNode(models.Model):
         verbose_name='Является листом'
     )
 
-    measuring_unit = models.CharField(
-        max_length=50,
+    measuring_unit = models.ForeignKey(
+        MeasuringUnit,
         verbose_name='Единица измерения',
         null=True,
         blank=True,
+        on_delete=models.SET_NULL,
     )
 
     created_at = models.DateTimeField(
