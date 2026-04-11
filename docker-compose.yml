@@ -4,7 +4,7 @@ volumes:
 services:
   beauty_salon:
     build: ./beauty_salon/
-    env_file: ./beauty_salon/.env
+    env_file: ./beauty_salon/.docker.env
     ports:
       - "8000:8000"
     extra_hosts:
