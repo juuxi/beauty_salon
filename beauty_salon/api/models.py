@@ -1,6 +1,18 @@
 from django.db import models
 
 
+class MeasuringUnit(models.Model):
+    name = models.CharField(
+        max_length=50,
+        verbose_name='Название единицы измерения'
+    )
+
+    class Meta:
+        db_table = 'measuring_unit'
+        verbose_name = 'Единица измерения'
+        verbose_name_plural = 'Единицы измерения'
+
+
 class ClassifierNode(models.Model):
     name = models.CharField(
         max_length=200,
