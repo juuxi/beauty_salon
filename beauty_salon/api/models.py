@@ -96,6 +96,13 @@ class Value(models.Model):
         verbose_name="Позиция"
     )
 
+    enumeration = models.ManyToManyField(
+        Enumeration,
+        through='EnumerationValue',
+        related_name='values',
+        verbose_name='Перечисление'
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания'
@@ -110,3 +117,19 @@ class Value(models.Model):
         db_table = 'values'
         verbose_name = 'Значение перечисления'
         verbose_name_plural = 'Значения перечисления'
+
+
+class EnumerationValue(models.Model):
+    enumeration = models.ForeignKey(
+        Enumeration,
+        verbose_name='Перечисление',
+        on_delete=models.CASCADE
+    )
+    value = models.ForeignKey(
+        Value,
+        verbose_name='Значение',
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        db_table = 'enumerations_values'
