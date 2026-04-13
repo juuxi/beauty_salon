@@ -55,3 +55,33 @@ class ClassifierNode(models.Model):
         db_table = 'classifier_node'
         verbose_name = 'Узел классификатора'
         verbose_name_plural = 'Узлы классификатора'
+
+
+class Enumeration(models.Model):
+    name = models.CharField(
+        max_length=200,
+        verbose_name="Название перечисления"
+    )
+
+    measuring_unit = models.ForeignKey(
+        MeasuringUnit,
+        verbose_name='Единица измерения',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания'
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата обновления'
+    )
+
+    class Meta:
+        db_table = 'enumerations'
+        verbose_name = 'Перечисление'
+        verbose_name_plural = 'Перечисления'
