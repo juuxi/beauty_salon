@@ -85,3 +85,28 @@ class Enumeration(models.Model):
         db_table = 'enumerations'
         verbose_name = 'Перечисление'
         verbose_name_plural = 'Перечисления'
+
+
+class Value(models.Model):
+    data = models.JSONField(
+        verbose_name="Данные"
+    )
+
+    num = models.IntegerField(
+        verbose_name="Позиция"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания'
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата обновления'
+    )
+
+    class Meta:
+        db_table = 'values'
+        verbose_name = 'Значение перечисления'
+        verbose_name_plural = 'Значения перечисления'
