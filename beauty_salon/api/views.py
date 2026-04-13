@@ -12,6 +12,7 @@ from .serializers import ClassifierNodeFunctionSerializer
 
 
 class ClassifierNodeView(viewsets.ModelViewSet):
+    """CRUD для узла классификатора услуг"""
     serializer_class = ClassifierNodeSerializer
     queryset = ClassifierNode.objects.all().order_by('id')
 
@@ -52,6 +53,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
 
 
 class ListParentsChildrenView(APIView):
+    """Вывод предков и родителей данного узла"""
 
     def get(self, request, node_id=None):
         if node_id is None:
@@ -93,6 +95,7 @@ class ListParentsChildrenView(APIView):
 
 
 class ListTerminalNodes(APIView):
+    """Вывод терминальных узлов"""
     def get(self, request):
         try:
             with connection.cursor() as cursor:
