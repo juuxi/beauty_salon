@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import ClassifierNode
+from .models import ClassifierNode, Enumeration
 
 
 class ClassifierNodeSerializer(serializers.ModelSerializer):
@@ -18,3 +18,10 @@ class ClassifierNodeFunctionSerializer(serializers.Serializer):
     parent_id = serializers.IntegerField(allow_null=True)
     is_terminal = serializers.BooleanField()
     measuring_unit_id = serializers.IntegerField()
+
+
+class EnumerationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enumeration
+        fields = ('id', 'name', 'measuring_unit')

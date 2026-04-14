@@ -6,8 +6,8 @@ from rest_framework.exceptions import ValidationError
 
 from django.db import connection
 
-from .models import ClassifierNode
-from .serializers import ClassifierNodeSerializer
+from .models import ClassifierNode, Enumeration
+from .serializers import ClassifierNodeSerializer, EnumerationSerializer
 from .serializers import ClassifierNodeFunctionSerializer
 
 
@@ -118,3 +118,9 @@ class ListTerminalNodes(APIView):
                 {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class EnumerationView(viewsets.ModelViewSet):
+    """CRUD для перечислений"""
+    serializer_class = EnumerationSerializer
+    queryset = Enumeration.objects.all().order_by('id')
