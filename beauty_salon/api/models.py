@@ -96,9 +96,9 @@ class Value(models.Model):
         verbose_name="Позиция"
     )
 
-    enumeration = models.ManyToManyField(
+    enumeration = models.ForeignKey(
         Enumeration,
-        through='EnumerationValue',
+        on_delete=models.CASCADE,
         related_name='values',
         verbose_name='Перечисление'
     )
@@ -117,19 +117,3 @@ class Value(models.Model):
         db_table = 'values'
         verbose_name = 'Значение перечисления'
         verbose_name_plural = 'Значения перечисления'
-
-
-class EnumerationValue(models.Model):
-    enumeration = models.ForeignKey(
-        Enumeration,
-        verbose_name='Перечисление',
-        on_delete=models.CASCADE
-    )
-    value = models.ForeignKey(
-        Value,
-        verbose_name='Значение',
-        on_delete=models.CASCADE
-    )
-
-    class Meta:
-        db_table = 'enumerations_values'
