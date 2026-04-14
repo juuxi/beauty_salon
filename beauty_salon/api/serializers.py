@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import ClassifierNode, Enumeration
+from .models import ClassifierNode, Enumeration, Value
 
 
 class ClassifierNodeSerializer(serializers.ModelSerializer):
@@ -25,3 +25,10 @@ class EnumerationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enumeration
         fields = ('id', 'name', 'measuring_unit')
+
+
+class ValueSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Value
+        fields = ('id', 'data', 'num', 'enumeration')

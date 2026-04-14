@@ -7,7 +7,9 @@ from rest_framework.exceptions import ValidationError
 from django.db import connection
 
 from .models import ClassifierNode, Enumeration
+from .models import Value
 from .serializers import ClassifierNodeSerializer, EnumerationSerializer
+from .serializers import ValueSerializer
 from .serializers import ClassifierNodeFunctionSerializer
 
 
@@ -124,3 +126,9 @@ class EnumerationView(viewsets.ModelViewSet):
     """CRUD для перечислений"""
     serializer_class = EnumerationSerializer
     queryset = Enumeration.objects.all().order_by('id')
+
+
+class ValueView(viewsets.ModelViewSet):
+    """CRUD для значений перечислений"""
+    serializer_class = ValueSerializer
+    queryset = Value.objects.all().order_by('id')

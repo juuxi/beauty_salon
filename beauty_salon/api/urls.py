@@ -7,6 +7,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register('classifier', views.ClassifierNodeView, 'classifier')
 router.register('enumerations', views.EnumerationView, 'enumerations')
+router.register('values', views.ValueView, 'value')
 
 app_name = 'api'
 
