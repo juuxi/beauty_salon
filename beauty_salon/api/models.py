@@ -115,5 +115,6 @@ class Value(models.Model):
 
     class Meta:
         db_table = 'values'
+        unique_together = ('num', 'enumeration')
         verbose_name = 'Значение перечисления'
         verbose_name_plural = 'Значения перечисления'
