@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class MeasuringUnit(models.Model):
@@ -127,6 +129,10 @@ class Value(models.Model):
         related_name='values',
         verbose_name='Перечисление'
     )
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    value_object_id = models.PositiveIntegerField()
+    value = GenericForeignKey('content_type', 'value_object_id')
 
     created_at = models.DateTimeField(
         auto_now_add=True,
