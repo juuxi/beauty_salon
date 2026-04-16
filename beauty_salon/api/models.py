@@ -59,19 +59,19 @@ class ClassifierNode(models.Model):
         verbose_name_plural = 'Узлы классификатора'
 
 
-class StringValue(models.Model):
-    value = models.TextField()
+class StringData(models.Model):
+    data = models.TextField()
 
 
-class IntValue(models.Model):
-    value = models.IntegerField()
+class IntData(models.Model):
+    data = models.IntegerField()
 
 
-class RealValue(models.Model):
-    value = models.FloatField()
+class RealData(models.Model):
+    data = models.FloatField()
 
 
-class PictureValue(models.Model):
+class PictureData(models.Model):
     image = models.ImageField(upload_to='pics/')
 
 
@@ -81,14 +81,14 @@ class Enumeration(models.Model):
         verbose_name="Название перечисления"
     )
 
-    VALUE_TYPES = (
+    DATA_TYPES = (
         ('str', 'String'),
         ('int', 'Integer'),
         ('real', 'Real'),
         ('pic', 'Picture'),
     )
 
-    value_type = models.CharField(max_length=4, choices=VALUE_TYPES)
+    data_type = models.CharField(max_length=4, choices=DATA_TYPES)
 
     measuring_unit = models.ForeignKey(
         MeasuringUnit,
@@ -115,10 +115,6 @@ class Enumeration(models.Model):
 
 
 class Value(models.Model):
-    data = models.JSONField(
-        verbose_name="Данные"
-    )
-
     num = models.IntegerField(
         verbose_name="Позиция"
     )
@@ -131,8 +127,8 @@ class Value(models.Model):
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    value_object_id = models.PositiveIntegerField()
-    value = GenericForeignKey('content_type', 'value_object_id')
+    data_object_id = models.PositiveIntegerField()
+    data = GenericForeignKey('content_type', 'data_object_id')
 
     created_at = models.DateTimeField(
         auto_now_add=True,
