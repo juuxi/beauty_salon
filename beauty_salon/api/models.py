@@ -57,11 +57,36 @@ class ClassifierNode(models.Model):
         verbose_name_plural = 'Узлы классификатора'
 
 
+class StringValue(models.Model):
+    value = models.TextField()
+
+
+class IntValue(models.Model):
+    value = models.IntegerField()
+
+
+class RealValue(models.Model):
+    value = models.FloatField()
+
+
+class PictureValue(models.Model):
+    image = models.ImageField(upload_to='pics/')
+
+
 class Enumeration(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name="Название перечисления"
     )
+
+    VALUE_TYPES = (
+        ('str', 'String'),
+        ('int', 'Integer'),
+        ('real', 'Real'),
+        ('pic', 'Picture'),
+    )
+
+    value_type = models.CharField(max_length=4, choices=VALUE_TYPES)
 
     measuring_unit = models.ForeignKey(
         MeasuringUnit,
