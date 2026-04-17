@@ -4,10 +4,12 @@ from . import views
 
 from rest_framework import routers
 
-router = routers.DefaultRouter()
-router.register('classifier', views.ClassifierNodeView, 'classifier')
-router.register('enumerations', views.EnumerationView, 'enumerations')
-router.register('values', views.ValueView, 'value')
+base_router = routers.DefaultRouter()
+base_router.register('classifier', views.ClassifierNodeView, 'classifier')
+base_router.register('enumerations', views.EnumerationView, 'enumerations')
+
+value_router = routers.DefaultRouter()
+value_router.register('values', views.ValueView, 'value')
 
 app_name = 'api'
 
@@ -19,5 +21,6 @@ urlpatterns = [
          views.ListParentsChildrenView.as_view(),
          name='list_children'),
     path('classifier/list_terminal_nodes/', views.ListTerminalNodes.as_view()),
-    path('', include(router.urls)),
+    path('', include(base_router.urls)),
+    path('enumerations/<int:enumeration_id>/', include(value_router.urls)),
 ]
