@@ -37,7 +37,7 @@ def create_type_based_data_object(data_type, data):
     elif data_type == 'real':
         data_obj = RealData.objects.create(data=data)
     elif data_type == 'pic':
-        data_obj = PictureData.objects.create(image=data)
+        data_obj = PictureData.objects.create(data=data)
     else:
         raise serializers.ValidationError(f"Unknown type: {data_type}")
     return data_obj
@@ -136,5 +136,16 @@ class ValueSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['data'] = instance.data.data if instance.data else None
+
+        model_class = instance.content_type.model_class()
+        model_name = model_class.__name__
+
+        if model_name == 'PictureData':
+            ret['data'] = (
+                instance.data.url if hasattr(instance.data, 'url')
+                else None
+            )
+        else:
+            ret['data'] = instance.data.data if instance.data else None
+
         return ret
