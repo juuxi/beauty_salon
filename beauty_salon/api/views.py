@@ -134,4 +134,7 @@ class ValueView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         enumeration_id = self.kwargs['enumeration_id']
-        return Value.objects.filter(enumeration_id=enumeration_id)
+        return (
+            Value.objects.filter(enumeration_id=enumeration_id)
+            .order_by('num')
+        )
