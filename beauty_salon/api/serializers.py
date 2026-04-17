@@ -55,7 +55,14 @@ class ValueSerializer(serializers.ModelSerializer):
     def validate_data(self, data):
         view = self.context['view']
         enumeration_id = view.kwargs.get('enumeration_id')
-        data_type = Enumeration.objects.get(id=enumeration_id).data_type
+        try:
+            enumeration = Enumeration.objects.get(id=enumeration_id)
+        except Enumeration.DoesNotExist:
+            raise serializers.ValidationError({
+                'enumeration': 'No enumeration with this id'
+            })
+
+        data_type = enumeration.data_type
 
         if data_type == 'int':
             if not isinstance(data, int):
