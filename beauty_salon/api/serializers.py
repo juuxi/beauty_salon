@@ -29,6 +29,20 @@ class EnumerationSerializer(serializers.ModelSerializer):
                   'data_type')
 
 
+def create_type_based_data_object(data_type, data):
+    if data_type == 'int':
+        data_obj = IntData.objects.create(data=data)
+    elif data_type == 'str':
+        data_obj = StringData.objects.create(data=data)
+    elif data_type == 'real':
+        data_obj = RealData.objects.create(data=data)
+    elif data_type == 'pic':
+        data_obj = PictureData.objects.create(image=data)
+    else:
+        raise serializers.ValidationError(f"Unknown type: {data_type}")
+    return data_obj
+
+
 class ValueSerializer(serializers.ModelSerializer):
     data = serializers.JSONField()
 
@@ -36,9 +50,11 @@ class ValueSerializer(serializers.ModelSerializer):
         model = Value
         fields = ('id', 'data', 'num', 'enumeration',
                   'data')
+        read_only_fields = ('enumeration',)
 
     def validate_data(self, data):
-        enumeration_id = self.initial_data.get('enumeration')
+        view = self.context['view']
+        enumeration_id = view.kwargs.get('enumeration_id')
         data_type = Enumeration.objects.get(id=enumeration_id).data_type
 
         if data_type == 'int':
@@ -81,29 +97,35 @@ class ValueSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         data = validated_data.pop('data')
-        enumeration = self.validated_data['enumeration']
-        data_type = enumeration.data_type
+        view = self.context['view']
+        enumeration_id = view.kwargs.get('enumeration_id')
+        data_type = Enumeration.objects.get(id=enumeration_id).data_type
 
-        if data_type == 'int':
-            data_obj = IntData.objects.create(data=data)
-        elif data_type == 'str':
-            data_obj = StringData.objects.create(data=data)
-        elif data_type == 'real':
-            data_obj = RealData.objects.create(data=data)
-        elif data_type == 'pic':
-            data_obj = PictureData.objects.create(image=data)
-        else:
-            raise serializers.dataError(f"Unknown type: {data_type}")
+        data_obj = create_type_based_data_object(data_type, data)
 
         content_type = ContentType.objects.get_for_model(data_obj)
 
         value_obj = Value.objects.create(
             content_type=content_type,
             data_object_id=data_obj.id,
-            **validated_data
+            **validated_data,
+            enumeration_id=enumeration_id,
         )
 
         return value_obj
+
+    def update(self, instance, validated_data):
+        data = validated_data.pop('data', None)
+
+        if data is not None:
+            model_class = instance.content_type.model_class()
+            data_obj = create_type_based_data_object(
+                instance.enumeration.data_type, data
+            )
+            model_class.objects.get(pk=instance.data_object_id).delete()
+            instance.data_object_id = data_obj.id
+
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

@@ -131,4 +131,7 @@ class EnumerationView(viewsets.ModelViewSet):
 class ValueView(viewsets.ModelViewSet):
     """CRUD для значений перечислений"""
     serializer_class = ValueSerializer
-    queryset = Value.objects.all().order_by('id')
+
+    def get_queryset(self):
+        enumeration_id = self.kwargs['enumeration_id']
+        return Value.objects.filter(enumeration_id=enumeration_id)
