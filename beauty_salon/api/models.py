@@ -98,6 +98,12 @@ class Enumeration(models.Model):
         on_delete=models.SET_NULL,
     )
 
+    nodes = models.ManyToManyField(
+        ClassifierNode,
+        related_name='enumerations',
+        verbose_name='Узлы классификатора'
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания'
