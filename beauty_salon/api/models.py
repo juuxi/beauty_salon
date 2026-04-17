@@ -31,7 +31,7 @@ class ClassifierNode(models.Model):
     )
 
     is_terminal = models.BooleanField(
-        default=False,
+        default=True,
         verbose_name='Является листом'
     )
 

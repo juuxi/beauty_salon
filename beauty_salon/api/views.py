@@ -45,6 +45,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
             ClassifierNode.objects.filter(
                 id__in=children_data
             ).update(parent=node)
+            node.is_terminal = False
 
         headers = self.get_success_headers(serializer.data)
         return Response(
