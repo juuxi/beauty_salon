@@ -2,9 +2,10 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 
-from django.db import connection
+from django.db import connection, transaction
 
 from .models import ClassifierNode, Enumeration
 from .models import Value
@@ -139,3 +140,41 @@ class ValueView(viewsets.ModelViewSet):
             Value.objects.filter(enumeration_id=enumeration_id)
             .order_by('num')
         )
+
+    @action(detail=False, methods=['patch'], url_path='ordering')
+    @transaction.atomic
+    def ordering_update(self, request, enumeration_id=None, *args, **kwargs):
+        new_ordering = request.data['ordering']
+        if not isinstance(new_ordering, list):
+            return Response(
+                {'ordering': 'Expected a list of objects, '
+                    'containing id-s in new order'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        queryset = self.get_queryset()
+        if not queryset.count() == len(new_ordering):
+            return Response(
+                {'ordering': 'amount of object '
+                 f'must equal {queryset.count()}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # value id
+        for v_id in new_ordering:
+            try:
+                queryset.get(id=v_id)
+            except Value.DoesNotExist:
+                return Response(
+                    {'ordering': 'object with id '
+                        f'{v_id} does not exist in current queryset'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        for i in range(len(new_ordering)):
+            # current value while looping through new_order
+            curr_v = queryset.get(id=new_ordering[i])
+            curr_v.num = i + 1
+            curr_v.save()
+
+        return Response(status=status.HTTP_200_OK)

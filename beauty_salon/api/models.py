@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Deferrable
 
 
 class MeasuringUnit(models.Model):
@@ -148,6 +149,12 @@ class Value(models.Model):
 
     class Meta:
         db_table = 'values'
-        unique_together = ('num', 'enumeration')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['num', 'enumeration'],
+                name='unique_num_enumeration_constraint_deferrable',
+                deferrable=Deferrable.DEFERRED,
+            )
+        ]
         verbose_name = 'Значение перечисления'
         verbose_name_plural = 'Значения перечисления'
