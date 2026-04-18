@@ -6,11 +6,36 @@ from .models import StringData, IntData, RealData, PictureData, ContentType
 
 class ClassifierNodeSerializer(serializers.ModelSerializer):
     children = serializers.ListField(write_only=True, required=False)
+    enumerations = serializers.PrimaryKeyRelatedField(
+        required=False,
+        many=True,
+        queryset=Enumeration.objects.all()
+    )
 
     class Meta:
         model = ClassifierNode
         fields = ('id', 'name', 'parent', 'is_terminal',
-                  'measuring_unit', 'children')
+                  'measuring_unit', 'children', 'enumerations')
+
+    def create(self, validated_data):
+        enumerations_data = validated_data.pop('enumerations', [])
+        node = ClassifierNode.objects.create(**validated_data)
+
+        if enumerations_data:
+            node.enumerations.set(enumerations_data)
+        return node
+
+    def update(self, instance, validated_data):
+        enumerations_data = validated_data.pop('enumerations', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if enumerations_data is not None:
+            instance.enumerations.set(enumerations_data)
+
+        return instance
 
 
 class ClassifierNodeFunctionSerializer(serializers.Serializer):
