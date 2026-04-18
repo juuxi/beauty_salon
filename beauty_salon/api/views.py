@@ -144,6 +144,7 @@ class ValueView(viewsets.ModelViewSet):
     @action(detail=False, methods=['patch'], url_path='ordering')
     @transaction.atomic
     def ordering_update(self, request, enumeration_id=None, *args, **kwargs):
+        """Сортировка значений внутри перечисления"""
         new_ordering = request.data['ordering']
         if not isinstance(new_ordering, list):
             return Response(

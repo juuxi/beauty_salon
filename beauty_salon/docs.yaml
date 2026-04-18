@@ -68,9 +68,9 @@ paths:
   /api/classifier/:
     get:
       operationId: listClassifierNodes
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0441\u043f\u0438\u0441\u043a\
+        \u0430\u0020\u0443\u0437\u043b\u043e\u0432\u0020\u043a\u043b\u0430\u0441\u0441\
+        \u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u0430"
       parameters: []
       responses:
         '200':
@@ -85,9 +85,9 @@ paths:
       - api
     post:
       operationId: createClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      description: "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435\u0020\u0443\u0437\
+        \u043b\u0430\u0020\u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\
+        \u0442\u043e\u0440\u0430"
       parameters: []
       requestBody:
         content:
@@ -112,9 +112,9 @@ paths:
   /api/classifier/{id}/:
     get:
       operationId: retrieveClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u043a\u043e\u043d\u043a\u0440\
+        \u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\u0437\u043b\u0430\u0020\u043a\
+        \u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u0430"
       parameters:
       - name: id
         in: path
@@ -135,9 +135,10 @@ paths:
       - api
     put:
       operationId: updateClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      description: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\
+        \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\
+        \u0437\u043b\u0430\u0020\u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\
+        \u0430\u0442\u043e\u0440\u0430"
       parameters:
       - name: id
         in: path
@@ -169,9 +170,11 @@ paths:
       - api
     patch:
       operationId: partialUpdateClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      description: "\u0427\u0430\u0441\u0442\u0438\u0447\u043d\u043e\u0435\u0020\u043e\
+        \u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u043a\u043e\u043d\
+        \u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\u0437\u043b\u0430\
+        \u0020\u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\u0442\u043e\
+        \u0440\u0430"
       parameters:
       - name: id
         in: path
@@ -203,9 +206,9 @@ paths:
       - api
     delete:
       operationId: destroyClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      description: "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435\u0020\u043a\u043e\u043d\
+        \u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\u0437\u043b\u0430\u0020\
+        \u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u0430"
       parameters:
       - name: id
         in: path
@@ -217,6 +220,369 @@ paths:
           type: string
       responses:
         '204':
+          description: ''
+      tags:
+      - api
+  /api/enumerations/:
+    get:
+      operationId: listEnumerations
+      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0441\u043f\u0438\u0441\u043a\u0430\
+        \u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u0439"
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enumeration'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createEnumeration
+      description: "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435\u0020\u043f\u0435\u0440\
+        \u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+      tags:
+      - api
+  /api/enumerations/{id}/:
+    get:
+      operationId: retrieveEnumeration
+      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u043f\u0435\u0440\u0435\u0447\
+        \u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
+          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateEnumeration
+      description: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\
+        \u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
+          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateEnumeration
+      description: "\u0427\u0430\u0441\u0442\u0438\u0447\u043d\u043e\u0435\u0020\u043e\
+        \u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u043f\u0435\u0440\
+        \u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
+          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyEnumeration
+      description: "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435\u0020\u043f\u0435\
+        \u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
+          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
+  /api/enumerations/{enumeration_id}/values/:
+    get:
+      operationId: listValues
+      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0441\u043f\u0438\u0441\u043a\
+        \u0430\u0020\u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439\u0020\u043f\u0435\
+        \u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters:
+      - name: enumeration_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Value'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createValue
+      description: "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435\u0020\u0437\u043d\
+        \u0430\u0447\u0435\u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\
+        \u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters:
+      - name: enumeration_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Value'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Value'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Value'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: ''
+      tags:
+      - api
+  /api/enumerations/{enumeration_id}/values/{id}/:
+    get:
+      operationId: retrieveValue
+      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0437\u043d\u0430\u0447\u0435\
+        \u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\
+        \u043d\u0438\u044f"
+      parameters:
+      - name: enumeration_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateValue
+      description: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u0437\
+        \u043d\u0430\u0447\u0435\u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\
+        \u0441\u043b\u0435\u043d\u0438\u044f"
+      parameters:
+      - name: enumeration_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Value'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Value'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Value'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateValue
+      description: "\u0427\u0430\u0441\u0442\u0438\u0447\u043d\u043e\u0435\u0020\u043e\u0431\
+        \u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u0437\u043d\u0430\u0447\u0435\
+        \u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\
+        \u0438\u044f"
+      parameters:
+      - name: enumeration_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Value'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Value'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Value'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyValue
+      description: "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435\u0020\u0437\u043d\u0430\
+        \u0447\u0435\u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\
+        \u0435\u043d\u0438\u044f"
+      parameters:
+      - name: enumeration_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
+  /api/enumerations/{enumeration_id}/values/ordering/:
+    patch:
+      operationId: orderingUpdateValue
+      description: "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430 \u0437\
+        \u043D\u0430\u0447\u0435\u043D\u0438\u0439 \u0432\u043D\u0443\u0442\u0440\u0438\
+        \ \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u044F"
+      parameters:
+      - name: enumeration_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Value'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Value'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Value'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
           description: ''
       tags:
       - api
@@ -243,5 +609,49 @@ components:
           type: array
           items: {}
           writeOnly: true
+        enumerations:
+          type: array
+          items:
+            type: integer
       required:
       - name
+    Enumeration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        measuring_unit:
+          type: integer
+          nullable: true
+        data_type:
+          enum:
+          - str
+          - int
+          - real
+          - pic
+          type: string
+      required:
+      - name
+      - data_type
+    Value:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        data:
+          type: object
+        num:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        enumeration:
+          type: string
+          readOnly: true
+      required:
+      - data
+      - num
