@@ -73,7 +73,7 @@ class RealData(models.Model):
 
 
 class PictureData(models.Model):
-    data = models.ImageField(upload_to='pics/', max_length=200)
+    data = models.URLField()
 
 
 class Enumeration(models.Model):

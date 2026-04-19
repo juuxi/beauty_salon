@@ -174,16 +174,5 @@ class ValueSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-
-        model_class = instance.content_type.model_class()
-        model_name = model_class.__name__
-
-        if model_name == 'PictureData':
-            ret['data'] = (
-                instance.data.url if hasattr(instance.data, 'url')
-                else None
-            )
-        else:
-            ret['data'] = instance.data.data if instance.data else None
-
+        ret['data'] = instance.data.data if instance.data else None
         return ret
