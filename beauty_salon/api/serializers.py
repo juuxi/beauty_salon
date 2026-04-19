@@ -127,6 +127,19 @@ class ValueSerializer(serializers.ModelSerializer):
 
         return data
 
+    def validate_num(self, num):
+        view = self.context['view']
+        enumeration_id = view.kwargs.get('enumeration_id')
+
+        if not (Value.objects.
+                filter(enumeration=enumeration_id, num=num).count()) == 0:
+            raise serializers.ValidationError({
+                'num': f'Pair (num={num}, enumeration={enumeration_id}) '
+                'already exists'
+            })
+
+        return num
+
     def create(self, validated_data):
         data = validated_data.pop('data')
         view = self.context['view']
