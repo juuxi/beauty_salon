@@ -158,3 +158,36 @@ class Value(models.Model):
         ]
         verbose_name = 'Значение перечисления'
         verbose_name_plural = 'Значения перечисления'
+
+
+class Parameter(models.Model):
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название параметра'
+    )
+
+    DATA_TYPES = (
+        ('int', 'Integer'),
+        ('enum', 'Enumeration'),
+    )
+
+    data_type = models.CharField(
+        max_length=4,
+        choices=DATA_TYPES,
+        verbose_name='Тип данных'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания'
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата обновления'
+    )
+
+    class Meta:
+        db_table = 'parameters'
+        verbose_name = 'Параметр'
+        verbose_name_plural = 'Параметры'
