@@ -159,7 +159,43 @@ class Parameter(ModelWithTimestamp):
         verbose_name='Тип данных'
     )
 
+    nodes = models.ManyToManyField(
+        ClassifierNode,
+        through='ParameterNode',
+        related_name='parameters',
+        verbose_name='Узлы классификатора'
+    )
+
     class Meta:
         db_table = 'parameters'
         verbose_name = 'Параметр'
         verbose_name_plural = 'Параметры'
+
+
+class ParameterNode(models.Model):
+    parameter = models.ForeignKey(
+        Parameter,
+        on_delete=models.CASCADE,
+        verbose_name='Параметр'
+    )
+
+    classifiernode = models.ForeignKey(
+        ClassifierNode,
+        on_delete=models.CASCADE,
+        verbose_name='Узел классификатора'
+    )
+
+    min_param_value = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name='Минимальное значение'
+    )
+
+    max_param_value = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name='Максимальное значение'
+    )
+
+    class Meta:
+        db_table = 'parameters_nodes'
