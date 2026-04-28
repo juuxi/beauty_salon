@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import ClassifierNode, Enumeration, Value, Parameter
+from .models import ClassifierNode, Enumeration, Value, Parameter, Service
 from .models import StringData, IntData, RealData, PictureData, ContentType
 
 
@@ -183,3 +183,10 @@ class ParameterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Parameter
         fields = ('id', 'name', 'data_type')
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Service
+        fields = ('id', 'name', 'base_class')

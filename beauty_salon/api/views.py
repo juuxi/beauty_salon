@@ -8,10 +8,11 @@ from rest_framework.exceptions import ValidationError
 from django.db import connection, transaction
 
 from .models import ClassifierNode, Enumeration
-from .models import Value, Parameter
+from .models import Value, Parameter, Service
 from .serializers import ClassifierNodeSerializer, EnumerationSerializer
 from .serializers import ValueSerializer, ParameterSerializer
 from .serializers import ClassifierNodeFunctionSerializer
+from .serializers import ServiceSerializer
 
 
 class ClassifierNodeView(viewsets.ModelViewSet):
@@ -185,3 +186,9 @@ class ValueView(viewsets.ModelViewSet):
             curr_v.save()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class ServiceView(viewsets.ModelViewSet):
+    """CRUD для параметров"""
+    serializer_class = ServiceSerializer
+    queryset = Service.objects.all().order_by('id')

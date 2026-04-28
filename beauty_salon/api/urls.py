@@ -8,6 +8,7 @@ base_router = routers.DefaultRouter()
 base_router.register('classifier', views.ClassifierNodeView, 'classifier')
 base_router.register('enumerations', views.EnumerationView, 'enumerations')
 base_router.register('parameters', views.ParameterView, 'parameters')
+base_router.register('services', views.ServiceView, 'services')
 
 value_router = routers.DefaultRouter()
 value_router.register('values', views.ValueView, 'value')
