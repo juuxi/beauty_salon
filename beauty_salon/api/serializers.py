@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import ClassifierNode, Enumeration, Value
+from .models import ClassifierNode, Enumeration, Value, Parameter
 from .models import StringData, IntData, RealData, PictureData, ContentType
 
 
@@ -176,3 +176,10 @@ class ValueSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         ret['data'] = instance.data.data if instance.data else None
         return ret
+
+
+class ParameterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Parameter
+        fields = ('id', 'name', 'data_type')
