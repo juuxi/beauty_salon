@@ -4,6 +4,21 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Deferrable
 
 
+class ModelWithTimestamp(models.Model):
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания'
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата обновления'
+    )
+
+    class Meta:
+        abstract = True
+
+
 class MeasuringUnit(models.Model):
     name = models.CharField(
         max_length=50,
@@ -16,7 +31,20 @@ class MeasuringUnit(models.Model):
         verbose_name_plural = 'Единицы измерения'
 
 
-class ClassifierNode(models.Model):
+class ModelWithMeasuringUnit(models.Model):
+    measuring_unit = models.ForeignKey(
+        MeasuringUnit,
+        verbose_name='Единица измерения',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit):
     name = models.CharField(
         max_length=200,
         verbose_name="Название узла"
@@ -34,24 +62,6 @@ class ClassifierNode(models.Model):
     is_terminal = models.BooleanField(
         default=True,
         verbose_name='Является листом'
-    )
-
-    measuring_unit = models.ForeignKey(
-        MeasuringUnit,
-        verbose_name='Единица измерения',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата обновления'
     )
 
     class Meta:
@@ -76,10 +86,10 @@ class PictureData(models.Model):
     data = models.URLField()
 
 
-class Enumeration(models.Model):
+class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit):
     name = models.CharField(
         max_length=200,
-        verbose_name="Название перечисления"
+        verbose_name='Название перечисления'
     )
 
     DATA_TYPES = (
@@ -91,28 +101,10 @@ class Enumeration(models.Model):
 
     data_type = models.CharField(max_length=4, choices=DATA_TYPES)
 
-    measuring_unit = models.ForeignKey(
-        MeasuringUnit,
-        verbose_name='Единица измерения',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-    )
-
     nodes = models.ManyToManyField(
         ClassifierNode,
         related_name='enumerations',
         verbose_name='Узлы классификатора'
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата обновления'
     )
 
     class Meta:
@@ -121,9 +113,9 @@ class Enumeration(models.Model):
         verbose_name_plural = 'Перечисления'
 
 
-class Value(models.Model):
+class Value(ModelWithTimestamp):
     num = models.IntegerField(
-        verbose_name="Позиция"
+        verbose_name='Позиция'
     )
 
     enumeration = models.ForeignKey(
@@ -136,16 +128,6 @@ class Value(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     data_object_id = models.PositiveIntegerField()
     data = GenericForeignKey('content_type', 'data_object_id')
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата обновления'
-    )
 
     class Meta:
         db_table = 'values'
@@ -160,7 +142,7 @@ class Value(models.Model):
         verbose_name_plural = 'Значения перечисления'
 
 
-class Parameter(models.Model):
+class Parameter(ModelWithTimestamp):
     name = models.CharField(
         max_length=200,
         verbose_name='Название параметра'
@@ -175,16 +157,6 @@ class Parameter(models.Model):
         max_length=4,
         choices=DATA_TYPES,
         verbose_name='Тип данных'
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата обновления'
     )
 
     class Meta:
