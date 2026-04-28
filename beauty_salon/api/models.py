@@ -142,7 +142,7 @@ class Value(ModelWithTimestamp):
         verbose_name_plural = 'Значения перечисления'
 
 
-class Parameter(ModelWithTimestamp):
+class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit):
     name = models.CharField(
         max_length=200,
         verbose_name='Название параметра'
