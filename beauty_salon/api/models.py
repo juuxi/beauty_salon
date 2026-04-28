@@ -199,3 +199,22 @@ class ParameterNode(models.Model):
 
     class Meta:
         db_table = 'parameters_nodes'
+
+
+class Service(ModelWithTimestamp):
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название услуги'
+    )
+
+    base_class = models.ForeignKey(
+        ClassifierNode,
+        on_delete=models.CASCADE,
+        related_name='services',
+        verbose_name='Базовый класс'
+    )
+
+    class Meta:
+        db_table = 'services'
+        verbose_name = 'Услуга'
+        verbose_name_plural = 'Услуги'
