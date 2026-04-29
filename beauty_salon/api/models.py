@@ -199,6 +199,12 @@ class ParameterNode(models.Model):
 
     class Meta:
         db_table = 'parameters_nodes'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['parameter', 'classifiernode'],
+                name='unique_num_enumeration_constraint',
+            )
+        ]
 
 
 class Service(ModelWithTimestamp):
