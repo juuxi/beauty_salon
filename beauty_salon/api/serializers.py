@@ -11,22 +11,31 @@ class ClassifierNodeSerializer(serializers.ModelSerializer):
         many=True,
         queryset=Enumeration.objects.all()
     )
+    parameters = serializers.PrimaryKeyRelatedField(
+        required=False,
+        many=True,
+        queryset=Parameter.objects.all()
+    )
 
     class Meta:
         model = ClassifierNode
         fields = ('id', 'name', 'parent', 'is_terminal',
-                  'measuring_unit', 'children', 'enumerations')
+                  'measuring_unit', 'children', 'enumerations', 'parameters')
 
     def create(self, validated_data):
         enumerations_data = validated_data.pop('enumerations', [])
+        parameters_data = validated_data.pop('parameters', [])
         node = ClassifierNode.objects.create(**validated_data)
 
-        if enumerations_data:
+        if enumerations_data:  # enumerations is a related_name in M2M creation
             node.enumerations.set(enumerations_data)
+        if parameters_data:
+            node.parameters.set(parameters_data)
         return node
 
     def update(self, instance, validated_data):
         enumerations_data = validated_data.pop('enumerations', None)
+        parameters_data = validated_data.pop('parameters', None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -34,6 +43,8 @@ class ClassifierNodeSerializer(serializers.ModelSerializer):
 
         if enumerations_data is not None:
             instance.enumerations.set(enumerations_data)
+        if parameters_data is not None:
+            instance.parameters.set(parameters_data)
 
         return instance
 
