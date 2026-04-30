@@ -218,7 +218,9 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         values = data.get('values')
-        base_class = data.get('base_class')
+        base_class = data.get('base_class', None)
+        if not base_class:
+            base_class = self.instance.base_class
 
         if len(values) != base_class.parameters.count():
             raise serializers.ValidationError({'values':
@@ -272,7 +274,8 @@ class ServiceSerializer(serializers.ModelSerializer):
             ParameterValueService.objects.create(
                 content_type=content_type,
                 data_object_id=data_obj.id,
-                service=service_obj
+                service=service_obj,
+                parameter=param
             )
 
         return service_obj
@@ -284,14 +287,20 @@ class ServiceSerializer(serializers.ModelSerializer):
             base_class = instance.base_class
 
         if values is not None:
-            model_class = instance.content_type.model_class()
             for value, param in zip(values, base_class.parameters.all()):
+                param_service_instance = (
+                    param.values_for_services
+                    .filter(service_id=instance.id)
+                )[0]
                 if param.data_type == 'int':
+                    IntData.objects.get(
+                        id=param_service_instance.data_object_id
+                    ).delete()
                     data_obj = IntData.objects.create(data=value)
                 if param.data_type == 'enum':
                     data_obj = Value.objects.get(id=value)
-                model_class.objects.get(pk=instance.data_object_id).delete()
-            instance.data_object_id = data_obj.id
+                param_service_instance.data_object_id = data_obj.id
+                param_service_instance.save()
 
         return super().update(instance, validated_data)
 
