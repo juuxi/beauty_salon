@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import ClassifierNode, Enumeration, Value, Parameter, Service
 from .models import StringData, IntData, RealData, PictureData, ContentType
+from .models import ParameterValueService
 
 
 class ClassifierNodeSerializer(serializers.ModelSerializer):
@@ -209,7 +210,92 @@ class ParameterSerializer(serializers.ModelSerializer):
 
 
 class ServiceSerializer(serializers.ModelSerializer):
+    values = serializers.JSONField(write_only=True)
 
     class Meta:
         model = Service
-        fields = ('id', 'name', 'base_class')
+        fields = ('id', 'name', 'base_class', 'values')
+
+    def validate(self, data):
+        values = data.get('values')
+        base_class = data.get('base_class')
+
+        if len(values) != base_class.parameters.count():
+            raise serializers.ValidationError({'values':
+                                               'Number of values must be '
+                                               'the same as the amount of '
+                                               'parameters in base_class'})
+
+        for value, param in zip(values, base_class.parameters.all()):
+            if param.data_type == 'int':
+                if not isinstance(value, int):
+                    raise serializers.ValidationError({
+                        'values': f'Expected integer for value of parameter, \
+                        {param.name} got {type(value).__name__}'
+                    })
+            if param.data_type == 'enum':
+                if not isinstance(value, int):
+                    raise serializers.ValidationError({
+                        'values': f'Expected integer for value of parameter, \
+                        {param} got {type(value).__name__}'
+                    })
+                value_obj = Value.objects.get(id=value)
+                if not value_obj:
+                    raise serializers.ValidationError({
+                        'values': f'no value with id {id}'
+                    })
+                if value_obj.enumeration != param.enumeration:
+                    raise serializers.ValidationError({
+                        'values': f'value with id {id} is created \
+                        for different enumeration'
+                    })
+
+        return data
+
+    def create(self, validated_data):
+        values = validated_data.pop('values')
+
+        service_obj = Service.objects.create(
+            **validated_data,
+        )
+
+        base_class = validated_data.pop('base_class')
+
+        for value, param in zip(values, base_class.parameters.all()):
+            if param.data_type == 'int':
+                data_obj = IntData.objects.create(data=value)
+            if param.data_type == 'enum':
+                data_obj = Value.objects.get(id=value)
+
+            content_type = ContentType.objects.get_for_model(data_obj)
+
+            ParameterValueService.objects.create(
+                content_type=content_type,
+                data_object_id=data_obj.id,
+                service=service_obj
+            )
+
+        return service_obj
+
+    def update(self, instance, validated_data):
+        values = validated_data.pop('values', None)
+        base_class = validated_data.pop('base_class', None)
+        if base_class is None:
+            base_class = instance.base_class
+
+        if values is not None:
+            model_class = instance.content_type.model_class()
+            for value, param in zip(values, base_class.parameters.all()):
+                if param.data_type == 'int':
+                    data_obj = IntData.objects.create(data=value)
+                if param.data_type == 'enum':
+                    data_obj = Value.objects.get(id=value)
+                model_class.objects.get(pk=instance.data_object_id).delete()
+            instance.data_object_id = data_obj.id
+
+        return super().update(instance, validated_data)
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['values'] = 'dummy'  # instance.parameter_values.value if instance.parameter_values else None
+        return ret
