@@ -166,6 +166,17 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit):
         verbose_name='Узлы классификатора'
     )
 
+    # очередная игра с generic-ами в данном случае была бы overkill-ом,
+    # т.к. сложно представить сслыки на другие таблицы где помимо таблицы в
+    # параметре нужен будет id
+    enumeration = models.ForeignKey(
+        Enumeration,
+        related_name='parameters_using',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
     class Meta:
         db_table = 'parameters'
         verbose_name = 'Параметр'

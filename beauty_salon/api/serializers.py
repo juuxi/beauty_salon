@@ -193,7 +193,19 @@ class ParameterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Parameter
-        fields = ('id', 'name', 'data_type')
+        fields = ('id', 'name', 'data_type', 'enumeration')
+
+    def validate(self, data):
+        data = super().validate(data)
+
+        if data.get('data_type') == 'enum' and not data.get('enumeration'):
+            raise serializers.ValidationError({'enumeration':
+                                               'Required for enum type.'})
+        if data.get('data_type') == 'int' and data.get('enumeration'):
+            raise serializers.ValidationError({'enumeration':
+                                               'Must be empty for int type.'})
+
+        return data
 
 
 class ServiceSerializer(serializers.ModelSerializer):
