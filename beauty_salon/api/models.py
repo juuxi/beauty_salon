@@ -224,3 +224,18 @@ class Service(ModelWithTimestamp):
         db_table = 'services'
         verbose_name = 'Услуга'
         verbose_name_plural = 'Услуги'
+
+
+class ParameterValueService(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    data_object_id = models.PositiveIntegerField()
+    data = GenericForeignKey('content_type', 'data_object_id')
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        verbose_name='Услуга'
+    )
+
+    class Meta:
+        db_table = 'parameters_services'
