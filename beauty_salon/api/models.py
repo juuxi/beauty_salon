@@ -249,5 +249,12 @@ class ParameterValueService(models.Model):
         verbose_name='Услуга'
     )
 
+    parameter = models.ForeignKey(
+        Parameter,
+        on_delete=models.CASCADE,
+        related_name='values_for_services',
+        verbose_name='Услуга'
+    )
+
     class Meta:
         db_table = 'parameters_services'
