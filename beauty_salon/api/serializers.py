@@ -306,5 +306,18 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['values'] = 'dummy'  # instance.parameter_values.value if instance.parameter_values else None
+        base_class = instance.base_class
+        values_text = {}
+        for param in base_class.parameters.all():
+            if param.data_type == 'int':
+                values_text[param.name] = IntData.objects.get(
+                    id=(param.values_for_services
+                        .filter(service_id=instance.id)[0]).data_object_id
+                ).data
+            if param.data_type == 'enum':
+                values_text[param.name] = Value.objects.get(
+                    id=(param.values_for_services
+                        .filter(service_id=instance.id)[0]).data_object_id
+                ).data.data
+        ret['values'] = values_text
         return ret
