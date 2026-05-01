@@ -250,6 +250,15 @@ class ParameterSerializer(serializers.ModelSerializer):
 
         return data
 
+    def cyclical_create_paraggr_member(self, aggregate, aggregate_members):
+        for i in range(1, len(aggregate_members) + 1):
+            param = Parameter.objects.get(id=aggregate_members[i - 1])
+            ParameterAggregateMember.objects.create(
+                num=i,
+                parameter=param,
+                aggregate=aggregate
+            )
+
     @transaction.atomic
     def create(self, validated_data):
         aggregate_members = validated_data.pop('aggregate_members', [])
@@ -257,13 +266,8 @@ class ParameterSerializer(serializers.ModelSerializer):
 
         if aggregate_members:
             new_aggregate = ParameterAggregate.objects.create()
-            for i in range(1, len(aggregate_members) + 1):
-                param = Parameter.objects.get(id=aggregate_members[i - 1])
-                ParameterAggregateMember.objects.create(
-                    num=i,
-                    parameter=param,
-                    aggregate=new_aggregate
-                )
+            self.cyclical_create_paraggr_member(new_aggregate,
+                                                aggregate_members)
 
         param_obj = Parameter.objects.create(
             aggregate=new_aggregate,
@@ -283,13 +287,8 @@ class ParameterSerializer(serializers.ModelSerializer):
                 aggregate=instance.aggregate
             ).delete()
 
-            for i in range(1, len(new_members_data) + 1):
-                param = Parameter.objects.get(id=new_members_data[i - 1])
-                ParameterAggregateMember.objects.create(
-                    num=i,
-                    parameter=param,
-                    aggregate=instance.aggregate
-                )
+            self.cyclical_create_paraggr_member(instance.aggregate,
+                                                new_members_data)
 
         return instance
 
