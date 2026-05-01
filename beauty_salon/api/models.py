@@ -155,6 +155,14 @@ class Value(ModelWithTimestamp):
         verbose_name_plural = 'Значения перечисления'
 
 
+class ParameterAggregate(models.Model):
+
+    class Meta:
+        db_table = 'parameters_aggregate'
+        verbose_name = 'Агрегат параметров'
+        verbose_name_plural = 'Агрегаты параметров'
+
+
 class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     name = models.CharField(
         max_length=200,
@@ -190,10 +198,49 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
         blank=True
     )
 
+    aggregate = models.ForeignKey(
+        ParameterAggregate,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='parameters'
+    )
+
+    aggregates = models.ManyToManyField(
+        ParameterAggregate,
+        through='ParameterAggregateMember',
+        related_name='member_parameters',
+        blank=True
+    )
+
     class Meta:
         db_table = 'parameters'
         verbose_name = 'Параметр'
         verbose_name_plural = 'Параметры'
+
+
+class ParameterAggregateMember(models.Model):
+    aggregate = models.ForeignKey(
+        ParameterAggregate,
+        on_delete=models.CASCADE
+    )
+    parameter = models.ForeignKey(
+        Parameter,
+        on_delete=models.CASCADE
+    )
+    num = models.IntegerField(
+        verbose_name='Позиция'
+    )
+
+    class Meta:
+        db_table = 'parameters_aggregate_members'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['aggregate', 'num'],
+                name='unique_agg_num_deferred',
+                deferrable=models.Deferrable.DEFERRED,
+            )
+        ]
 
 
 class ParameterNode(models.Model):
