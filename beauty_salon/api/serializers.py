@@ -1,8 +1,11 @@
 from rest_framework import serializers
 
+from django.db import transaction
+
 from .models import ClassifierNode, Enumeration, Value, Parameter, Service
 from .models import StringData, IntData, RealData, PictureData, ContentType
-from .models import ParameterValueService
+from .models import ParameterValueService, ParameterAggregate
+from .models import ParameterAggregateMember
 
 
 class ClassifierNodeSerializer(serializers.ModelSerializer):
@@ -191,10 +194,24 @@ class ValueSerializer(serializers.ModelSerializer):
 
 
 class ParameterSerializer(serializers.ModelSerializer):
+    aggregate_members = serializers.JSONField(write_only=True)
 
     class Meta:
         model = Parameter
-        fields = ('id', 'name', 'data_type', 'enumeration')
+        fields = (
+            'id', 'name', 'data_type', 'enumeration', 'aggregate_members'
+        )
+
+    def validate_aggregate_members(self, aggregate_members):
+        if not isinstance(aggregate_members, list):
+            raise serializers.ValidationError('must be of type list')
+
+        for member in aggregate_members:
+            if not Parameter.objects.get(id=member):
+                raise serializers.ValidationError({f'No parameter \
+                                                   with id {id}'})
+
+        return aggregate_members
 
     def validate(self, data):
         data = super().validate(data)
@@ -207,6 +224,28 @@ class ParameterSerializer(serializers.ModelSerializer):
                                                'Must be empty for int type.'})
 
         return data
+
+    @transaction.atomic
+    def create(self, validated_data):
+        aggregate_members = validated_data.pop('aggregate_members', [])
+        new_aggregate = None
+
+        if aggregate_members:
+            new_aggregate = ParameterAggregate.objects.create()
+            for i in range(1, len(aggregate_members) + 1):
+                param = Parameter.objects.get(id=aggregate_members[i - 1])
+                ParameterAggregateMember.objects.create(
+                    num=i,
+                    parameter=param,
+                    aggregate=new_aggregate
+                )
+
+        param_obj = Parameter.objects.create(
+            aggregate=new_aggregate,
+            **validated_data,
+        )
+
+        return param_obj
 
 
 class ServiceSerializer(serializers.ModelSerializer):

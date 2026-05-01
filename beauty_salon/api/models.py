@@ -172,10 +172,11 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     DATA_TYPES = (
         ('int', 'Integer'),
         ('enum', 'Enumeration'),
+        ('aggregate', 'Aggregate'),
     )
 
     data_type = models.CharField(
-        max_length=4,
+        max_length=9,
         choices=DATA_TYPES,
         verbose_name='Тип данных'
     )
