@@ -247,6 +247,29 @@ class ParameterSerializer(serializers.ModelSerializer):
 
         return param_obj
 
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        new_members_data = validated_data.pop('aggregate_members', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if new_members_data is not None:
+            ParameterAggregateMember.objects.filter(
+                aggregate=instance.aggregate
+            ).delete()
+
+            for i in range(1, len(new_members_data) + 1):
+                param = Parameter.objects.get(id=new_members_data[i - 1])
+                ParameterAggregateMember.objects.create(
+                    num=i,
+                    parameter=param,
+                    aggregate=instance.aggregate
+                )
+
+        return instance
+
 
 class ServiceSerializer(serializers.ModelSerializer):
     values = serializers.JSONField(write_only=True)
