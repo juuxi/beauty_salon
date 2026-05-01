@@ -8,6 +8,12 @@ from .models import ParameterValueService, ParameterAggregate
 from .models import ParameterAggregateMember
 
 
+def common_update(instance, validated_data):
+    for attr, value in validated_data.items():
+        setattr(instance, attr, value)
+    instance.save()
+
+
 class ClassifierNodeSerializer(serializers.ModelSerializer):
     children = serializers.ListField(write_only=True, required=False)
     enumerations = serializers.PrimaryKeyRelatedField(
@@ -44,9 +50,7 @@ class ClassifierNodeSerializer(serializers.ModelSerializer):
         enumerations_data = validated_data.pop('enumerations', None)
         parameters_data = validated_data.pop('parameters', None)
 
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
+        common_update(instance, validated_data)
 
         if enumerations_data is not None:
             instance.enumerations.set(enumerations_data)
@@ -180,6 +184,8 @@ class ValueSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         data = validated_data.pop('data', None)
 
+        common_update(instance, validated_data)
+
         if data is not None:
             model_class = instance.content_type.model_class()
             data_obj = create_type_based_data_object(
@@ -188,7 +194,7 @@ class ValueSerializer(serializers.ModelSerializer):
             model_class.objects.get(pk=instance.data_object_id).delete()
             instance.data_object_id = data_obj.id
 
-        return super().update(instance, validated_data)
+        return instance
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -270,9 +276,7 @@ class ParameterSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         new_members_data = validated_data.pop('aggregate_members', None)
 
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
+        common_update(instance, validated_data)
 
         if new_members_data is not None:
             ParameterAggregateMember.objects.filter(
@@ -373,6 +377,8 @@ class ServiceSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         values = validated_data.pop('values', None)
 
+        common_update(instance, validated_data)
+
         view = self.context['view']
         base_class_id = view.kwargs.get('node_id')
         base_class = ClassifierNode.objects.get(id=base_class_id)
@@ -393,7 +399,7 @@ class ServiceSerializer(serializers.ModelSerializer):
                 param_service_instance.data_object_id = data_obj.id
                 param_service_instance.save()
 
-        return super().update(instance, validated_data)
+        return instance
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
