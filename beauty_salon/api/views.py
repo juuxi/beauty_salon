@@ -56,6 +56,47 @@ class ClassifierNodeView(viewsets.ModelViewSet):
             headers=headers
         )
 
+    @action(detail=True, methods=['patch'], url_path='parameters/ordering')
+    @transaction.atomic
+    def update_ordering(self, request, pk=None):
+        instance = self.get_object()
+
+        new_ordering = request.data['ordering']
+        if not isinstance(new_ordering, list):
+            return Response(
+                {'ordering': 'Expected a list of objects, '
+                    'containing id-s in new order'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        queryset = instance.parameters_nodes.filter(
+            classifiernode=instance)
+
+        if not queryset.count() == len(new_ordering):
+            return Response(
+                {'ordering': 'amount of object '
+                    f'must equal {queryset.count()}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        for obj_id in new_ordering:
+            try:
+                queryset.get(parameter_id=obj_id)
+            except queryset.model.DoesNotExist:
+                return Response(
+                    {'ordering': 'object with id '
+                        f'{obj_id} does not exist in current queryset'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        for i in range(len(new_ordering)):
+            # current value while looping through new_order
+            curr_v = queryset.get(parameter_id=new_ordering[i])
+            curr_v.num = i + 1
+            curr_v.save()
+
+        return Response(status=status.HTTP_200_OK)
+
 
 class ListParentsChildrenView(APIView):
     """Вывод предков и родителей данного узла"""
