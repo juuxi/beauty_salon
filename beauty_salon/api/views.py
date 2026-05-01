@@ -191,4 +191,10 @@ class ValueView(viewsets.ModelViewSet):
 class ServiceView(viewsets.ModelViewSet):
     """CRUD для параметров"""
     serializer_class = ServiceSerializer
-    queryset = Service.objects.all().order_by('id')
+
+    def get_queryset(self):
+        base_class_id = self.kwargs['node_id']
+        return (
+            Service.objects.filter(base_class_id=base_class_id)
+            .order_by('id')
+        )
