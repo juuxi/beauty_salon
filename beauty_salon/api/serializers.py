@@ -90,6 +90,16 @@ def create_type_based_data_object(data_type, data):
     return data_obj
 
 
+def get_or_validation_error(model, id, field):
+    try:
+        obj = model.objects.get(id=id)
+    except model.DoesNotExist:
+        raise serializers.ValidationError({
+            'field': f'No {model} with id {id}'
+        })
+    return obj
+
+
 class ValueSerializer(serializers.ModelSerializer):
     data = serializers.JSONField()
 
@@ -102,12 +112,8 @@ class ValueSerializer(serializers.ModelSerializer):
     def validate_data(self, data):
         view = self.context['view']
         enumeration_id = view.kwargs.get('enumeration_id')
-        try:
-            enumeration = Enumeration.objects.get(id=enumeration_id)
-        except Enumeration.DoesNotExist:
-            raise serializers.ValidationError({
-                'enumeration': 'No enumeration with this id'
-            })
+        enumeration = get_or_validation_error(Enumeration, enumeration_id,
+                                              'enumeration')
 
         data_type = enumeration.data_type
 
@@ -305,12 +311,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         values = data.get('values')
         view = self.context['view']
         base_class_id = view.kwargs.get('node_id')
-        try:
-            base_class = ClassifierNode.objects.get(id=base_class_id)
-        except ClassifierNode.DoesNotExist:
-            raise serializers.ValidationError({
-                'base_class': 'No classifier_node with this id'
-            })
+        base_class = get_or_validation_error(ClassifierNode, base_class_id,
+                                             'base_class')
 
         if len(values) != base_class.parameters.count():
             raise serializers.ValidationError({'values':
