@@ -219,12 +219,28 @@ class ParameterSerializer(serializers.ModelSerializer):
     def validate(self, data):
         data = super().validate(data)
 
+        if (data.get('data_type') == 'aggregate'
+           and not data.get('aggregate_members')):
+            raise serializers.ValidationError({'aggregate_members':
+                                               'Required for aggregate type.'})
+
         if data.get('data_type') == 'enum' and not data.get('enumeration'):
             raise serializers.ValidationError({'enumeration':
                                                'Required for enum type.'})
-        if data.get('data_type') == 'int' and data.get('enumeration'):
+
+        if (data.get('data_type') == 'int'
+           or data.get('data_type') == 'aggregate'
+           and data.get('enumeration')):
             raise serializers.ValidationError({'enumeration':
-                                               'Must be empty for int type.'})
+                                               'Must be empty for'
+                                               'int/aggregate type.'})
+
+        if (data.get('data_type') == 'int'
+           or data.get('data_type') == 'enumeration'
+           and data.get('aggregate_members')):
+            raise serializers.ValidationError({'aggregate_members':
+                                               'Must be empty for'
+                                               'int/enum type.'})
 
         return data
 
