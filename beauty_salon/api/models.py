@@ -247,12 +247,14 @@ class ParameterAggregateMember(models.Model):
 class ParameterNode(models.Model):
     parameter = models.ForeignKey(
         Parameter,
+        related_name='parameters_nodes',
         on_delete=models.CASCADE,
         verbose_name='Параметр'
     )
 
     classifiernode = models.ForeignKey(
         ClassifierNode,
+        related_name='parameters_nodes',
         on_delete=models.CASCADE,
         verbose_name='Узел классификатора'
     )
@@ -269,12 +271,21 @@ class ParameterNode(models.Model):
         verbose_name='Максимальное значение'
     )
 
+    num = models.IntegerField(
+        verbose_name='Позиция'
+    )
+
     class Meta:
         db_table = 'parameters_nodes'
         constraints = [
             models.UniqueConstraint(
                 fields=['parameter', 'classifiernode'],
-                name='unique_num_enumeration_constraint',
+                name='unique_parameter_classifiernode_constraint',
+            ),
+            models.UniqueConstraint(
+                fields=['classifiernode', 'num'],
+                name='unique_classifiernode_num_constraint',
+                deferrable=models.Deferrable.DEFERRED,
             )
         ]
 

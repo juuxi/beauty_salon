@@ -15,11 +15,14 @@ class ClassifierNodeSerializer(serializers.ModelSerializer):
         many=True,
         queryset=Enumeration.objects.all()
     )
-    parameters = serializers.PrimaryKeyRelatedField(
-        required=False,
-        many=True,
-        queryset=Parameter.objects.all()
-    )
+    parameters = serializers.SerializerMethodField()
+
+    def get_parameters(self, obj):
+        return list(
+            obj.parameters_nodes
+            .order_by('num')
+            .values_list('parameter_id', flat=True)
+        )
 
     class Meta:
         model = ClassifierNode

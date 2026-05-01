@@ -131,27 +131,10 @@ class EnumerationView(viewsets.ModelViewSet):
     queryset = Enumeration.objects.all().order_by('id')
 
 
-class ParameterView(viewsets.ModelViewSet):
-    """CRUD для параметров"""
-    serializer_class = ParameterSerializer
-    queryset = Parameter.objects.all().order_by('id')
-
-
-class ValueView(viewsets.ModelViewSet):
-    """CRUD для значений перечислений"""
-    serializer_class = ValueSerializer
-
-    def get_queryset(self):
-        enumeration_id = self.kwargs['enumeration_id']
-        return (
-            Value.objects.filter(enumeration_id=enumeration_id)
-            .order_by('num')
-        )
-
+class OrderingUpdateMixin:
     @action(detail=False, methods=['patch'], url_path='ordering')
     @transaction.atomic
-    def ordering_update(self, request, enumeration_id=None, *args, **kwargs):
-        """Сортировка значений внутри перечисления"""
+    def handle_ordering_update(viewset, request, *args, **kwargs):
         new_ordering = request.data['ordering']
         if not isinstance(new_ordering, list):
             return Response(
@@ -160,22 +143,21 @@ class ValueView(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        queryset = self.get_queryset()
+        queryset = viewset.get_queryset()
         if not queryset.count() == len(new_ordering):
             return Response(
                 {'ordering': 'amount of object '
-                 f'must equal {queryset.count()}'},
+                    f'must equal {queryset.count()}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # value id
-        for v_id in new_ordering:
+        for obj_id in new_ordering:
             try:
-                queryset.get(id=v_id)
-            except Value.DoesNotExist:
+                queryset.get(id=obj_id)
+            except viewset.get_queryset().model.DoesNotExist:
                 return Response(
                     {'ordering': 'object with id '
-                        f'{v_id} does not exist in current queryset'},
+                        f'{obj_id} does not exist in current queryset'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
@@ -186,6 +168,24 @@ class ValueView(viewsets.ModelViewSet):
             curr_v.save()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class ParameterView(viewsets.ModelViewSet):
+    """CRUD для параметров"""
+    serializer_class = ParameterSerializer
+    queryset = Parameter.objects.all()
+
+
+class ValueView(OrderingUpdateMixin, viewsets.ModelViewSet):
+    """CRUD для значений перечислений"""
+    serializer_class = ValueSerializer
+
+    def get_queryset(self):
+        enumeration_id = self.kwargs['enumeration_id']
+        return (
+            Value.objects.filter(enumeration_id=enumeration_id)
+            .order_by('num')
+        )
 
 
 class ServiceView(viewsets.ModelViewSet):
