@@ -346,12 +346,15 @@ class ServiceSerializer(serializers.ModelSerializer):
 
         return data
 
-    def create(self, validated_data):
-        values = validated_data.pop('values')
-
+    def get_base_class(self):
         view = self.context['view']
         base_class_id = view.kwargs.get('node_id')
         base_class = ClassifierNode.objects.get(id=base_class_id)
+        return base_class
+
+    def create(self, validated_data):
+        values = validated_data.pop('values')
+        base_class = self.get_base_class()
 
         service_obj = Service.objects.create(
             **validated_data,
@@ -377,12 +380,9 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         values = validated_data.pop('values', None)
+        base_class = self.get_base_class()
 
         common_update(instance, validated_data)
-
-        view = self.context['view']
-        base_class_id = view.kwargs.get('node_id')
-        base_class = ClassifierNode.objects.get(id=base_class_id)
 
         if values is not None:
             for value, param in zip(values, base_class.parameters.all()):
