@@ -215,12 +215,18 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ('id', 'name', 'base_class', 'values')
+        read_only_fields = ('base_class',)
 
     def validate(self, data):
         values = data.get('values')
-        base_class = data.get('base_class', None)
-        if not base_class:
-            base_class = self.instance.base_class
+        view = self.context['view']
+        base_class_id = view.kwargs.get('node_id')
+        try:
+            base_class = ClassifierNode.objects.get(id=base_class_id)
+        except ClassifierNode.DoesNotExist:
+            raise serializers.ValidationError({
+                'base_class': 'No classifier_node with this id'
+            })
 
         if len(values) != base_class.parameters.count():
             raise serializers.ValidationError({'values':
@@ -257,11 +263,14 @@ class ServiceSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         values = validated_data.pop('values')
 
+        view = self.context['view']
+        base_class_id = view.kwargs.get('node_id')
+        base_class = ClassifierNode.objects.get(id=base_class_id)
+
         service_obj = Service.objects.create(
             **validated_data,
+            base_class=base_class,
         )
-
-        base_class = validated_data.pop('base_class')
 
         for value, param in zip(values, base_class.parameters.all()):
             if param.data_type == 'int':
@@ -282,9 +291,10 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         values = validated_data.pop('values', None)
-        base_class = validated_data.pop('base_class', None)
-        if base_class is None:
-            base_class = instance.base_class
+
+        view = self.context['view']
+        base_class_id = view.kwargs.get('node_id')
+        base_class = ClassifierNode.objects.get(id=base_class_id)
 
         if values is not None:
             for value, param in zip(values, base_class.parameters.all()):

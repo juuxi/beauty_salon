@@ -8,10 +8,12 @@ base_router = routers.DefaultRouter()
 base_router.register('classifier', views.ClassifierNodeView, 'classifier')
 base_router.register('enumerations', views.EnumerationView, 'enumerations')
 base_router.register('parameters', views.ParameterView, 'parameters')
-base_router.register('services', views.ServiceView, 'services')
 
 value_router = routers.DefaultRouter()
 value_router.register('values', views.ValueView, 'value')
+
+services_router = routers.DefaultRouter()
+services_router.register('services', views.ServiceView, 'services')
 
 app_name = 'api'
 
@@ -25,4 +27,5 @@ urlpatterns = [
     path('classifier/list_terminal_nodes/', views.ListTerminalNodes.as_view()),
     path('', include(base_router.urls)),
     path('enumerations/<int:enumeration_id>/', include(value_router.urls)),
+    path('classifier/<int:node_id>/', include(services_router.urls)),
 ]
