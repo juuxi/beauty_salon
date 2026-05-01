@@ -44,7 +44,20 @@ class ModelWithMeasuringUnit(models.Model):
         abstract = True
 
 
-class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit):
+class CodedModel(models.Model):
+    code = models.CharField(
+        max_length=15,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='Обозначение'
+    )
+
+    class Meta:
+        abstract = True
+
+
+class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     name = models.CharField(
         max_length=200,
         verbose_name="Название узла"
@@ -86,7 +99,7 @@ class PictureData(models.Model):
     data = models.URLField()
 
 
-class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit):
+class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     name = models.CharField(
         max_length=200,
         verbose_name='Название перечисления'
@@ -142,7 +155,7 @@ class Value(ModelWithTimestamp):
         verbose_name_plural = 'Значения перечисления'
 
 
-class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit):
+class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     name = models.CharField(
         max_length=200,
         verbose_name='Название параметра'
@@ -218,7 +231,7 @@ class ParameterNode(models.Model):
         ]
 
 
-class Service(ModelWithTimestamp):
+class Service(ModelWithTimestamp, CodedModel):
     name = models.CharField(
         max_length=200,
         verbose_name='Название услуги'
