@@ -5,7 +5,7 @@ from django.db import transaction
 from .models import ClassifierNode, Enumeration, Value, Parameter, Service
 from .models import StringData, IntData, RealData, PictureData, ContentType
 from .models import ParameterValueService, ParameterAggregate
-from .models import ParameterAggregateMember
+from .models import ParameterAggregateMember, ParameterNode
 
 
 def common_update(instance, validated_data):
@@ -441,3 +441,38 @@ class ServiceSerializer(serializers.ModelSerializer):
                 ).data.data
         ret['values'] = values_text
         return ret
+
+
+class ParameterNodeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ParameterNode
+        fields = ('id', 'parameter', 'classifiernode',
+                  'min_param_value', 'max_param_value', 'num',
+                  'measuring_unit')
+        read_only_fields = ('classifiernode',)
+
+    def validate_num(self, num):
+        view = self.context['view']
+        classifiernode_id = view.kwargs.get('node_id')
+
+        if not (ParameterNode.objects.
+                filter(classifiernode_id=classifiernode_id, num=num)
+                .count()) == 0:
+            raise serializers.ValidationError({
+                'num': f'Pair (num={num}, classifiernode={classifiernode_id}) '
+                'already exists'
+            })
+
+        return num
+
+    def create(self, validated_data):
+        view = self.context['view']
+        classifiernode_id = view.kwargs.get('node_id')
+
+        param_node_obj = ParameterNode.objects.create(
+            **validated_data,
+            classifiernode_id=classifiernode_id,
+        )
+
+        return param_node_obj

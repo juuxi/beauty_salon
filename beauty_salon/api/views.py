@@ -9,10 +9,11 @@ from django.db import connection, transaction
 
 from .models import ClassifierNode, Enumeration
 from .models import Value, Parameter, Service
+from .models import ParameterNode
 from .serializers import ClassifierNodeSerializer, EnumerationSerializer
 from .serializers import ValueSerializer, ParameterSerializer
 from .serializers import ClassifierNodeFunctionSerializer
-from .serializers import ServiceSerializer
+from .serializers import ServiceSerializer, ParameterNodeSerializer
 
 
 class ClassifierNodeView(viewsets.ModelViewSet):
@@ -56,7 +57,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
             headers=headers
         )
 
-    @action(detail=True, methods=['patch'], url_path='parameters/ordering')
+    """ @action(detail=True, methods=['patch'], url_path='parameters/ordering')
     @transaction.atomic
     def update_ordering(self, request, pk=None):
         instance = self.get_object()
@@ -95,7 +96,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
             curr_v.num = i + 1
             curr_v.save()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK) """
 
 
 class ListParentsChildrenView(APIView):
@@ -238,4 +239,16 @@ class ServiceView(viewsets.ModelViewSet):
         return (
             Service.objects.filter(base_class_id=base_class_id)
             .order_by('id')
+        )
+
+
+class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
+    """CRUD для параметров класса"""
+    serializer_class = ParameterNodeSerializer
+
+    def get_queryset(self):
+        classifiernode_id = self.kwargs['node_id']
+        return (
+            ParameterNode.objects.filter(classifiernode_id=classifiernode_id)
+            .order_by('num')
         )
