@@ -7,6 +7,9 @@ from rest_framework.exceptions import ValidationError
 
 from django.db import connection, transaction
 
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import ServiceFilter
+
 from .models import ClassifierNode, Enumeration
 from .models import Value, Parameter, Service
 from .models import ParameterNode
@@ -199,6 +202,9 @@ class ServiceView(viewsets.ModelViewSet):
             Service.objects.filter(base_class_id=base_class_id)
             .order_by('id')
         )
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ServiceFilter
 
 
 class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
