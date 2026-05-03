@@ -332,10 +332,10 @@ class ServiceSerializer(serializers.ModelSerializer):
                     })
 
             elif param.data_type == 'real':
-                if not isinstance(data, (int, float)):
+                if not isinstance(value, (int, float)):
                     raise serializers.ValidationError({
                         'data': f'Expected type "real" for value of, \
-                        parameter {param.name} got {type(data).__name__}'
+                        parameter {param.name} got {type(value).__name__}'
                     })
 
             elif param.data_type == 'enum':
