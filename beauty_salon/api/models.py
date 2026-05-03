@@ -171,6 +171,7 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
 
     DATA_TYPES = (
         ('int', 'Integer'),
+        ('real', 'Real'),
         ('enum', 'Enumeration'),
         ('aggregate', 'Aggregate'),
     )

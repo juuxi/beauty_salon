@@ -209,7 +209,7 @@ class ValueSerializer(serializers.ModelSerializer):
 
 
 class ParameterSerializer(serializers.ModelSerializer):
-    aggregate_members = serializers.JSONField(write_only=True)
+    aggregate_members = serializers.JSONField(write_only=True, required=False)
 
     class Meta:
         model = Parameter
@@ -240,19 +240,21 @@ class ParameterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'enumeration':
                                                'Required for enum type.'})
 
-        if (data.get('data_type') == 'int'
-           or data.get('data_type') == 'aggregate'
+        if ((data.get('data_type') == 'int'
+           or data.get('data_type') == 'real'
+           or data.get('data_type') == 'aggregate')
            and data.get('enumeration')):
             raise serializers.ValidationError({'enumeration':
-                                               'Must be empty for'
-                                               'int/aggregate type.'})
+                                               'Must be empty for '
+                                               'int/real/aggregate type.'})
 
-        if (data.get('data_type') == 'int'
-           or data.get('data_type') == 'enumeration'
+        if ((data.get('data_type') == 'int'
+           or data.get('data_type') == 'real'
+           or data.get('data_type') == 'enumeration')
            and data.get('aggregate_members')):
             raise serializers.ValidationError({'aggregate_members':
                                                'Must be empty for'
-                                               'int/enum type.'})
+                                               'int/real/enum type.'})
 
         return data
 
@@ -327,7 +329,15 @@ class ServiceSerializer(serializers.ModelSerializer):
                         'values': f'Expected integer for value of parameter, \
                         {param.name} got {type(value).__name__}'
                     })
-            if param.data_type == 'enum':
+
+            elif param.data_type == 'real':
+                if not isinstance(data, (int, float)):
+                    raise serializers.ValidationError({
+                        'data': f'Expected type "real" for value of, \
+                        parameter {param.name} got {type(data).__name__}'
+                    })
+
+            elif param.data_type == 'enum':
                 if not isinstance(value, int):
                     raise serializers.ValidationError({
                         'values': f'Expected integer for value of parameter, \
@@ -364,6 +374,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         for value, param in zip(values, base_class.parameters.all()):
             if param.data_type == 'int':
                 data_obj = IntData.objects.create(data=value)
+            if param.data_type == 'real':
+                data_obj = RealData.objects.create(data=value)
             if param.data_type == 'enum':
                 data_obj = Value.objects.get(id=value)
 
@@ -395,6 +407,11 @@ class ServiceSerializer(serializers.ModelSerializer):
                         id=param_service_instance.data_object_id
                     ).delete()
                     data_obj = IntData.objects.create(data=value)
+                if param.data_type == 'real':
+                    RealData.objects.get(
+                        id=param_service_instance.data_object_id
+                    ).delete()
+                    data_obj = RealData.objects.create(data=value)
                 if param.data_type == 'enum':
                     data_obj = Value.objects.get(id=value)
                 param_service_instance.data_object_id = data_obj.id
@@ -409,6 +426,11 @@ class ServiceSerializer(serializers.ModelSerializer):
         for param in base_class.parameters.all():
             if param.data_type == 'int':
                 values_text[param.name] = IntData.objects.get(
+                    id=(param.values_for_services
+                        .filter(service_id=instance.id)[0]).data_object_id
+                ).data
+            if param.data_type == 'real':
+                values_text[param.name] = RealData.objects.get(
                     id=(param.values_for_services
                         .filter(service_id=instance.id)[0]).data_object_id
                 ).data
