@@ -68,9 +68,9 @@ paths:
   /api/classifier/:
     get:
       operationId: listClassifierNodes
-      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0441\u043f\u0438\u0441\u043a\
-        \u0430\u0020\u0443\u0437\u043b\u043e\u0432\u0020\u043a\u043b\u0430\u0441\u0441\
-        \u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u0430"
+      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
+        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
+        \u043B\u0443\u0433"
       parameters: []
       responses:
         '200':
@@ -85,9 +85,9 @@ paths:
       - api
     post:
       operationId: createClassifierNode
-      description: "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435\u0020\u0443\u0437\
-        \u043b\u0430\u0020\u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\
-        \u0442\u043e\u0440\u0430"
+      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
+        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
+        \u043B\u0443\u0433"
       parameters: []
       requestBody:
         content:
@@ -112,9 +112,9 @@ paths:
   /api/classifier/{id}/:
     get:
       operationId: retrieveClassifierNode
-      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u043a\u043e\u043d\u043a\u0440\
-        \u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\u0437\u043b\u0430\u0020\u043a\
-        \u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u0430"
+      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
+        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
+        \u043B\u0443\u0433"
       parameters:
       - name: id
         in: path
@@ -135,10 +135,9 @@ paths:
       - api
     put:
       operationId: updateClassifierNode
-      description: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\
-        \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\
-        \u0437\u043b\u0430\u0020\u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\
-        \u0430\u0442\u043e\u0440\u0430"
+      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
+        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
+        \u043B\u0443\u0433"
       parameters:
       - name: id
         in: path
@@ -170,11 +169,9 @@ paths:
       - api
     patch:
       operationId: partialUpdateClassifierNode
-      description: "\u0427\u0430\u0441\u0442\u0438\u0447\u043d\u043e\u0435\u0020\u043e\
-        \u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u043a\u043e\u043d\
-        \u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\u0437\u043b\u0430\
-        \u0020\u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\u0442\u043e\
-        \u0440\u0430"
+      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
+        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
+        \u043B\u0443\u0433"
       parameters:
       - name: id
         in: path
@@ -206,9 +203,9 @@ paths:
       - api
     delete:
       operationId: destroyClassifierNode
-      description: "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435\u0020\u043a\u043e\u043d\
-        \u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e\u0020\u0443\u0437\u043b\u0430\u0020\
-        \u043a\u043b\u0430\u0441\u0441\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u0430"
+      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
+        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
+        \u043B\u0443\u0433"
       parameters:
       - name: id
         in: path
@@ -226,8 +223,8 @@ paths:
   /api/enumerations/:
     get:
       operationId: listEnumerations
-      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0441\u043f\u0438\u0441\u043a\u0430\
-        \u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u0439"
+      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
+        \u043B\u0435\u043D\u0438\u0439"
       parameters: []
       responses:
         '200':
@@ -242,8 +239,8 @@ paths:
       - api
     post:
       operationId: createEnumeration
-      description: "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435\u0020\u043f\u0435\u0440\
-        \u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
+        \u043B\u0435\u043D\u0438\u0439"
       parameters: []
       requestBody:
         content:
@@ -268,8 +265,8 @@ paths:
   /api/enumerations/{id}/:
     get:
       operationId: retrieveEnumeration
-      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u043f\u0435\u0440\u0435\u0447\
-        \u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
+        \u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: id
         in: path
@@ -289,8 +286,8 @@ paths:
       - api
     put:
       operationId: updateEnumeration
-      description: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\
-        \u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
+        \u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: id
         in: path
@@ -321,9 +318,8 @@ paths:
       - api
     patch:
       operationId: partialUpdateEnumeration
-      description: "\u0427\u0430\u0441\u0442\u0438\u0447\u043d\u043e\u0435\u0020\u043e\
-        \u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u043f\u0435\u0440\
-        \u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
+        \u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: id
         in: path
@@ -354,8 +350,8 @@ paths:
       - api
     delete:
       operationId: destroyEnumeration
-      description: "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435\u0020\u043f\u0435\
-        \u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
+        \u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: id
         in: path
@@ -369,12 +365,156 @@ paths:
           description: ''
       tags:
       - api
+  /api/parameters/:
+    get:
+      operationId: listParameters
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parameter'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createParameter
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+      tags:
+      - api
+  /api/parameters/{id}/:
+    get:
+      operationId: retrieveParameter
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
+          \u043C\u0435\u0442\u0440."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateParameter
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
+          \u043C\u0435\u0442\u0440."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateParameter
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
+          \u043C\u0435\u0442\u0440."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyParameter
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
+          \u043C\u0435\u0442\u0440."
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
   /api/enumerations/{enumeration_id}/values/:
     get:
       operationId: listValues
-      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0441\u043f\u0438\u0441\u043a\
-        \u0430\u0020\u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439\u0020\u043f\u0435\
-        \u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: enumeration_id
         in: path
@@ -395,9 +535,8 @@ paths:
       - api
     post:
       operationId: createValue
-      description: "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435\u0020\u0437\u043d\
-        \u0430\u0447\u0435\u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\
-        \u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: enumeration_id
         in: path
@@ -428,9 +567,8 @@ paths:
   /api/enumerations/{enumeration_id}/values/{id}/:
     get:
       operationId: retrieveValue
-      description: "\u0412\u044b\u0432\u043e\u0434\u0020\u0437\u043d\u0430\u0447\u0435\
-        \u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\
-        \u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: enumeration_id
         in: path
@@ -455,9 +593,8 @@ paths:
       - api
     put:
       operationId: updateValue
-      description: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u0437\
-        \u043d\u0430\u0447\u0435\u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\
-        \u0441\u043b\u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: enumeration_id
         in: path
@@ -493,10 +630,8 @@ paths:
       - api
     patch:
       operationId: partialUpdateValue
-      description: "\u0427\u0430\u0441\u0442\u0438\u0447\u043d\u043e\u0435\u0020\u043e\u0431\
-        \u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u0020\u0437\u043d\u0430\u0447\u0435\
-        \u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0435\u043d\
-        \u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: enumeration_id
         in: path
@@ -532,9 +667,8 @@ paths:
       - api
     delete:
       operationId: destroyValue
-      description: "\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435\u0020\u0437\u043d\u0430\
-        \u0447\u0435\u043d\u0438\u044f\u0020\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\
-        \u0435\u043d\u0438\u044f"
+      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: enumeration_id
         in: path
@@ -553,12 +687,365 @@ paths:
           description: ''
       tags:
       - api
+  /api/classifier/{node_id}/services/:
+    get:
+      operationId: listServices
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createService
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Service'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+      tags:
+      - api
+  /api/classifier/{node_id}/services/{id}/:
+    get:
+      operationId: retrieveService
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateService
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Service'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateService
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Service'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyService
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
+  /api/classifier/{node_id}/parameters/:
+    get:
+      operationId: listParameterNodes
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParameterNode'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createParameterNode
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterNode'
+          description: ''
+      tags:
+      - api
+  /api/classifier/{node_id}/parameters/{id}/:
+    get:
+      operationId: retrieveParameterNode
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterNode'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateParameterNode
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterNode'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateParameterNode
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterNode'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyParameterNode
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
   /api/enumerations/{enumeration_id}/values/ordering/:
     patch:
-      operationId: orderingUpdateValue
-      description: "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430 \u0437\
-        \u043D\u0430\u0447\u0435\u043D\u0438\u0439 \u0432\u043D\u0443\u0442\u0440\u0438\
-        \ \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u044F"
+      operationId: handleOrderingUpdateValue
+      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
       parameters:
       - name: enumeration_id
         in: path
@@ -583,6 +1070,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Value'
+          description: ''
+      tags:
+      - api
+  /api/classifier/{node_id}/parameters/ordering/:
+    patch:
+      operationId: handleOrderingUpdateParameterNode
+      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
+        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      parameters:
+      - name: node_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ParameterNode'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterNode'
           description: ''
       tags:
       - api
@@ -613,6 +1132,9 @@ components:
           type: array
           items:
             type: integer
+        parameters:
+          type: string
+          readOnly: true
       required:
       - name
     Enumeration:
@@ -637,6 +1159,34 @@ components:
       required:
       - name
       - data_type
+    Parameter:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        data_type:
+          enum:
+          - int
+          - real
+          - enum
+          - aggregate
+          type: string
+        enumeration:
+          type: integer
+          nullable: true
+        aggregate_members:
+          type: object
+          writeOnly: true
+        measuring_unit:
+          type: integer
+          nullable: true
+      required:
+      - name
+      - data_type
     Value:
       type: object
       properties:
@@ -654,4 +1204,50 @@ components:
           readOnly: true
       required:
       - data
+      - num
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        base_class:
+          type: string
+          readOnly: true
+        values:
+          type: object
+          writeOnly: true
+      required:
+      - name
+      - values
+    ParameterNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        parameter:
+          type: integer
+        classifiernode:
+          type: string
+          readOnly: true
+        min_param_value:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        max_param_value:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        num:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - parameter
       - num
