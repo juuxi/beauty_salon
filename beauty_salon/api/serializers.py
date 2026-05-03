@@ -214,7 +214,8 @@ class ParameterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Parameter
         fields = (
-            'id', 'name', 'data_type', 'enumeration', 'aggregate_members'
+            'id', 'name', 'data_type', 'enumeration', 'aggregate_members',
+            'measuring_unit'
         )
 
     def validate_aggregate_members(self, aggregate_members):
