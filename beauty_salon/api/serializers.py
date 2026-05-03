@@ -449,8 +449,7 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ParameterNode
         fields = ('id', 'parameter', 'classifiernode',
-                  'min_param_value', 'max_param_value', 'num',
-                  'measuring_unit')
+                  'min_param_value', 'max_param_value', 'num')
         read_only_fields = ('classifiernode',)
 
     def validate_num(self, num):
