@@ -331,6 +331,20 @@ class ServiceSerializer(serializers.ModelSerializer):
                         {param.name} got {type(value).__name__}'
                     })
 
+                param_node = base_class.parameters_nodes.get(parameter=param)
+                if (param_node.min_param_value
+                   and value < param_node.min_param_value):
+                    raise serializers.ValidationError({'values':
+                                                       f'value {value} is \
+                                                       smaller than min_val \
+                                                       for the given class'})
+                if (param_node.max_param_value
+                   and value > param_node.max_param_value):
+                    raise serializers.ValidationError({'values':
+                                                       f'value {value} is \
+                                                       bigger than max_val \
+                                                       for the given class'})
+
             elif param.data_type == 'real':
                 if not isinstance(value, (int, float)):
                     raise serializers.ValidationError({
