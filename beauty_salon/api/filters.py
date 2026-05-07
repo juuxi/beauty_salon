@@ -26,6 +26,9 @@ class ServiceFilter(django_filters.FilterSet):
                                   .filter(data=param_value)))
         )
 
+    def format_corruption_error(self):
+        raise ValidationError({'values': 'format is param[__mode]=value'})
+
     def filter_by_resolved_data(self, queryset, name, value):
         if not value:
             return queryset
@@ -35,7 +38,7 @@ class ServiceFilter(django_filters.FilterSet):
         try:
             param, param_value = first_pair.split('=')
         except ValueError:
-            raise ValidationError({'values': 'format is param=value'})
+            self.format_corruption_error()
         items_dict[param] = param_value
 
         for param, param_value in items_dict.items():
@@ -44,7 +47,7 @@ class ServiceFilter(django_filters.FilterSet):
             try:
                 param = Parameter.objects.get(name=param)
             except ValueError:
-                raise ValidationError({'values': 'format is param=value'})
+                self.format_corruption_error()
             except Parameter.DoesNotExist:
                 raise ValidationError({'values':
                                        'no parameter with this name'})
