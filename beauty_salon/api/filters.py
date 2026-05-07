@@ -10,7 +10,8 @@ from rest_framework.exceptions import ValidationError
 class ServiceFilter(django_filters.FilterSet):
     values = django_filters.CharFilter(method='filter_by_resolved_data')
 
-    def get_condition(self, param_value, param, exp_type, c_type_id, model):
+    def get_condition(self, param_value, param,
+                      exp_type, content_type_id, model, mode):
         try:
             param_value = exp_type(param_value)
         except ValueError:
@@ -19,9 +20,25 @@ class ServiceFilter(django_filters.FilterSet):
                                     be type {exp_type} \
                                     got {type(param_value).__name__}'})
 
+        if mode:  # str
+            if mode == 'gt':
+                return (
+                    Q(parameter=param,
+                      content_type_id=content_type_id,
+                      data_object_id__in=(model.objects
+                                          .filter(data__gt=param_value)))
+                )
+            if mode == 'lt':
+                return (
+                    Q(parameter=param,
+                      content_type_id=content_type_id,
+                      data_object_id__in=(model.objects
+                                          .filter(data__lt=param_value)))
+                )
+
         return (
             Q(parameter=param,
-              content_type_id=c_type_id,
+              content_type_id=content_type_id,
               data_object_id__in=(model.objects
                                   .filter(data=param_value)))
         )
@@ -41,9 +58,15 @@ class ServiceFilter(django_filters.FilterSet):
             self.format_corruption_error()
         items_dict[param] = param_value
 
+        mode = None
         for param, param_value in items_dict.items():
             if param == 'values':
                 continue
+            if '__' in param:
+                try:
+                    param, mode = param.split('__')
+                except ValueError:
+                    self.format_corruption_error()
             try:
                 param = Parameter.objects.get(name=param)
             except ValueError:
@@ -55,12 +78,12 @@ class ServiceFilter(django_filters.FilterSet):
             condition = None
             if param.data_type == 'int':
                 condition = self.get_condition(
-                    param_value, param, int, 17, IntData
+                    param_value, param, int, 17, IntData, mode
                 )
 
             if param.data_type == 'real':
                 condition = self.get_condition(
-                    param_value, param, float, 18, RealData
+                    param_value, param, float, 18, RealData, mode
                 )
 
             if param.data_type == 'enum':
@@ -70,17 +93,17 @@ class ServiceFilter(django_filters.FilterSet):
 
                 if enumeration.data_type == 'int':
                     condition = self.get_condition(
-                        param_value, param, int, 17, IntData
+                        param_value, param, int, 17, IntData, mode
                     )
 
                 if enumeration.data_type == 'real':
                     condition = self.get_condition(
-                        param_value, param, float, 18, RealData
+                        param_value, param, float, 18, RealData, mode
                     )
 
                 if enumeration.data_type == 'str':
                     condition = self.get_condition(
-                        param_value, param, str, 19, StringData
+                        param_value, param, str, 19, StringData, mode
                     )
 
                 condition = Q(
