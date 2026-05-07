@@ -11,7 +11,7 @@ class ServiceFilter(django_filters.FilterSet):
         if not value:
             return queryset
 
-        values = [v.strip() for v in str(value).split(',') if v.strip()]
+        values = [v.strip() for v in str(value).split('&') if v.strip()]
 
         # PATH 1: Direct terminate tables
         direct_condition = (
