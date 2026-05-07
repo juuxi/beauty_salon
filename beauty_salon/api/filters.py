@@ -26,22 +26,19 @@ class ServiceFilter(django_filters.FilterSet):
                                         for number params'})
             if mode == 'gt':
                 return (
-                    Q(parameter=param,
-                      content_type_id=content_type_id,
+                    Q(content_type_id=content_type_id,
                       data_object_id__in=(model.objects
                                           .filter(data__gt=param_value)))
                 )
             if mode == 'lt':
                 return (
-                    Q(parameter=param,
-                      content_type_id=content_type_id,
+                    Q(content_type_id=content_type_id,
                       data_object_id__in=(model.objects
                                           .filter(data__lt=param_value)))
                 )
 
         return (
-            Q(parameter=param,
-              content_type_id=content_type_id,
+            Q(content_type_id=content_type_id,
               data_object_id__in=(model.objects
                                   .filter(data=param_value)))
         )
@@ -80,14 +77,14 @@ class ServiceFilter(django_filters.FilterSet):
 
             condition = None
             if param.data_type == 'int':
-                condition = self.get_condition(
+                condition = Q(self.get_condition(
                     param_value, param, int, 17, IntData, mode
-                )
+                ), parameter=param)
 
             if param.data_type == 'real':
-                condition = self.get_condition(
+                condition = Q(self.get_condition(
                     param_value, param, float, 18, RealData, mode
-                )
+                ), parameter=param)
 
             if param.data_type == 'enum':
                 enumeration = Enumeration.objects.get(
@@ -113,7 +110,8 @@ class ServiceFilter(django_filters.FilterSet):
                     content_type_id=11,
                     data_object_id__in=Value.objects.filter(
                         condition
-                    )
+                    ),
+                    parameter=param
                 )
 
             matching_service_ids = (ParameterValueService.objects
