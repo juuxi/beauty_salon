@@ -20,7 +20,10 @@ class ServiceFilter(django_filters.FilterSet):
                                     be type {exp_type} \
                                     got {type(param_value).__name__}'})
 
-        if mode:  # str
+        if mode:
+            if exp_type != int and exp_type != float:
+                raise ValidationError({'values': 'mode is only availible \
+                                        for number params'})
             if mode == 'gt':
                 return (
                     Q(parameter=param,
