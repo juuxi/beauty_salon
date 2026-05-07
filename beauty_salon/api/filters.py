@@ -19,10 +19,11 @@ class ServiceFilter(django_filters.FilterSet):
                                     be type {exp_type} \
                                     got {type(param_value).__name__}'})
 
-        return (  # возвращает не по конкретеному параметру, а в общем
-            Q(content_type_id=c_type_id,
-                data_object_id__in=(model.objects
-                                    .filter(data=param_value)))
+        return (
+            Q(parameter=param,
+              content_type_id=c_type_id,
+              data_object_id__in=(model.objects
+                                  .filter(data=param_value)))
         )
 
     def filter_by_resolved_data(self, queryset, name, value):
