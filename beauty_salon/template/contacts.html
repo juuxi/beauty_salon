@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - Flora</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header__leaves">
+            <img src="https://pngimg.com/d/leaves_PNG100473.png" alt="Листья">
+        </div>
+        <div class="container header__inner">
+            <div class="logo">
+                <img src="https://png.pngtree.com/png-clipart/20220721/original/pngtree-cute-fairy-with-flowers-png-image_8388885.png" alt="Flora" class="logo__fairy">
+                <span class="logo__text">Flora</span>
+            </div>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li><a href="index.html" class="nav__link">Главная</a></li>
+                    <li><a href="services.html" class="nav__link">Услуги</a></li>
+                    <li><a href="appointment.html" class="nav__link">Запись</a></li>
+                    <li><a href="about.html" class="nav__link">О салоне</a></li>
+                    <li><a href="contacts.html" class="nav__link nav__link--active">Контакты</a></li>
+                </ul>
+            </nav>
+            <p class="header__slogan">Воплоти свои мечты в реальность!</p>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">Контакты</h1>
+            </div>
+        </section>
+
+        <section class="contacts-section">
+            <div class="container">
+                <div class="contacts-wrapper">
+                    <div class="contacts-info">
+                        <h2>Как с нами связаться</h2>
+                        
+                        <div class="contact-item">
+                            <div class="contact-item-icon">📍</div>
+                            <div class="contact-item-content">
+                                <h3>Адрес</h3>
+                                <p>г. Москва, ул. Цветочная, 12<br>м. Садовая (5 минут пешком)</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item-icon">📞</div>
+                            <div class="contact-item-content">
+                                <h3>Телефон</h3>
+                                <p>+7 (999) 123-45-67<br>+7 (999) 765-43-21</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item-icon">✉️</div>
+                            <div class="contact-item-content">
+                                <h3>Email</h3>
+                                <p>info@flora-salon.ru<br>booking@flora-salon.ru</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item-icon">🕐</div>
+                            <div class="contact-item-content">
+                                <h3>Режим работы</h3>
+                                <p>Пн-Пт: 9:00 - 21:00<br>Сб-Вс: 10:00 - 20:00</p>
+                            </div>
+                        </div>
+
+                        <div class="contacts-social">
+                            <h3>Мы в социальных сетях</h3>
+                            <div class="social-links">
+                                <a href="#" class="social-link">Instagram</a>
+                                <a href="#" class="social-link">VKontakte</a>
+                                <a href="#" class="social-link">Telegram</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contacts-form-wrapper">
+                        <h2>Напишите нам</h2>
+                        <form class="form" id="contactForm">
+                            <div class="form-group">
+                                <label for="contact-name">Ваше имя</label>
+                                <input type="text" id="contact-name" name="name" placeholder="Введите имя" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email" name="email" placeholder="example@mail.ru" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact-message">Сообщение</label>
+                                <textarea id="contact-message" name="message" rows="5" placeholder="Ваш вопрос или сообщение" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn--secondary btn--full">Отправить сообщение</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="contacts-map">
+                    <div class="map-placeholder">
+                        <p>📍 Карта проезда</p>
+                        <p class="map-note">Здесь будет интегрирована карта</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__inner">
+            <p>&copy; 2026 Салон красоты Flora</p>
+            <div class="footer__info">
+                <span>г. Москва, ул. Цветочная, 12</span>
+                <span>+7 (999) 123-45-67</span>
+                <span>info@flora-salon.ru</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Спасибо за сообщение! Мы ответим вам в ближайшее время.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
