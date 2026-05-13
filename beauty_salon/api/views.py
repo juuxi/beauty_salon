@@ -26,6 +26,10 @@ from .serializers import ClassifierNodeSerializer, EnumerationSerializer
 from .serializers import ValueSerializer, ParameterSerializer
 from .serializers import ClassifierNodeFunctionSerializer
 from .serializers import ServiceSerializer, ParameterNodeSerializer
+from .serializers import (
+    SubjectCategorySerializer,
+    OperationsClassifierSerializer,
+)
 
 
 class ClassifierNodeView(viewsets.ModelViewSet):
@@ -206,3 +210,13 @@ class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
         return ParameterNode.objects.filter(
             classifiernode_id=classifiernode_id
         ).order_by('num')
+
+
+class OperationsClassifierView(viewsets.ModelViewSet):
+    serializer_class = OperationsClassifierSerializer
+    queryset = OperationsClassifier.objects.all()
+
+
+class SubjectCategoryView(viewsets.ModelViewSet):
+    serializer_class = SubjectCategorySerializer
+    queryset = SubjectCategory.objects.all()

@@ -295,7 +295,7 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class SubjectSerializer(serializers.ModelSerializer):
+class OperationsClassifierSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Subject
-        fields = ('id', 'name', 'category')
+        model = OperationsClassifier
+        fields = ('id', 'name')
