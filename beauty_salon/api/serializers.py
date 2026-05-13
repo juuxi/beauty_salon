@@ -4,14 +4,14 @@ from django.db import transaction
 
 from .models import ClassifierNode, Enumeration, Value, Parameter, Service
 from .models import StringData, IntData, RealData, PictureData, ContentType
-from .models import ParameterValueService, ParameterAggregate
-from .models import ParameterAggregateMember, ParameterNode
+from .models import ParameterValueService
+from .models import ParameterNode
 
-
-def common_update(instance, validated_data):
-    for attr, value in validated_data.items():
-        setattr(instance, attr, value)
-    instance.save()
+from .utils import (
+    common_update,
+    create_type_based_data_object,
+    get_or_validation_error,
+)
 
 
 class ClassifierNodeSerializer(serializers.ModelSerializer):
@@ -74,30 +74,6 @@ class EnumerationSerializer(serializers.ModelSerializer):
         model = Enumeration
         fields = ('id', 'name', 'measuring_unit',
                   'data_type')
-
-
-def create_type_based_data_object(data_type, data):
-    if data_type == 'int':
-        data_obj = IntData.objects.create(data=data)
-    elif data_type == 'str':
-        data_obj = StringData.objects.create(data=data)
-    elif data_type == 'real':
-        data_obj = RealData.objects.create(data=data)
-    elif data_type == 'pic':
-        data_obj = PictureData.objects.create(data=data)
-    else:
-        raise serializers.ValidationError(f"Unknown type: {data_type}")
-    return data_obj
-
-
-def get_or_validation_error(model, id, field):
-    try:
-        obj = model.objects.get(id=id)
-    except model.DoesNotExist:
-        raise serializers.ValidationError({
-            'field': f'No {model} with id {id}'
-        })
-    return obj
 
 
 class ValueSerializer(serializers.ModelSerializer):
@@ -209,97 +185,28 @@ class ValueSerializer(serializers.ModelSerializer):
 
 
 class ParameterSerializer(serializers.ModelSerializer):
-    aggregate_members = serializers.JSONField(write_only=True, required=False)
 
     class Meta:
         model = Parameter
         fields = (
-            'id', 'name', 'data_type', 'enumeration', 'aggregate_members',
-            'measuring_unit'
+            'id', 'name', 'data_type', 'enumeration', 'measuring_unit'
         )
-
-    def validate_aggregate_members(self, aggregate_members):
-        if not isinstance(aggregate_members, list):
-            raise serializers.ValidationError('must be of type list')
-
-        for member in aggregate_members:
-            if not Parameter.objects.get(id=member):
-                raise serializers.ValidationError({f'No parameter \
-                                                   with id {id}'})
-
-        return aggregate_members
 
     def validate(self, data):
         data = super().validate(data)
-
-        if (data.get('data_type') == 'aggregate'
-           and not data.get('aggregate_members')):
-            raise serializers.ValidationError({'aggregate_members':
-                                               'Required for aggregate type.'})
 
         if data.get('data_type') == 'enum' and not data.get('enumeration'):
             raise serializers.ValidationError({'enumeration':
                                                'Required for enum type.'})
 
         if ((data.get('data_type') == 'int'
-           or data.get('data_type') == 'real'
-           or data.get('data_type') == 'aggregate')
+           or data.get('data_type') == 'real')
            and data.get('enumeration')):
             raise serializers.ValidationError({'enumeration':
                                                'Must be empty for '
-                                               'int/real/aggregate type.'})
-
-        if ((data.get('data_type') == 'int'
-           or data.get('data_type') == 'real'
-           or data.get('data_type') == 'enumeration')
-           and data.get('aggregate_members')):
-            raise serializers.ValidationError({'aggregate_members':
-                                               'Must be empty for'
-                                               'int/real/enum type.'})
+                                               'int/real type.'})
 
         return data
-
-    def cyclical_create_paraggr_member(self, aggregate, aggregate_members):
-        for i in range(1, len(aggregate_members) + 1):
-            param = Parameter.objects.get(id=aggregate_members[i - 1])
-            ParameterAggregateMember.objects.create(
-                num=i,
-                parameter=param,
-                aggregate=aggregate
-            )
-
-    @transaction.atomic
-    def create(self, validated_data):
-        aggregate_members = validated_data.pop('aggregate_members', [])
-        new_aggregate = None
-
-        if aggregate_members:
-            new_aggregate = ParameterAggregate.objects.create()
-            self.cyclical_create_paraggr_member(new_aggregate,
-                                                aggregate_members)
-
-        param_obj = Parameter.objects.create(
-            aggregate=new_aggregate,
-            **validated_data,
-        )
-
-        return param_obj
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        new_members_data = validated_data.pop('aggregate_members', None)
-
-        common_update(instance, validated_data)
-
-        if new_members_data is not None:
-            ParameterAggregateMember.objects.filter(
-                aggregate=instance.aggregate
-            ).delete()
-
-            self.cyclical_create_paraggr_member(instance.aggregate,
-                                                new_members_data)
-
-        return instance
 
 
 class ServiceSerializer(serializers.ModelSerializer):
