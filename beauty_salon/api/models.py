@@ -398,3 +398,31 @@ class ServicesOperations(models.Model):
 
     class Meta:
         db_table = 'services_operations'
+
+
+class SubjectRole(models.Model):
+    name = models.CharField(max_length=200, verbose_name='Название роли')
+
+    class Meta:
+        db_table = 'subject_roles'
+        verbose_name = 'Роль субъекта'
+        verbose_name_plural = 'Роли субъектов'
+
+
+class RolesOperations(models.Model):
+    operation = models.ForeignKey(
+        Operation,
+        on_delete=models.CASCADE,
+        related_name='subject_roles',
+        verbose_name='Операция',
+    )
+
+    subject_role = models.ForeignKey(
+        SubjectRole,
+        on_delete=models.CASCADE,
+        related_name='operations',
+        verbose_name='Параметр',
+    )
+
+    class Meta:
+        db_table = 'subject_roles_operations'
