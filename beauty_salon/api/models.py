@@ -311,7 +311,7 @@ class Operation(ModelWithTimestamp, CodedModel):
 
     services = models.ManyToManyField(
         Service,
-        db_table='services_operations',
+        through='OperationService',
         related_name='operations',
         blank=True,
     )
@@ -427,21 +427,15 @@ class Document(CodedModel, ModelWithTimestamp):
         related_name='documents'
     )
 
-    services = models.ManyToManyField(
-        Service,
-        through='DocumentService',
-        related_name='documents',
-    )
-
     class Meta:
         db_table = 'documents'
         verbose_name = 'Документ'
         verbose_name_plural = 'Документы'
 
 
-class DocumentService(models.Model):
-    document = models.ForeignKey(
-        Document,
+class OperationService(models.Model):
+    operation = models.ForeignKey(
+        Operation,
         on_delete=models.CASCADE,
     )
 
@@ -453,4 +447,4 @@ class DocumentService(models.Model):
     amount = models.IntegerField()
 
     class Meta:
-        db_table = 'documents_services'
+        db_table = 'operations_services'
