@@ -263,14 +263,12 @@ class OperationsClassifier(ModelWithTimestamp, CodedModel):
 class ParameterOperation(models.Model):
     parameter = models.ForeignKey(
         Parameter,
-        related_name='parameters_operations',
         on_delete=models.CASCADE,
         verbose_name='Параметр',
     )
 
     operation_node = models.ForeignKey(
         OperationsClassifier,
-        related_name='parameters_operations',
         on_delete=models.CASCADE,
         verbose_name='Узел классификатора',
     )
@@ -310,7 +308,7 @@ class Operation(ModelWithTimestamp, CodedModel):
         verbose_name='Базовый класс',
     )
 
-    operations = models.ManyToManyField(
+    services = models.ManyToManyField(
         Service,
         db_table='services_operations',
         related_name='operations'
@@ -424,9 +422,10 @@ class Document(CodedModel, ModelWithTimestamp):
         related_name='documents'
     )
 
-    service = models.ManyToManyField(
+    services = models.ManyToManyField(
         Service,
-        through='DocumentService'
+        through='DocumentService',
+        related_name='documents',
     )
 
     class Meta:
@@ -439,13 +438,11 @@ class DocumentService(models.Model):
     document = models.ForeignKey(
         Document,
         on_delete=models.CASCADE,
-        related_name='services',
     )
 
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
-        related_name='documents',
     )
 
     amount = models.IntegerField()
