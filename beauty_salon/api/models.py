@@ -349,7 +349,7 @@ class SubjectCategory(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название категории')
 
     class Meta:
-        db_table = 'subject_category'
+        db_table = 'subject_categories'
         verbose_name = 'Категория субъекта'
         verbose_name_plural = 'Категории субъектов'
 
