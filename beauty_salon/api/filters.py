@@ -10,8 +10,7 @@ from rest_framework.exceptions import ValidationError
 class ServiceFilter(django_filters.FilterSet):
     values = django_filters.CharFilter(method='filter_by_resolved_data')
 
-    def get_condition(self, param_value, param,
-                      exp_type, content_type_id, model, mode):
+    def get_condition(self, param_value, param, exp_type, content_type_id, model, mode):
         try:
             param_value = exp_type(param_value)
         except ValueError:
@@ -25,22 +24,19 @@ class ServiceFilter(django_filters.FilterSet):
                 raise ValidationError({'values': 'mode is only availible \
                                         for number params'})
             if mode == 'gt':
-                return (
-                    Q(content_type_id=content_type_id,
-                      data_object_id__in=(model.objects
-                                          .filter(data__gt=param_value)))
+                return Q(
+                    content_type_id=content_type_id,
+                    data_object_id__in=(model.objects.filter(data__gt=param_value)),
                 )
             if mode == 'lt':
-                return (
-                    Q(content_type_id=content_type_id,
-                      data_object_id__in=(model.objects
-                                          .filter(data__lt=param_value)))
+                return Q(
+                    content_type_id=content_type_id,
+                    data_object_id__in=(model.objects.filter(data__lt=param_value)),
                 )
 
-        return (
-            Q(content_type_id=content_type_id,
-              data_object_id__in=(model.objects
-                                  .filter(data=param_value)))
+        return Q(
+            content_type_id=content_type_id,
+            data_object_id__in=(model.objects.filter(data=param_value)),
         )
 
     def format_corruption_error(self):
@@ -72,24 +68,23 @@ class ServiceFilter(django_filters.FilterSet):
             except ValueError:
                 self.format_corruption_error()
             except Parameter.DoesNotExist:
-                raise ValidationError({'values':
-                                       'no parameter with this name'})
+                raise ValidationError({'values': 'no parameter with this name'})
 
             condition = None
             if param.data_type == 'int':
-                condition = Q(self.get_condition(
-                    param_value, param, int, 17, IntData, mode
-                ), parameter=param)
+                condition = Q(
+                    self.get_condition(param_value, param, int, 17, IntData, mode),
+                    parameter=param,
+                )
 
             if param.data_type == 'real':
-                condition = Q(self.get_condition(
-                    param_value, param, float, 18, RealData, mode
-                ), parameter=param)
+                condition = Q(
+                    self.get_condition(param_value, param, float, 18, RealData, mode),
+                    parameter=param,
+                )
 
             if param.data_type == 'enum':
-                enumeration = Enumeration.objects.get(
-                    id=param.enumeration_id
-                )
+                enumeration = Enumeration.objects.get(id=param.enumeration_id)
 
                 if enumeration.data_type == 'int':
                     condition = self.get_condition(
@@ -108,16 +103,15 @@ class ServiceFilter(django_filters.FilterSet):
 
                 condition = Q(
                     content_type_id=11,
-                    data_object_id__in=Value.objects.filter(
-                        condition
-                    ),
-                    parameter=param
+                    data_object_id__in=Value.objects.filter(condition),
+                    parameter=param,
                 )
 
-            matching_service_ids = (ParameterValueService.objects
-                                    .filter(condition)
-                                    .values_list('service', flat=True)
-                                    .distinct())
+            matching_service_ids = (
+                ParameterValueService.objects.filter(condition)
+                .values_list('service', flat=True)
+                .distinct()
+            )
 
             queryset = queryset.filter(id__in=matching_service_ids)
 

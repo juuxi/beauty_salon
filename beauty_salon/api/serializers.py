@@ -19,23 +19,27 @@ from .utils import (
 class ClassifierNodeSerializer(serializers.ModelSerializer):
     children = serializers.ListField(write_only=True, required=False)
     enumerations = serializers.PrimaryKeyRelatedField(
-        required=False,
-        many=True,
-        queryset=Enumeration.objects.all()
+        required=False, many=True, queryset=Enumeration.objects.all()
     )
     parameters = serializers.SerializerMethodField()
 
     def get_parameters(self, obj):
         return list(
-            obj.parameters_nodes
-            .order_by('num')
-            .values_list('parameter_id', flat=True)
+            obj.parameters_nodes.order_by('num').values_list('parameter_id', flat=True)
         )
 
     class Meta:
         model = ClassifierNode
-        fields = ('id', 'name', 'parent', 'is_terminal',
-                  'measuring_unit', 'children', 'enumerations', 'parameters')
+        fields = (
+            'id',
+            'name',
+            'parent',
+            'is_terminal',
+            'measuring_unit',
+            'children',
+            'enumerations',
+            'parameters',
+        )
 
     def create(self, validated_data):
         enumerations_data = validated_data.pop('enumerations', [])
@@ -74,8 +78,7 @@ class EnumerationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enumeration
-        fields = ('id', 'name', 'measuring_unit',
-                  'data_type')
+        fields = ('id', 'name', 'measuring_unit', 'data_type')
 
 
 class ValueSerializer(serializers.ModelSerializer):
@@ -83,8 +86,7 @@ class ValueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Value
-        fields = ('id', 'data', 'num', 'enumeration',
-                  'data')
+        fields = ('id', 'data', 'num', 'enumeration', 'data')
         read_only_fields = ('enumeration',)
 
     def validate_data(self, data):
@@ -139,9 +141,7 @@ class ParameterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Parameter
-        fields = (
-            'id', 'name', 'data_type', 'enumeration', 'measuring_unit'
-        )
+        fields = ('id', 'name', 'data_type', 'enumeration', 'measuring_unit')
 
     def validate(self, data):
         data = super().validate(data)
@@ -190,7 +190,7 @@ class ServiceSerializer(serializers.ModelSerializer):
                 content_type=content_type,
                 data_object_id=data_obj.id,
                 service=service_obj,
-                parameter=param
+                parameter=param,
             )
 
         return service_obj
@@ -204,8 +204,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         if values is not None:
             for value, param in zip(values, base_class.parameters.all()):
                 param_service_instance = (
-                    param.values_for_services
-                    .filter(service_id=instance.id)
+                    param.values_for_services.filter(service_id=instance.id)
                 )[0]
                 if param.data_type == 'int':
                     IntData.objects.get(
@@ -231,18 +230,21 @@ class ServiceSerializer(serializers.ModelSerializer):
         for param in base_class.parameters.all():
             if param.data_type == 'int':
                 values_text[param.name] = IntData.objects.get(
-                    id=(param.values_for_services
-                        .filter(service_id=instance.id)[0]).data_object_id
+                    id=(
+                        param.values_for_services.filter(service_id=instance.id)[0]
+                    ).data_object_id
                 ).data
             if param.data_type == 'real':
                 values_text[param.name] = RealData.objects.get(
-                    id=(param.values_for_services
-                        .filter(service_id=instance.id)[0]).data_object_id
+                    id=(
+                        param.values_for_services.filter(service_id=instance.id)[0]
+                    ).data_object_id
                 ).data
             if param.data_type == 'enum':
                 values_text[param.name] = Value.objects.get(
-                    id=(param.values_for_services
-                        .filter(service_id=instance.id)[0]).data_object_id
+                    id=(
+                        param.values_for_services.filter(service_id=instance.id)[0]
+                    ).data_object_id
                 ).data.data
         ret['values'] = values_text
         return ret
@@ -252,8 +254,14 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ParameterNode
-        fields = ('id', 'parameter', 'classifiernode',
-                  'min_param_value', 'max_param_value', 'num')
+        fields = (
+            'id',
+            'parameter',
+            'classifiernode',
+            'min_param_value',
+            'max_param_value',
+            'num',
+        )
         read_only_fields = ('classifiernode',)
 
     def validate_num(self, num):
