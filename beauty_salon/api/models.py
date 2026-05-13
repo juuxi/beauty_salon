@@ -386,3 +386,69 @@ class SubjectRole(models.Model):
         db_table = 'subject_roles'
         verbose_name = 'Роль субъекта'
         verbose_name_plural = 'Роли субъектов'
+
+
+class DocumentRole(models.Model):
+    name = models.CharField(max_length=200, verbose_name='Название роли')
+
+    operations = models.ManyToManyField(
+        OperationsClassifier,
+        db_table='document_roles_operation_nodes',
+        related_name='document_roles'
+    )
+
+    class Meta:
+        db_table = 'document_roles'
+        verbose_name = 'Роль документа'
+        verbose_name_plural = 'Роли документов'
+
+
+class Document(CodedModel, ModelWithTimestamp):
+    name = models.CharField(max_length=200, verbose_name='Название документа')
+
+    subjects = models.ManyToManyField(
+        Subject,
+        db_table='subjects_documents',
+        related_name='documents'
+    )
+
+    operation = models.ForeignKey(
+        Operation,
+        on_delete=models.CASCADE,
+        related_name='documents'
+    )
+
+    role = models.ForeignKey(
+        DocumentRole,
+        on_delete=models.CASCADE,
+        related_name='documents'
+    )
+
+    service = models.ManyToManyField(
+        Service,
+        through='DocumentService'
+    )
+
+    class Meta:
+        db_table = 'documents'
+        verbose_name = 'Документ'
+        verbose_name_plural = 'Документы'
+
+
+class DocumentService(models.Model):
+    document = models.ForeignKey(
+        Document,
+        on_delete=models.CASCADE,
+        related_name='services',
+    )
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='documents',
+    )
+
+    amount = models.IntegerField()
+
+    class Meta:
+        db_table = 'documents_services'
