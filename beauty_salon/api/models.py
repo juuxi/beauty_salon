@@ -337,3 +337,45 @@ class ParameterValueOperation(models.Model):
 
     class Meta:
         db_table = 'parameters_operations'
+
+
+class SubjectCategory(models.Model):
+    name = models.CharField(max_length=200, verbose_name='Название категории')
+
+    class Meta:
+        db_table = 'subject_category'
+        verbose_name = 'Категория субъекта'
+        verbose_name_plural = 'Категории субъектов'
+
+
+class Subject(ModelWithTimestamp):
+    name = models.CharField(max_length=200, verbose_name='Название субъекта')
+    category = models.ForeignKey(
+        SubjectCategory,
+        verbose_name='Категория субъекта',
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = 'subject'
+        verbose_name = 'Субъект'
+        verbose_name_plural = 'Субъекты'
+
+
+class SubjectOperation(models.Model):
+    operation = models.ForeignKey(
+        Operation,
+        on_delete=models.CASCADE,
+        related_name='subject_operations',
+        verbose_name='Операция',
+    )
+
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+        related_name='subjects_for_operations',
+        verbose_name='Параметр',
+    )
+
+    class Meta:
+        db_table = 'subjects_operations'
