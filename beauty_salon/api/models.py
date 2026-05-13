@@ -310,6 +310,12 @@ class Operation(ModelWithTimestamp, CodedModel):
         verbose_name='Базовый класс',
     )
 
+    operations = models.ManyToManyField(
+        Service,
+        db_table='services_operations',
+        related_name='operations'
+    )
+
     class Meta:
         db_table = 'operations'
         verbose_name = 'Операция'
@@ -355,6 +361,11 @@ class Subject(ModelWithTimestamp):
         verbose_name='Категория субъекта',
         on_delete=models.CASCADE,
     )
+    operations = models.ManyToManyField(
+        Operation,
+        db_table='subjects_operations',
+        related_name='subjects'
+    )
 
     class Meta:
         db_table = 'subject'
@@ -362,67 +373,16 @@ class Subject(ModelWithTimestamp):
         verbose_name_plural = 'Субъекты'
 
 
-class SubjectOperation(models.Model):
-    operation = models.ForeignKey(
-        Operation,
-        on_delete=models.CASCADE,
-        related_name='subjects_for_operations',
-        verbose_name='Операция',
-    )
-
-    subject = models.ForeignKey(
-        Subject,
-        on_delete=models.CASCADE,
-        related_name='subject_operations',
-        verbose_name='Параметр',
-    )
-
-    class Meta:
-        db_table = 'subjects_operations'
-
-
-class ServicesOperations(models.Model):
-    operation = models.ForeignKey(
-        Operation,
-        on_delete=models.CASCADE,
-        related_name='subject_operations',
-        verbose_name='Операция',
-    )
-
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.CASCADE,
-        related_name='operations_for_subject',
-        verbose_name='Параметр',
-    )
-
-    class Meta:
-        db_table = 'services_operations'
-
-
 class SubjectRole(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название роли')
+
+    operations = models.ManyToManyField(
+        OperationsClassifier,
+        db_table='subject_roles_operation_nodes',
+        related_name='subject_roles'
+    )
 
     class Meta:
         db_table = 'subject_roles'
         verbose_name = 'Роль субъекта'
         verbose_name_plural = 'Роли субъектов'
-
-
-class RolesOperations(models.Model):
-    operation = models.ForeignKey(
-        Operation,
-        on_delete=models.CASCADE,
-        related_name='subject_roles',
-        verbose_name='Операция',
-    )
-
-    subject_role = models.ForeignKey(
-        SubjectRole,
-        on_delete=models.CASCADE,
-        related_name='operations',
-        verbose_name='Параметр',
-    )
-
-    class Meta:
-        db_table = 'subject_roles_operations'
