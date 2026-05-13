@@ -243,3 +243,97 @@ class ParameterValueService(models.Model):
 
     class Meta:
         db_table = 'parameters_services'
+
+
+class OperationsClassifier(ModelWithTimestamp, CodedModel):
+    name = models.CharField(max_length=200, verbose_name="Название узла")
+    parameters = models.ManyToManyField(
+        Parameter,
+        through='ParameterOperation',
+        related_name='operations',
+        verbose_name='Параметры операции',
+    )
+
+    class Meta:
+        db_table = 'operations_classifier'
+        verbose_name = 'Класс хозяйственной операции'
+        verbose_name_plural = 'Классы хозяйственных операций'
+
+
+class ParameterOperation(models.Model):
+    parameter = models.ForeignKey(
+        Parameter,
+        related_name='parameters_operations',
+        on_delete=models.CASCADE,
+        verbose_name='Параметр',
+    )
+
+    operation_node = models.ForeignKey(
+        OperationsClassifier,
+        related_name='parameters_operations',
+        on_delete=models.CASCADE,
+        verbose_name='Узел классификатора',
+    )
+
+    min_param_value = models.IntegerField(
+        null=True, blank=True, verbose_name='Минимальное значение'
+    )
+
+    max_param_value = models.IntegerField(
+        null=True, blank=True, verbose_name='Максимальное значение'
+    )
+
+    num = models.IntegerField(verbose_name='Позиция')
+
+    class Meta:
+        db_table = 'parameters_operation_nodes'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['parameter', 'operation_node'],
+                name='unique_parameter_operation_node_constraint',
+            ),
+            models.UniqueConstraint(
+                fields=['operation_node', 'num'],
+                name='unique_operation_node_num_constraint',
+                deferrable=models.Deferrable.DEFERRED,
+            ),
+        ]
+
+
+class Operation(ModelWithTimestamp, CodedModel):
+    name = models.CharField(max_length=200, verbose_name='Название операции')
+
+    base_class = models.ForeignKey(
+        OperationsClassifier,
+        on_delete=models.CASCADE,
+        related_name='operations',
+        verbose_name='Базовый класс',
+    )
+
+    class Meta:
+        db_table = 'operations'
+        verbose_name = 'Операция'
+        verbose_name_plural = 'Операции'
+
+
+class ParameterValueOperation(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    data_object_id = models.PositiveIntegerField()
+    value = GenericForeignKey('content_type', 'data_object_id')
+
+    operation = models.ForeignKey(
+        Operation,
+        on_delete=models.CASCADE,
+        related_name='parameter_operations',
+        verbose_name='Операция',
+    )
+
+    parameter = models.ForeignKey(
+        Parameter,
+        on_delete=models.CASCADE,
+        related_name='values_for_operations',
+        verbose_name='Параметр',
+    )
+
+    class Meta:
+        db_table = 'parameters_operations'
