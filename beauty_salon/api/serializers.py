@@ -4,6 +4,15 @@ from .models import ClassifierNode, Enumeration, Value, Parameter, Service
 from .models import IntData, RealData, ContentType
 from .models import ParameterValueService
 from .models import ParameterNode
+from .models import (
+    Document,
+    DocumentRole,
+    OperationsClassifier,
+    Operation,
+    Subject,
+    SubjectRole,
+    SubjectCategory,
+)
 
 from .utils import (
     common_update,
@@ -278,3 +287,15 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
         )
 
         return param_node_obj
+
+
+class SubjectCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectCategory
+        fields = ('id', 'name')
+
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ('id', 'name', 'category')

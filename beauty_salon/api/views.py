@@ -13,6 +13,15 @@ from .filters import ServiceFilter
 from .models import ClassifierNode, Enumeration
 from .models import Value, Parameter, Service
 from .models import ParameterNode
+from .models import (
+    Document,
+    DocumentRole,
+    OperationsClassifier,
+    Operation,
+    Subject,
+    SubjectRole,
+    SubjectCategory,
+)
 from .serializers import ClassifierNodeSerializer, EnumerationSerializer
 from .serializers import ValueSerializer, ParameterSerializer
 from .serializers import ClassifierNodeFunctionSerializer

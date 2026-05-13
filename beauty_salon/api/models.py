@@ -252,6 +252,7 @@ class OperationsClassifier(ModelWithTimestamp, CodedModel):
         through='ParameterOperation',
         related_name='operations',
         verbose_name='Параметры операции',
+        blank=True,
     )
 
     class Meta:
@@ -311,7 +312,8 @@ class Operation(ModelWithTimestamp, CodedModel):
     services = models.ManyToManyField(
         Service,
         db_table='services_operations',
-        related_name='operations'
+        related_name='operations',
+        blank=True,
     )
 
     class Meta:
@@ -362,7 +364,8 @@ class Subject(ModelWithTimestamp):
     operations = models.ManyToManyField(
         Operation,
         db_table='subjects_operations',
-        related_name='subjects'
+        related_name='subjects',
+        blank=True,
     )
 
     class Meta:
@@ -377,7 +380,8 @@ class SubjectRole(models.Model):
     operations = models.ManyToManyField(
         OperationsClassifier,
         db_table='subject_roles_operation_nodes',
-        related_name='subject_roles'
+        related_name='subject_roles',
+        blank=True,
     )
 
     class Meta:
@@ -392,7 +396,8 @@ class DocumentRole(models.Model):
     operations = models.ManyToManyField(
         OperationsClassifier,
         db_table='document_roles_operation_nodes',
-        related_name='document_roles'
+        related_name='document_roles',
+        blank=True,
     )
 
     class Meta:
