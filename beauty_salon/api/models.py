@@ -324,14 +324,14 @@ class ParameterValueOperation(models.Model):
     operation = models.ForeignKey(
         Operation,
         on_delete=models.CASCADE,
-        related_name='parameter_operations',
+        related_name='operation_parameters',
         verbose_name='Операция',
     )
 
     parameter = models.ForeignKey(
         Parameter,
         on_delete=models.CASCADE,
-        related_name='values_for_operations',
+        related_name='operations_for_parameter',
         verbose_name='Параметр',
     )
 
@@ -366,16 +366,35 @@ class SubjectOperation(models.Model):
     operation = models.ForeignKey(
         Operation,
         on_delete=models.CASCADE,
-        related_name='subject_operations',
+        related_name='subjects_for_operations',
         verbose_name='Операция',
     )
 
     subject = models.ForeignKey(
         Subject,
         on_delete=models.CASCADE,
-        related_name='subjects_for_operations',
+        related_name='subject_operations',
         verbose_name='Параметр',
     )
 
     class Meta:
         db_table = 'subjects_operations'
+
+
+class ServicesOperations(models.Model):
+    operation = models.ForeignKey(
+        Operation,
+        on_delete=models.CASCADE,
+        related_name='subject_operations',
+        verbose_name='Операция',
+    )
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='operations_for_subject',
+        verbose_name='Параметр',
+    )
+
+    class Meta:
+        db_table = 'services_operations'
