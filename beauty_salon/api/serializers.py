@@ -486,3 +486,30 @@ class OperationSerializer(serializers.ModelSerializer):
                 ).data.data
         ret['values'] = values_text
         return ret
+
+
+class DocumentSerializer(serializers.ModelSerializer):
+    subjects = serializers.SerializerMethodField()
+    services = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Document
+        fields = ('id', 'name', 'operation', 'role', 'code', 'subjects', 'services')
+
+    def get_subjects(self, obj):
+        subjects = obj.operation.subjects.filter(operations=obj.operation)
+        roles = obj.operation.base_class.subject_roles.filter(operations=obj.operation.base_class)
+        return [
+            {
+                'role': role.name,
+                'subject': subject.name
+            }
+            for subject, role in zip(subjects, roles)
+        ]
+
+    def get_services(self, obj):
+        services_operations = obj.operation.services.through.objects.filter(operation=obj.operation)
+        return [
+            f'{service_operation.service.name}: {service_operation.amount}'
+            for service_operation in services_operations
+        ]

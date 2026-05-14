@@ -35,6 +35,7 @@ from .serializers import (
     ParameterOperationSerializer,
     SubjectSerializer,
     OperationSerializer,
+    DocumentSerializer,
 )
 
 
@@ -261,3 +262,8 @@ class OperationView(viewsets.ModelViewSet):
     def get_queryset(self):
         base_class_id = self.kwargs['node_id']
         return Operation.objects.filter(base_class_id=base_class_id).order_by('id')
+
+
+class DocumentView(viewsets.ModelViewSet):
+    serializer_class = DocumentSerializer
+    queryset = Document.objects.all()
