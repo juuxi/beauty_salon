@@ -9,7 +9,11 @@ base_router.register('classifier', views.ClassifierNodeView, 'classifier')
 base_router.register('enumerations', views.EnumerationView, 'enumerations')
 base_router.register('parameters', views.ParameterView, 'parameters')
 base_router.register('subject_categories', views.SubjectCategoryView, 'subject_categories')
-base_router.register('operations', views.OperationsClassifierView, 'operations')
+base_router.register(
+    'operations_classifier',
+    views.OperationsClassifierView,
+    'operations_classifier'
+)
 base_router.register('subject_roles', views.SubjectRoleView, 'subject_roles')
 base_router.register('document_roles', views.DocumentRoleView, 'document_roles')
 
