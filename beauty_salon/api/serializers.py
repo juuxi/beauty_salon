@@ -299,3 +299,15 @@ class OperationsClassifierSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperationsClassifier
         fields = ('id', 'name')
+
+
+class SubjectRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectRole
+        fields = ('id', 'name')
+
+
+class DocumentRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentRole
+        fields = ('id', 'name')

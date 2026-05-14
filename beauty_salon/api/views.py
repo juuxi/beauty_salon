@@ -29,6 +29,8 @@ from .serializers import ServiceSerializer, ParameterNodeSerializer
 from .serializers import (
     SubjectCategorySerializer,
     OperationsClassifierSerializer,
+    SubjectRoleSerializer,
+    DocumentRoleSerializer,
 )
 
 
@@ -220,3 +222,13 @@ class OperationsClassifierView(viewsets.ModelViewSet):
 class SubjectCategoryView(viewsets.ModelViewSet):
     serializer_class = SubjectCategorySerializer
     queryset = SubjectCategory.objects.all()
+
+
+class SubjectRoleView(viewsets.ModelViewSet):
+    serializer_class = SubjectRoleSerializer
+    queryset = SubjectRole.objects.all()
+
+
+class DocumentRoleView(viewsets.ModelViewSet):
+    serializer_class = DocumentRoleSerializer
+    queryset = DocumentRole.objects.all()
