@@ -369,7 +369,7 @@ class Subject(ModelWithTimestamp):
     )
 
     class Meta:
-        db_table = 'subject'
+        db_table = 'subjects'
         verbose_name = 'Субъект'
         verbose_name_plural = 'Субъекты'
 
