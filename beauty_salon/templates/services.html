@@ -1,204 +1,196 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Услуги - Flora</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="header">
-        <div class="header__leaves">
-            <img src="https://pngimg.com/d/leaves_PNG100473.png" alt="Листья">
-        </div>
-        <div class="container header__inner">
-            <div class="logo">
-                <img src="https://png.pngtree.com/png-clipart/20220721/original/pngtree-cute-fairy-with-flowers-png-image_8388885.png" alt="Flora" class="logo__fairy">
-                <span class="logo__text">Flora</span>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Услуги - Flora{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Справочник услуг</h1>
+        <button class="btn btn--primary open-modal-btn" data-modal="serviceModal">+ Добавить услугу</button>
+    </div>
+
+    <div class="filter-panel">
+        <h3>Фильтры</h3>
+        <form class="filter-form" method="get">
+            <div class="filter-group">
+                <label for="category">Категория</label>
+                <select id="category" name="category">
+                    <option value="">Все</option>
+                    <option value="makeup">Макияж</option>
+                    <option value="hair">Стрижки</option>
+                </select>
             </div>
-            <nav class="nav">
-                <ul class="nav__list">
-                    <li><a href="index.html" class="nav__link">Главная</a></li>
-                    <li><a href="services.html" class="nav__link nav__link--active">Услуги</a></li>
-                    <li><a href="appointment.html" class="nav__link">Запись</a></li>
-                    <li><a href="about.html" class="nav__link">О салоне</a></li>
-                    <li><a href="contacts.html" class="nav__link">Контакты</a></li>
-                </ul>
-            </nav>
-            <p class="header__slogan">Воплоти свои мечты в реальность!</p>
-        </div>
-    </header>
-
-    <main class="main">
-        <section class="page-header">
-            <div class="container">
-                <h1 class="page-title">Каталог услуг</h1>
+            <div class="filter-group">
+                <label for="price_from">Цена от</label>
+                <input type="number" id="price_from" name="price_from" placeholder="0">
             </div>
-        </section>
+            <div class="filter-group">
+                <label for="price_to">Цена до</label>
+                <input type="number" id="price_to" name="price_to" placeholder="10000">
+            </div>
+            <button type="submit" class="btn btn--secondary">Применить</button>
+        </form>
+    </div>
 
-        <section class="services-full">
-            <div class="container">
-                <div class="services-grid">
-                    <div class="service-category">
-                        <h2>Макияж</h2>
-                        <div class="service-list">
-                            <div class="service-item">
-                                <h3>Свадебный макияж</h3>
-                                <p>Стойкий макияж для самого важного дня</p>
-                                <div class="service-details">
-                                    <span>90 мин</span>
-                                    <span>от 3500 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Нюдовый макияж</h3>
-                                <p>Естественный дневной макияж</p>
-                                <div class="service-details">
-                                    <span>45 мин</span>
-                                    <span>от 2000 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Вечерний макияж</h3>
-                                <p>Яркий образ для особых случаев</p>
-                                <div class="service-details">
-                                    <span>60 мин</span>
-                                    <span>от 2500 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="service-category">
-                        <h2>Брови</h2>
-                        <div class="service-list">
-                            <div class="service-item">
-                                <h3>Коррекция бровей</h3>
-                                <p>Придание идеальной формы</p>
-                                <div class="service-details">
-                                    <span>30 мин</span>
-                                    <span>от 800 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Окрашивание бровей</h3>
-                                <p>Краска или хна на выбор</p>
-                                <div class="service-details">
-                                    <span>20 мин</span>
-                                    <span>от 600 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Долговременная укладка</h3>
-                                <p>Эффект на 4-6 недель</p>
-                                <div class="service-details">
-                                    <span>45 мин</span>
-                                    <span>от 1500 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="service-category">
-                        <h2>Ресницы</h2>
-                        <div class="service-list">
-                            <div class="service-item">
-                                <h3>Наращивание ресниц</h3>
-                                <p>Классика или объем 2D-3D</p>
-                                <div class="service-details">
-                                    <span>120-180 мин</span>
-                                    <span>от 2500 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Ламинирование ресниц</h3>
-                                <p>Изгиб и питание ресниц</p>
-                                <div class="service-details">
-                                    <span>60 мин</span>
-                                    <span>от 1800 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="service-category">
-                        <h2>Парикмахерские услуги</h2>
-                        <div class="service-list">
-                            <div class="service-item">
-                                <h3>Стрижка женская</h3>
-                                <p>Любая сложность</p>
-                                <div class="service-details">
-                                    <span>60 мин</span>
-                                    <span>от 1500 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Окрашивание волос</h3>
-                                <p>В один тон или сложное</p>
-                                <div class="service-details">
-                                    <span>120-240 мин</span>
-                                    <span>от 3000 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="service-category">
-                        <h2>Ногтевые услуги</h2>
-                        <div class="service-list">
-                            <div class="service-item">
-                                <h3>Маникюр с покрытием</h3>
-                                <p>Гель-лак или обычный лак</p>
-                                <div class="service-details">
-                                    <span>90 мин</span>
-                                    <span>от 1500 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Педикюр</h3>
-                                <p>Полный уход за стопами</p>
-                                <div class="service-details">
-                                    <span>120 мин</span>
-                                    <span>от 2000 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                            <div class="service-item">
-                                <h3>Наращивание ногтей</h3>
-                                <p>Гель или акрил</p>
-                                <div class="service-details">
-                                    <span>150 мин</span>
-                                    <span>от 2500 ₽</span>
-                                </div>
-                                <a href="appointment.html" class="btn btn--primary btn--small">Записаться</a>
-                            </div>
-                        </div>
-                    </div>
+    <div class="services-grid">
+        {% for service in services %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ service.name }}</h3>
+                <div class="card__actions">
+                    <button class="btn btn--icon btn-edit open-modal-btn" data-modal="serviceModal" data-edit="true" data-id="{{ service.id }}">✏️</button>
+                    <button class="btn btn--icon btn-delete" data-delete="{{ service.id }}">🗑️</button>
                 </div>
             </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer__inner">
-            <p>&copy; 2026 Салон красоты Flora</p>
-            <div class="footer__info">
-                <span>г. Москва, ул. Цветочная, 12</span>
-                <span>+7 (999) 123-45-67</span>
-                <span>info@flora-salon.ru</span>
+            <div class="card__meta">
+                <span class="card__tag">{{ service.category }}</span>
+                <span class="card__tag">{{ service.duration }} мин</span>
+                <span class="card__tag">{{ service.price }} ₽</span>
             </div>
+            <div class="card__body">
+                {{ service.description }}
+            </div>
+            <a href="{% url 'service_detail' service.id %}" class="card__link">Подробнее →</a>
         </div>
-    </footer>
-</body>
-</html>
+        {% empty %}
+        <p>Услуги пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal Window for Service -->
+<div class="modal-overlay" id="serviceModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Создание услуги</h2>
+            <button class="modal-close" data-close="serviceModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form class="modal-form" id="serviceForm" method="post" action="{% url 'service_create' %}">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="s-name">Название <span class="required">*</span></label>
+                        <input type="text" id="s-name" name="name" placeholder="Введите название услуги" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-category">Категория <span class="required">*</span></label>
+                        <select id="s-category" name="category" required>
+                            <option value="" disabled selected>Выберите категорию</option>
+                            <option value="makeup">Макияж</option>
+                            <option value="brows">Брови</option>
+                            <option value="lashes">Ресницы</option>
+                            <option value="hair">Парикмахерские</option>
+                            <option value="nails">Ногтевые</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="s-desc">Описание</label>
+                    <textarea id="s-desc" name="description" rows="3" placeholder="Подробное описание процедуры..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="s-duration">Длительность (мин)</label>
+                        <input type="number" id="s-duration" name="duration" placeholder="60" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="s-price">Стоимость (₽)</label>
+                        <input type="number" id="s-price" name="price" placeholder="1500" min="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="s-status">Статус</label>
+                    <select id="s-status" name="status">
+                        <option value="active">Активно</option>
+                        <option value="draft">Черновик</option>
+                        <option value="archived">Архив</option>
+                    </select>
+                </div>
+
+                <div class="form-error" id="serviceError" style="display: none;">
+                    ⚠️ Пожалуйста, заполните обязательные поля корректно.
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn--outline" data-close="serviceModal">Отмена</button>
+            <button type="submit" form="serviceForm" class="btn btn--primary">Сохранить</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const openButtons = document.querySelectorAll('.open-modal-btn');
+    const closeButtons = document.querySelectorAll('[data-close]');
+    const overlays = document.querySelectorAll('.modal-overlay');
+
+    function openModal(modalId, isEdit = false) {
+        const modal = document.getElementById(modalId);
+        const title = document.getElementById('modalTitle');
+        
+        if (isEdit) {
+            title.textContent = 'Редактирование услуги';
+        } else {
+            title.textContent = 'Создание услуги';
+            document.getElementById('serviceForm').reset();
+        }
+        
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            const error = modal.querySelector('.form-error');
+            if (error) error.style.display = 'none';
+        }
+    }
+
+    openButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal');
+            const isEdit = this.getAttribute('data-edit') === 'true';
+            openModal(modalId, isEdit);
+        });
+    });
+
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-close');
+            closeModal(modalId);
+        });
+    });
+
+    overlays.forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeModal(overlay.id);
+            }
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            overlays.forEach(overlay => {
+                if (overlay.classList.contains('active')) {
+                    closeModal(overlay.id);
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

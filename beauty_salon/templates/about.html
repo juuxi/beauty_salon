@@ -1,97 +1,30 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>О салоне - Flora</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="header">
-        <div class="header__leaves">
-            <img src="https://pngimg.com/d/leaves_PNG100473.png" alt="Листья">
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}О системе - Flora{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">О системе</h1>
+    </div>
+
+    <div class="about-content">
+        <div class="about-text">
+            <h2>Автоматизация салона красоты</h2>
+            <p>Система Flora предназначена для комплексного управления справочниками салона красоты. Она позволяет гибко настраивать структуру услуг, параметры и характеристики без изменения программного кода.</p>
+            
+            <h3>Основные возможности:</h3>
+            <ul class="about-list">
+                <li>🌸 Иерархический классификатор услуг</li>
+                <li>🌸 Динамические параметры с наследованием</li>
+                <li>🌸 Управление перечислениями и единицами измерения</li>
+                <li>🌸 Группировка характеристик (агрегаты)</li>
+            </ul>
         </div>
-        <div class="container header__inner">
-            <div class="logo">
-                <img src="https://png.pngtree.com/png-clipart/20220721/original/pngtree-cute-fairy-with-flowers-png-image_8388885.png" alt="Flora" class="logo__fairy">
-                <span class="logo__text">Flora</span>
-            </div>
-            <nav class="nav">
-                <ul class="nav__list">
-                    <li><a href="index.html" class="nav__link">Главная</a></li>
-                    <li><a href="services.html" class="nav__link">Услуги</a></li>
-                    <li><a href="appointment.html" class="nav__link">Запись</a></li>
-                    <li><a href="about.html" class="nav__link nav__link--active">О салоне</a></li>
-                    <li><a href="contacts.html" class="nav__link">Контакты</a></li>
-                </ul>
-            </nav>
-            <p class="header__slogan">Воплоти свои мечты в реальность!</p>
+        <div class="about-image">
+            <img src="{% static 'images/flora about.jpg' %}" alt="О системе Flora">
         </div>
-    </header>
-
-    <main class="main">
-        <section class="page-header">
-            <div class="container">
-                <h1 class="page-title">О нашем салоне</h1>
-            </div>
-        </section>
-
-        <section class="about-section">
-            <div class="container">
-                <div class="about-content">
-                    <div class="about-text">
-                        <h2>Добро пожаловать в Flora</h2>
-                        <p>Салон красоты Flora — это место, где воплощаются ваши мечты о красоте и гармонии. Мы создали пространство, где каждый клиент может расслабиться и довериться профессионалам.</p>
-                        
-                        <h3>Наши преимущества</h3>
-                        <ul class="about-list">
-                            <li>Опытные мастера с многолетним стажем</li>
-                            <li>Премиальная косметика и материалы</li>
-                            <li>Уютная атмосфера и индивидуальный подход</li>
-                            <li>Современное оборудование</li>
-                            <li>Удобное расположение</li>
-                        </ul>
-
-                        <h3>Наша философия</h3>
-                        <p>Мы верим, что красота — это не только внешность, но и внутреннее состояние. Наша задача — помочь вам почувствовать себя уверенными и прекрасными.</p>
-                    </div>
-
-                    <div class="about-image">
-                        <img src="https://png.pngtree.com/png-clipart/20220721/original/pngtree-cute-fairy-with-flowers-png-image_8388885.png" alt="Flora - фея красоты">
-                    </div>
-                </div>
-
-                <div class="about-stats">
-                    <div class="stat">
-                        <span class="stat-number">10+</span>
-                        <span class="stat-label">лет опыта</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">5000+</span>
-                        <span class="stat-label">довольных клиентов</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">15</span>
-                        <span class="stat-label">мастеров</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">50+</span>
-                        <span class="stat-label">видов услуг</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer__inner">
-            <p>&copy; 2026 Салон красоты Flora</p>
-            <div class="footer__info">
-                <span>г. Москва, ул. Цветочная, 12</span>
-                <span>+7 (999) 123-45-67</span>
-                <span>info@flora-salon.ru</span>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}
