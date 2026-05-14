@@ -298,7 +298,7 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
 class OperationsClassifierSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperationsClassifier
-        fields = ('id', 'name', 'subject_roles', 'document_roles')
+        fields = ('id', 'name', 'subject_roles', 'document_roles', 'code')
 
 
 class SubjectRoleSerializer(serializers.ModelSerializer):
