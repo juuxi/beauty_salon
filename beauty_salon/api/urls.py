@@ -31,6 +31,7 @@ operations_classifier_nested_router.register(
     views.ParameterOperationsView,
     'parameters'
 )
+operations_classifier_nested_router.register('operations', views.OperationView, 'operations')
 
 app_name = 'api'
 

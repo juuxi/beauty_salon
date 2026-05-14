@@ -7,7 +7,6 @@ from .models import (
     PictureData,
     Value,
     Enumeration,
-    ClassifierNode,
     ParameterNode,
     ParameterOperation,
 )
@@ -37,7 +36,7 @@ def get_or_validation_error(model, id, field):
     try:
         obj = model.objects.get(id=id)
     except model.DoesNotExist:
-        raise serializers.ValidationError({'field': f'No {model} with id {id}'})
+        raise serializers.ValidationError({f'{field}': f'No {model} with id {id}'})
     return obj
 
 
@@ -109,10 +108,10 @@ def parameter_validate_general(data):
     return data
 
 
-def service_validate_general(view, values, data):
+def service_operation_validate_general(view, values, data, base_model, is_oper=False):
     values = data.get('values')
     base_class_id = view.kwargs.get('node_id')
-    base_class = get_or_validation_error(ClassifierNode, base_class_id, 'base_class')
+    base_class = get_or_validation_error(base_model, base_class_id, 'base_class')
 
     if len(values) != base_class.parameters.count():
         raise serializers.ValidationError(
@@ -131,7 +130,10 @@ def service_validate_general(view, values, data):
                     {param.name} got {type(value).__name__}'}
                 )
 
-            param_node = base_class.parameters_nodes.get(parameter=param)
+            if is_oper:
+                param_node = base_class.parameters.through.objects.get(parameter=param)
+            else:
+                param_node = base_class.parameters_nodes.get(parameter=param)
             if param_node.min_param_value and value < param_node.min_param_value:
                 raise serializers.ValidationError({'values': f'value {value} is \
                                                     smaller than min_val \

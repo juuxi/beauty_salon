@@ -13,6 +13,8 @@ from .models import (
     SubjectRole,
     SubjectCategory,
     ParameterOperation,
+    ParameterValueOperation,
+    OperationService,
 )
 
 from .utils import (
@@ -21,9 +23,10 @@ from .utils import (
     value_validate_data,
     value_validate_num,
     parameter_validate_general,
-    service_validate_general,
+    service_operation_validate_general,
     parameter_node_validate_num,
     parameter_operation_validate_num,
+    get_or_validation_error,
 )
 
 
@@ -170,7 +173,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     def validate(self, data):
         values = data.get('values')
         view = self.context['view']
-        service_validate_general(view, values, data)
+        return service_operation_validate_general(view, values, data, ClassifierNode)
 
     def get_base_class(self):
         view = self.context['view']
@@ -348,3 +351,138 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = ('id', 'name', 'category')
+
+
+class OperationSerializer(serializers.ModelSerializer):
+    values = serializers.JSONField(write_only=True)
+    amounts = serializers.JSONField(write_only=True)
+
+    class Meta:
+        model = Operation
+        fields = ('id', 'name', 'base_class', 'services', 'amounts', 'subjects', 'values')
+        read_only_fields = ('base_class',)
+
+    def validate_subjects(self, subjects):
+        if len(subjects) != self.get_base_class().subject_roles.count():
+            raise serializers.ValidationError(
+                    {'subjects': 'length must be the same as in base class\' subject_roles'}
+                )
+        return subjects
+
+    def validate_services(self, services):
+        for service in services:
+            get_or_validation_error(Service, service, 'services')
+        return services
+
+    def validate(self, data):
+        request = self.context.get('request')
+        values = data.get('values')
+        services = request.data.get('services', [])
+        amounts = data.get('amounts')
+        view = self.context['view']
+        if len(services) != len(amounts):
+            raise serializers.ValidationError(
+                    {'amounts': 'size must be the same as service\'s'}
+                )
+        return service_operation_validate_general(view, values, data, OperationsClassifier, True)
+
+    def get_base_class(self):
+        view = self.context['view']
+        base_class_id = view.kwargs.get('node_id')
+        base_class = OperationsClassifier.objects.get(id=base_class_id)
+        return base_class
+
+    def create(self, validated_data):
+        values = validated_data.pop('values')
+        services = self.initial_data.get('services', [])
+        amounts = validated_data.pop('amounts')
+        subjects = validated_data.pop('subjects', [])
+        base_class = self.get_base_class()
+
+        operation_obj = Operation.objects.create(
+            **validated_data,
+            base_class=base_class,
+        )
+
+        for value, param in zip(values, base_class.parameters.all()):
+            if param.data_type == 'int':
+                data_obj = IntData.objects.create(data=value)
+            if param.data_type == 'real':
+                data_obj = RealData.objects.create(data=value)
+            if param.data_type == 'enum':
+                data_obj = Value.objects.get(id=value)
+
+            content_type = ContentType.objects.get_for_model(data_obj)
+
+            ParameterValueOperation.objects.create(
+                content_type=content_type,
+                data_object_id=data_obj.id,
+                operation=operation_obj,
+                parameter=param,
+            )
+
+        for service_id, amount in zip(services, amounts):
+            OperationService.objects.create(
+                operation=operation_obj,
+                service_id=service_id,
+                amount=amount
+            )
+
+        if subjects:
+            operation_obj.subjects.set(subjects)
+
+        return operation_obj
+
+    def update(self, instance, validated_data):
+        values = validated_data.pop('values', None)
+        base_class = self.get_base_class()
+
+        common_update(instance, validated_data)
+
+        if values is not None:
+            for value, param in zip(values, base_class.parameters.all()):
+                param_operation_instance = (
+                    param.operations_for_parameter.filter(operation_id=instance.id)
+                )[0]
+                if param.data_type == 'int':
+                    IntData.objects.get(
+                        id=param_operation_instance.data_object_id
+                    ).delete()
+                    data_obj = IntData.objects.create(data=value)
+                if param.data_type == 'real':
+                    RealData.objects.get(
+                        id=param_operation_instance.data_object_id
+                    ).delete()
+                    data_obj = RealData.objects.create(data=value)
+                if param.data_type == 'enum':
+                    data_obj = Value.objects.get(id=value)
+                param_operation_instance.data_object_id = data_obj.id
+                param_operation_instance.save()
+
+        return instance
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        base_class = instance.base_class
+        values_text = {}
+        for param in base_class.parameters.all():
+            if param.data_type == 'int':
+                values_text[param.name] = IntData.objects.get(
+                    id=(
+                        param.operations_for_parameter.filter(operation_id=instance.id)[0]
+                    ).data_object_id
+                ).data
+            if param.data_type == 'real':
+                values_text[param.name] = RealData.objects.get(
+                    id=(
+                        param.operations_for_parameter.filter(operation_id=instance.id)[0]
+                    ).data_object_id
+                ).data
+            if param.data_type == 'enum':
+                values_text[param.name] = Value.objects.get(
+                    id=(
+                        param.operations_for_parameter.filter(operation_id=instance.id)[0]
+                    ).data_object_id
+                ).data.data
+        ret['values'] = values_text
+        return ret
