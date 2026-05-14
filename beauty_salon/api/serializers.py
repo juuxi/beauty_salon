@@ -342,3 +342,9 @@ class DocumentRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentRole
         fields = ('id', 'name')
+
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ('id', 'name', 'category')

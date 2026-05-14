@@ -16,6 +16,7 @@ base_router.register(
 )
 base_router.register('subject_roles', views.SubjectRoleView, 'subject_roles')
 base_router.register('document_roles', views.DocumentRoleView, 'document_roles')
+base_router.register('subjects', views.SubjectView, 'subjects')
 
 value_router = routers.DefaultRouter()
 value_router.register('values', views.ValueView, 'value')

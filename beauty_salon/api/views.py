@@ -33,6 +33,7 @@ from .serializers import (
     SubjectRoleSerializer,
     DocumentRoleSerializer,
     ParameterOperationSerializer,
+    SubjectSerializer,
 )
 
 
@@ -246,3 +247,8 @@ class ParameterOperationsView(OrderingUpdateMixin, viewsets.ModelViewSet):
         return ParameterOperation.objects.filter(
             operation_node_id=operation_node_id
         ).order_by('num')
+
+
+class SubjectView(viewsets.ModelViewSet):
+    serializer_class = SubjectSerializer
+    queryset = Subject.objects.all()
