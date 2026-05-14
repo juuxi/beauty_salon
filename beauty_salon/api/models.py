@@ -409,12 +409,6 @@ class DocumentRole(models.Model):
 class Document(CodedModel, ModelWithTimestamp):
     name = models.CharField(max_length=200, verbose_name='Название документа')
 
-    subjects = models.ManyToManyField(
-        Subject,
-        db_table='subjects_documents',
-        related_name='documents'
-    )
-
     operation = models.ForeignKey(
         Operation,
         on_delete=models.CASCADE,
