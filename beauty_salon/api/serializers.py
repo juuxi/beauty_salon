@@ -12,6 +12,7 @@ from .models import (
     Subject,
     SubjectRole,
     SubjectCategory,
+    ParameterOperation,
 )
 
 from .utils import (
@@ -22,6 +23,7 @@ from .utils import (
     parameter_validate_general,
     service_validate_general,
     parameter_node_validate_num,
+    parameter_operation_validate_num,
 )
 
 
@@ -299,6 +301,35 @@ class OperationsClassifierSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperationsClassifier
         fields = ('id', 'name', 'subject_roles', 'document_roles', 'code')
+
+
+class ParameterOperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParameterOperation
+        fields = (
+            'id',
+            'parameter',
+            'operation_node',
+            'min_param_value',
+            'max_param_value',
+            'num',
+        )
+        read_only_fields = ('operation_node',)
+
+    def validate_num(self, num):
+        view = self.context['view']
+        return parameter_operation_validate_num(view, num)
+
+    def create(self, validated_data):
+        view = self.context['view']
+        operation_node_id = view.kwargs.get('node_id')
+
+        param_node_obj = ParameterOperation.objects.create(
+            **validated_data,
+            operation_node_id=operation_node_id,
+        )
+
+        return param_node_obj
 
 
 class SubjectRoleSerializer(serializers.ModelSerializer):

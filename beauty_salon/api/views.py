@@ -21,6 +21,7 @@ from .models import (
     Subject,
     SubjectRole,
     SubjectCategory,
+    ParameterOperation,
 )
 from .serializers import ClassifierNodeSerializer, EnumerationSerializer
 from .serializers import ValueSerializer, ParameterSerializer
@@ -31,6 +32,7 @@ from .serializers import (
     OperationsClassifierSerializer,
     SubjectRoleSerializer,
     DocumentRoleSerializer,
+    ParameterOperationSerializer,
 )
 
 
@@ -232,3 +234,15 @@ class SubjectRoleView(viewsets.ModelViewSet):
 class DocumentRoleView(viewsets.ModelViewSet):
     serializer_class = DocumentRoleSerializer
     queryset = DocumentRole.objects.all()
+
+
+class ParameterOperationsView(OrderingUpdateMixin, viewsets.ModelViewSet):
+    """CRUD для параметров класса"""
+
+    serializer_class = ParameterOperationSerializer
+
+    def get_queryset(self):
+        operation_node_id = self.kwargs['node_id']
+        return ParameterOperation.objects.filter(
+            operation_node_id=operation_node_id
+        ).order_by('num')

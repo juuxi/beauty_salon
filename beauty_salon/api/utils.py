@@ -9,6 +9,7 @@ from .models import (
     Enumeration,
     ClassifierNode,
     ParameterNode,
+    ParameterOperation,
 )
 
 
@@ -179,6 +180,27 @@ def parameter_node_validate_num(view, num):
         raise serializers.ValidationError(
             {
                 'num': f'Pair (num={num}, classifiernode={classifiernode_id}) '
+                'already exists'
+            }
+        )
+
+    return num
+
+
+def parameter_operation_validate_num(view, num):
+    operation_node_id = view.kwargs.get('node_id')
+
+    if (
+        not (
+            ParameterOperation.objects.filter(
+                operation_node_id=operation_node_id, num=num
+            ).count()
+        )
+        == 0
+    ):
+        raise serializers.ValidationError(
+            {
+                'num': f'Pair (num={num}, operation_node_id={operation_node_id}) '
                 'already exists'
             }
         )

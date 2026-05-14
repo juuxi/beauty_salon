@@ -24,6 +24,13 @@ classifier_nested_router = routers.DefaultRouter()
 classifier_nested_router.register('services', views.ServiceView, 'services')
 classifier_nested_router.register('parameters', views.ParameterNodeView, 'parameters')
 
+operations_classifier_nested_router = routers.DefaultRouter()
+operations_classifier_nested_router.register(
+    'parameters',
+    views.ParameterOperationsView,
+    'parameters'
+)
+
 app_name = 'api'
 
 urlpatterns = [
@@ -41,4 +48,5 @@ urlpatterns = [
     path('', include(base_router.urls)),
     path('enumerations/<int:enumeration_id>/', include(value_router.urls)),
     path('classifier/<int:node_id>/', include(classifier_nested_router.urls)),
+    path('operations_classifier/<int:node_id>/', include(operations_classifier_nested_router.urls)),
 ]
