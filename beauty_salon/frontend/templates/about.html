@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}О системе - Flora{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">О системе</h1>
+    </div>
+
+    <div class="about-content">
+        <div class="about-text">
+            <h2>Автоматизация салона красоты</h2>
+            <p>Система Flora предназначена для комплексного управления справочниками салона красоты. Она позволяет гибко настраивать структуру услуг, параметры и характеристики без изменения программного кода.</p>
+            
+            <h3>Основные возможности:</h3>
+            <ul class="about-list">
+                <li>🌸 Иерархический классификатор услуг</li>
+                <li>🌸 Динамические параметры с наследованием</li>
+                <li>🌸 Управление перечислениями и единицами измерения</li>
+                <li>🌸 Группировка характеристик (агрегаты)</li>
+            </ul>
+        </div>
+        <div class="about-image">
+            <img src="{% static 'images/flora about.jpg' %}" alt="О системе Flora">
+        </div>
+    </div>
+</div>
+{% endblock %}

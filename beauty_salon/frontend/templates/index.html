@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Flora - Система управления{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h1 class="hero__title">Система управления салоном красоты</h1>
+        <p class="hero__subtitle">Управление справочниками, услугами и параметрами</p>
+    </div>
+</section>
+
+<section class="admin-panel">
+    <div class="container">
+        <h2 class="section-title">Управление справочниками</h2>
+        <div class="admin-grid">
+            <a href="{% url 'classifiers' %}" class="admin-card">
+                <h3>Классификатор услуг</h3>
+                <p>Создание иерархии категорий и подкатегорий услуг</p>
+            </a>
+            <a href="{% url 'services' %}" class="admin-card">
+                <h3>Услуги</h3>
+                <p>Добавление конкретных услуг с настройкой параметров</p>
+            </a>
+            <a href="{% url 'parameters' %}" class="admin-card">
+                <h3>Параметры</h3>
+                <p>Настройка характеристик (длительность, цена и др.)</p>
+            </a>
+            <a href="{% url 'enumerations' %}" class="admin-card">
+                <h3>Перечисления</h3>
+                <p>Справочники фиксированных значений (типы кожи, цвета)</p>
+            </a>
+            <a href="{% url 'units' %}" class="admin-card">
+                <h3>Единицы измерения</h3>
+                <p>Управление единицами (мин, шт, мл, см)</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="quick-info">
+    <div class="container">
+        <h2 class="section-title">Структура данных</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Иерархия услуг</h3>
+                <p>Макияж, Брови, Ресницы, Парикмахерские услуги, Ногтевой сервис, Косметология</p>
+            </div>
+            <div class="info-card">
+                <h3>Динамические атрибуты</h3>
+                <p>Гибкая система параметров с наследованием от родительских категорий</p>
+            </div>
+            <div class="info-card">
+                <h3>Справочники</h3>
+                <p>Централизованное управление перечислениями и единицами измерения</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
