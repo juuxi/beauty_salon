@@ -21,8 +21,10 @@
                 </div>
             </div>
             <div class="card__body">
-                <p>Значений: <strong>{{ enumeration.values_count }}</strong></p>
-                <p>Примеры: {{ enumeration.examples }}</p>
+                <p>Значения:</p>
+                {% for value in enumeration.values.all %}
+                <p><strong>{{ value.data.data }}</strong></p>
+                {% endfor %}
             </div>
         </div>
         {% empty %}
