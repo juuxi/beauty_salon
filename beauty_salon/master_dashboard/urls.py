@@ -11,4 +11,5 @@ urlpatterns = [
     path('classifier_nodes/', views.ClassifierNodeView.as_view(), name='classifier_nodes'),
     path('parameters/', views.ParameterView.as_view(), name='parameters'),
     path('enumerations/', views.EnumerationView.as_view(), name='enumerations'),
+    path('measuring_units/', views.MeasuringUnitView.as_view(), name='measuring_units'),
 ]

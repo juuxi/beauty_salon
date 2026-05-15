@@ -7,6 +7,7 @@ from api.models import (
     ClassifierNode,
     Parameter,
     Enumeration,
+    MeasuringUnit,
 )
 
 
@@ -32,3 +33,9 @@ class EnumerationView(ListView):
     model = Enumeration
     template_name = 'enumerations.html'
     context_object_name = 'enumerations'
+
+
+class MeasuringUnitView(ListView):
+    model = MeasuringUnit
+    template_name = 'measuring_units.html'
+    context_object_name = 'measuring_units'
