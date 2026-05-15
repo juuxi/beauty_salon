@@ -23,6 +23,7 @@
             <div class="card__body">
                 <p>Родитель: <strong>{{ classifier.parent|default:"Корень" }}</strong></p>
                 <p>Листовой: <span class="card__tag">{% if classifier.is_terminal == True %} Да {% else %} Нет {% endif %}</span></p>
+                {% if classifier.code %}<p>Код: <strong>{{ classifier.code }}</strong></p>{% endif %}
             </div>
         </div>
         {% empty %}

@@ -25,6 +25,7 @@
                 {% for value in enumeration.values.all %}
                 <p><strong>{{ value.data.data }}</strong></p>
                 {% endfor %}
+                {% if enumeration.code %}<p>Код: <strong>{{ enumeration.code }}</strong></p>{% endif %}
             </div>
         </div>
         {% empty %}
