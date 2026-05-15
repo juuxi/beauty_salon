@@ -44,9 +44,10 @@
                 </div>
             </div>
             <div class="card__meta">
-                <span class="card__tag">{{ service.category }}</span>
-                <span class="card__tag">{{ service.duration }} мин</span>
-                <span class="card__tag">{{ service.price }} ₽</span>
+                <span class="card__tag">{{ service.base_class }}</span>
+                {% for parameter_value in service.parameter_values.all %}
+                <span class="card__tag">{{ parameter_value.parameter.name }}: {% if parameter_value.parameter.data_type != 'enum' %} {{ parameter_value.value.data }} {% else %} {{ parameter_value.value.data.data }}  {% endif %} </span>
+                {% endfor %}
             </div>
             <div class="card__body">
                 {{ service.description }}
