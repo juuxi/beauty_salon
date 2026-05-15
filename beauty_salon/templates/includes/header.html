@@ -16,8 +16,8 @@
                     <li><a href="{% url 'master_dashboard:parameters' %}" class="nav-link {% if view_name == 'master_dashboard:parameters' %}nav-link--active{% endif %}">Параметры</a></li>
                     <li><a href="{% url 'master_dashboard:enumerations' %}" class="nav-link {% if view_name == 'master_dashboard:enumerations' %}nav-link--active{% endif %}">Перечисления</a></li>
                     <li><a href="{% url 'master_dashboard:measuring_units' %}" class="nav-link {% if view_name == 'master_dashboard:measuring_units' %}nav-link--active{% endif %}">Единицы</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'about' %}nav-link--active{% endif %}">О системе</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'contacts' %}nav-link--active{% endif %}">Контакты</a></li>
+                    <li><a href="{% url 'pages:about' %}" class="nav-link {% if view_name == 'pages:about' %}nav-link--active{% endif %}">О системе</a></li>
+                    <li><a href="{% url 'pages:contacts' %}" class="nav-link {% if view_name == 'pages:contacts' %}nav-link--active{% endif %}">Контакты</a></li>
                 </ul>
                 {% endwith %}
             </nav>
