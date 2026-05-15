@@ -63,6 +63,9 @@ class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
         verbose_name = 'Узел классификатора'
         verbose_name_plural = 'Узлы классификатора'
 
+    def __str__(self):
+        return self.name
+
 
 class StringData(models.Model):
     data = models.TextField()
