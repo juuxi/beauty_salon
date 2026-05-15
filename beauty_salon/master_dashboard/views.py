@@ -2,7 +2,11 @@ from django.shortcuts import render
 
 from django.views.generic import ListView
 
-from api.models import Service, ClassifierNode
+from api.models import (
+    Service,
+    ClassifierNode,
+    Parameter,
+)
 
 
 class ServiceListView(ListView):
@@ -15,3 +19,9 @@ class ClassifierNodeView(ListView):
     model = ClassifierNode
     template_name = 'classifier_nodes.html'
     context_object_name = 'classifier_nodes'
+
+
+class ParameterView(ListView):
+    model = Parameter
+    template_name = 'parameters.html'
+    context_object_name = 'parameters'
