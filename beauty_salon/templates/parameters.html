@@ -21,9 +21,8 @@
                 </div>
             </div>
             <div class="card__body">
-                <p>Тип: <span class="card__tag">{{ parameter.type }}</span></p>
-                <p>Ед. изм: <span class="card__tag">{{ parameter.unit }}</span></p>
-                <p>Ограничения: {{ parameter.constraints }}</p>
+                <p>Тип: <span class="card__tag">{{ parameter.data_type }}</span></p>
+                {% if parameter.measuring_unit %}<p>Ед. изм: <span class="card__tag">{{ parameter.measuring_unit.name }}</span></p> {% endif %}
             </div>
         </div>
         {% empty %}
