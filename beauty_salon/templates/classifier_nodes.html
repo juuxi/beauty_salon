@@ -7,7 +7,7 @@
 <div class="container">
     <div class="page-header">
         <h1 class="page-title">Классификатор услуг</h1>
-        <button class="btn btn--primary open-modal-btn" data-modal="classifierModal">+ Добавить категорию</button>
+        <button class="btn btn--primary open-modal-btn" data-modal="classifierModal">+ Добавить класс</button>
     </div>
 
     <div class="list-grid">
@@ -22,8 +22,7 @@
             </div>
             <div class="card__body">
                 <p>Родитель: <strong>{{ classifier.parent|default:"Корень" }}</strong></p>
-                <p>Тип: <span class="card__tag">{{ classifier.type }}</span></p>
-                <p>Потомки: {{ classifier.children }}</p>
+                <p>Листовой: <span class="card__tag">{% if classifier.is_terminal == True %} Да {% else %} Нет {% endif %}</span></p>
             </div>
         </div>
         {% empty %}
