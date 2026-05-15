@@ -10,4 +10,5 @@ urlpatterns = [
     path('services/', views.ServiceListView.as_view(), name='services'),
     path('classifier_nodes/', views.ClassifierNodeView.as_view(), name='classifier_nodes'),
     path('parameters/', views.ParameterView.as_view(), name='parameters'),
+    path('enumerations/', views.EnumerationView.as_view(), name='enumerations'),
 ]

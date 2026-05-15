@@ -6,6 +6,7 @@ from api.models import (
     Service,
     ClassifierNode,
     Parameter,
+    Enumeration,
 )
 
 
@@ -25,3 +26,9 @@ class ParameterView(ListView):
     model = Parameter
     template_name = 'parameters.html'
     context_object_name = 'parameters'
+
+
+class EnumerationView(ListView):
+    model = Enumeration
+    template_name = 'enumerations.html'
+    context_object_name = 'enumerations'
