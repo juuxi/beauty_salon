@@ -3,21 +3,23 @@
 <header class="header">
     <div class="container header__inner">
         <div class="header__top">
-            <a href="#" class="logo">
+            <a href="{% url 'master_dashboard:index' %}" class="logo">
                 <img src="{% static 'images/main icon.jpg' %}" alt="Logo" class="logo__icon">
                 <span class="logo__text">Flora</span>
             </a>
             <nav class="nav">
+                {% with request.resolver_match.view_name as view_name %}
                 <ul class="nav__list">
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'index' %}nav-link--active{% endif %}">Главная</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'services' %}nav-link--active{% endif %}">Услуги</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'classifiers' %}nav-link--active{% endif %}">Классификатор</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'parameters' %}nav-link--active{% endif %}">Параметры</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'enumerations' %}nav-link--active{% endif %}">Перечисления</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'units' %}nav-link--active{% endif %}">Единицы</a></li>
+                    <li><a href="{% url 'master_dashboard:index' %}" class="nav-link {% if view_name == 'master_dashboard:index' %}nav-link--active {% endif %}">Главная</a></li>
+                    <li><a href="{% url 'master_dashboard:services' %}" class="nav-link {% if view_name == 'master_dashboard:services' %}nav-link--active{% endif %}">Услуги</a></li>
+                    <li><a href="{% url 'master_dashboard:classifier_nodes' %}" class="nav-link {% if view_name == 'master_dashboard:classifier_nodes' %}nav-link--active{% endif %}">Классификатор</a></li>
+                    <li><a href="{% url 'master_dashboard:parameters' %}" class="nav-link {% if view_name == 'master_dashboard:parameters' %}nav-link--active{% endif %}">Параметры</a></li>
+                    <li><a href="{% url 'master_dashboard:enumerations' %}" class="nav-link {% if view_name == 'master_dashboard:enumerations' %}nav-link--active{% endif %}">Перечисления</a></li>
+                    <li><a href="{% url 'master_dashboard:measuring_units' %}" class="nav-link {% if view_name == 'master_dashboard:measuring_units' %}nav-link--active{% endif %}">Единицы</a></li>
                     <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'about' %}nav-link--active{% endif %}">О системе</a></li>
                     <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'contacts' %}nav-link--active{% endif %}">Контакты</a></li>
                 </ul>
+                {% endwith %}
             </nav>
         </div>
     </div>

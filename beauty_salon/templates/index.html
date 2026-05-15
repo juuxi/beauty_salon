@@ -15,23 +15,23 @@
     <div class="container">
         <h2 class="section-title">Управление справочниками</h2>
         <div class="admin-grid">
-            <a href="#" class="admin-card">
+            <a href="{% url 'master_dashboard:classifier_nodes' %}" class="admin-card">
                 <h3>Классификатор услуг</h3>
                 <p>Создание иерархии категорий и подкатегорий услуг</p>
             </a>
-            <a href="#" class="admin-card">
+            <a href="{% url 'master_dashboard:services' %}" class="admin-card">
                 <h3>Услуги</h3>
                 <p>Добавление конкретных услуг с настройкой параметров</p>
             </a>
-            <a href="#" class="admin-card">
+            <a href="{% url 'master_dashboard:parameters' %}" class="admin-card">
                 <h3>Параметры</h3>
                 <p>Настройка характеристик (длительность, цена и др.)</p>
             </a>
-            <a href="#" class="admin-card">
+            <a href="{% url 'master_dashboard:enumerations' %}" class="admin-card">
                 <h3>Перечисления</h3>
                 <p>Справочники фиксированных значений (типы кожи, цвета)</p>
             </a>
-            <a href="#" class="admin-card">
+            <a href="{% url 'master_dashboard:measuring_units' %}" class="admin-card">
                 <h3>Единицы измерения</h3>
                 <p>Управление единицами (мин, шт, мл, см)</p>
             </a>
