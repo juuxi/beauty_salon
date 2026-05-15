@@ -12,7 +12,7 @@
                 <ul class="nav__list">
                     <li><a href="{% url 'master_dashboard:index' %}" class="nav-link {% if view_name == 'master_dashboard:index' %}nav-link--active {% endif %}">Главная</a></li>
                     <li><a href="{% url 'master_dashboard:services' %}" class="nav-link {% if view_name == 'master_dashboard:services' %}nav-link--active{% endif %}">Услуги</a></li>
-                    <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'classifiers' %}nav-link--active{% endif %}">Классификатор</a></li>
+                    <li><a href="{% url 'master_dashboard:classifier_nodes' %}" class="nav-link {% if view_name == 'master_dashboard:classifier_nodes' %}nav-link--active{% endif %}">Классификатор</a></li>
                     <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'parameters' %}nav-link--active{% endif %}">Параметры</a></li>
                     <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'enumerations' %}nav-link--active{% endif %}">Перечисления</a></li>
                     <li><a href="#" class="nav-link {% if request.resolver_match.url_name == 'units' %}nav-link--active{% endif %}">Единицы</a></li>
