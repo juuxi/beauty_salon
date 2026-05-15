@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'master_dashboard.apps.MasterDashboardConfig',
+    'pages.apps.PagesConfig',
     'rest_framework',
     'django_filters',
 ]

@@ -20,5 +20,10 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls', namespace='api')),
-    path('', include('master_dashboard.urls', namespace='master_dashboard')),
+    path('services/', include('master_dashboard.urls', namespace='master_dashboard')),
+    path('classifier_nodes/', include('master_dashboard.urls', namespace='master_dashboard')),
+    path('parameters/', include('master_dashboard.urls', namespace='master_dashboard')),
+    path('enumerations/', include('master_dashboard.urls', namespace='master_dashboard')),
+    path('measuring_units/', include('master_dashboard.urls', namespace='master_dashboard')),
+    path('', include('pages.urls', namespace='pages')),
 ]
