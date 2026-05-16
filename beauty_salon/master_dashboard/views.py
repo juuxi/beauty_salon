@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DeleteView
 
 from api.models import (
     Service,
@@ -34,6 +34,13 @@ def create_update_service(request, service_id=None):
         return redirect('master_dashboard:services')
     context = {'form': form, 'is_edit': is_edit}
     return render(request, 'service-create.html', context)
+
+
+class ServiceDeleteView(DeleteView):
+    model = Service
+    success_url = reverse_lazy('master_dashboard:services')
+    pk_url_kwarg = 'service_id'
+    template_name = 'service-create.html'
 
 
 class ClassifierNodeView(ListView):
