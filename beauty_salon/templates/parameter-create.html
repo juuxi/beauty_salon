@@ -37,7 +37,7 @@
             {% endif %}
 
             <div class="form-actions">
-                <a href="{% url 'master_dashboard:services' %}" class="btn btn-cancel">Отмена</a>
+                <a href="{% url 'master_dashboard:parameters' %}" class="btn btn-cancel">Отмена</a>
                 <button type="submit" class="btn btn-save">{% if '/edit/' in request.path %}Сохранить{% elif '/delete/' in request.path %}Удалить{% else %}Опубликовать{% endif %}</button>
             </div>
         </form>
