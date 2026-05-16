@@ -6,6 +6,8 @@ app_name = 'master_dashboard'
 
 urlpatterns = [
     path('services/list/', views.ServiceListView.as_view(), name='services'),
+    path('services/create/', views.create_update_service, name='service-create'),
+    path('services/<int:service_id>/edit/', views.create_update_service, name='service-edit'),
     path('classifier_nodes/list/', views.ClassifierNodeView.as_view(), name='classifier_nodes'),
     path('parameters/list/', views.ParameterView.as_view(), name='parameters'),
     path('enumerations/list/', views.EnumerationView.as_view(), name='enumerations'),

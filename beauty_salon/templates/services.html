@@ -6,7 +6,7 @@
 {% block content %}
 <div class="page-header">
     <h1 class="page-title">Справочник услуг</h1>
-    <button class="btn btn--primary open-modal-btn" data-modal="serviceModal">+ Добавить услугу</button>
+    <a href="{% url 'master_dashboard:service-create' %}" class="btn btn--primary open-modal-btn">+ Добавить услугу</a>
 </div>
 
 <div class="container">
@@ -39,7 +39,7 @@
             <div class="card__header">
                 <h3>{{ service.name }}</h3>
                 <div class="card__actions">
-                    <button class="btn btn--icon btn-edit open-modal-btn" data-modal="serviceModal" data-edit="true" data-id="{{ service.id }}">✏️</button>
+                    <a href="{% url 'master_dashboard:service-edit' service_id=service.id %}" class="btn btn--icon btn-edit open-modal-btn">✏️</a>
                     <button class="btn btn--icon btn-delete" data-delete="{{ service.id }}">🗑️</button>
                 </div>
             </div>
