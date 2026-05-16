@@ -15,6 +15,7 @@ from .forms import (
     ClassifierNodeForm,
     ParameterForm,
     EnumerationForm,
+    MeasuringUnitForm,
 )
 
 
@@ -127,3 +128,22 @@ class MeasuringUnitView(ListView):
     template_name = 'measuring_units.html'
     context_object_name = 'measuring_units'
     ordering = 'id'
+
+
+def create_update_measuring_unit(request, unit_id=None):
+    instance = None
+    if unit_id:
+        instance = get_object_or_404(MeasuringUnit, pk=unit_id)
+    form = MeasuringUnitForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:measuring_units')
+    context = {'form': form}
+    return render(request, 'measuring_unit-create.html', context)
+
+
+class MeasuringUnitDeleteView(DeleteView):
+    model = MeasuringUnit
+    success_url = reverse_lazy('master_dashboard:measuring_units')
+    pk_url_kwarg = 'unit_id'
+    template_name = 'measuring_unit-create.html'

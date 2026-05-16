@@ -50,4 +50,19 @@ urlpatterns = [
         name='enumeration-delete'
     ),
     path('measuring_units/list/', views.MeasuringUnitView.as_view(), name='measuring_units'),
+    path(
+        'measuring_units/create/',
+        views.create_update_measuring_unit,
+        name='measuring_unit-create'
+    ),
+    path(
+        'measuring_units/<int:unit_id>/edit/',
+        views.create_update_measuring_unit,
+        name='measuring_unit-edit'
+    ),
+    path(
+        'measuring_units/<int:unit_id>/delete/',
+        views.MeasuringUnitDeleteView.as_view(),
+        name='measuring_unit-delete'
+    ),
 ]

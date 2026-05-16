@@ -6,7 +6,7 @@
 {% block content %}
 <div class="page-header">
     <h1 class="page-title">Единицы измерения</h1>
-    <button class="btn btn--primary open-modal-btn" data-modal="unitModal">+ Добавить единицу</button>
+    <a href="{% url 'master_dashboard:measuring_unit-create' %}" class="btn btn--primary open-modal-btn">+ Добавить единицу</a>
 </div>
 
 <div class="container">
@@ -16,8 +16,8 @@
             <div class="card__header">
                 <h3>{{ unit.name }}</h3>
                 <div class="card__actions">
-                    <button class="btn btn--icon btn-edit open-modal-btn" data-modal="unitModal" data-edit="true" data-id="{{ unit.id }}">✏️</button>
-                    <button class="btn btn--icon btn-delete" data-delete="{{ unit.id }}">🗑️</button>
+                    <a href="{% url 'master_dashboard:measuring_unit-edit' unit_id=unit.id %}" class="btn btn--icon btn-edit open-modal-btn">✏️</a>
+                    <a href="{% url 'master_dashboard:measuring_unit-delete' unit_id=unit.id %}" class="btn btn--icon btn-delete">🗑️</a>
                 </div>
             </div>
         </div>

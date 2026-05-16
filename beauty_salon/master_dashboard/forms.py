@@ -31,3 +31,9 @@ class EnumerationForm(forms.ModelForm):
     class Meta:
         model = Enumeration
         fields = ('name', 'data_type')
+
+
+class MeasuringUnitForm(forms.ModelForm):
+    class Meta:
+        model = MeasuringUnit
+        fields = ('name',)
