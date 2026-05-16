@@ -24,15 +24,13 @@ class ServiceListView(ListView):
 
 def create_update_service(request, service_id=None):
     instance = None
-    is_edit = False
     if service_id:
         instance = get_object_or_404(Service, pk=service_id)
-        is_edit = True
     form = ServiceForm(request.POST or None, instance=instance)
     if form.is_valid():
         form.save()
         return redirect('master_dashboard:services')
-    context = {'form': form, 'is_edit': is_edit}
+    context = {'form': form}
     return render(request, 'service-create.html', context)
 
 
