@@ -13,6 +13,7 @@ from api.models import (
 from .forms import (
     ServiceForm,
     ClassifierNodeForm,
+    ParameterForm,
 )
 
 
@@ -73,6 +74,25 @@ class ParameterView(ListView):
     template_name = 'parameters.html'
     context_object_name = 'parameters'
     ordering = 'id'
+
+
+def create_update_parameter(request, param_id=None):
+    instance = None
+    if param_id:
+        instance = get_object_or_404(Parameter, pk=param_id)
+    form = ParameterForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:parameters')
+    context = {'form': form}
+    return render(request, 'parameter-create.html', context)
+
+
+class ParameterDeleteView(DeleteView):
+    model = Parameter
+    success_url = reverse_lazy('master_dashboard:parameters')
+    pk_url_kwarg = 'param_id'
+    template_name = 'parameter-create.html'
 
 
 class EnumerationView(ListView):

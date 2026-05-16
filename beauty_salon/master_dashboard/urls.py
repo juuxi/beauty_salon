@@ -30,6 +30,13 @@ urlpatterns = [
         name='classifier_node-delete'
     ),
     path('parameters/list/', views.ParameterView.as_view(), name='parameters'),
+    path('parameters/create/', views.create_update_parameter, name='parameter-create'),
+    path('parameters/<int:param_id>/edit/', views.create_update_parameter, name='parameter-edit'),
+    path(
+        'parameters/<int:param_id>/delete/',
+        views.ParameterDeleteView.as_view(),
+        name='parameter-delete'
+    ),
     path('enumerations/list/', views.EnumerationView.as_view(), name='enumerations'),
     path('measuring_units/list/', views.MeasuringUnitView.as_view(), name='measuring_units'),
 ]

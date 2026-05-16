@@ -19,3 +19,9 @@ class ClassifierNodeForm(forms.ModelForm):
     class Meta:
         model = ClassifierNode
         fields = ('name', 'parent', 'is_terminal')
+
+
+class ParameterForm(forms.ModelForm):
+    class Meta:
+        model = Parameter
+        fields = ('name', 'data_type')

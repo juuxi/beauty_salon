@@ -6,7 +6,7 @@
 {% block content %}
 <div class="page-header">
     <h1 class="page-title">Параметры услуг</h1>
-    <button class="btn btn--primary open-modal-btn" data-modal="parameterModal">+ Добавить параметр</button>
+    <a href="{% url 'master_dashboard:parameter-create' %}" class="btn btn--primary open-modal-btn">+ Добавить параметр</a>
 </div>
 
 <div class="container">
@@ -16,8 +16,8 @@
             <div class="card__header">
                 <h3>{{ parameter.name }}</h3>
                 <div class="card__actions">
-                    <button class="btn btn--icon btn-edit open-modal-btn" data-modal="parameterModal" data-edit="true" data-id="{{ parameter.id }}">✏️</button>
-                    <button class="btn btn--icon btn-delete" data-delete="{{ parameter.id }}">🗑️</button>
+                    <a href="{% url 'master_dashboard:parameter-edit' param_id=parameter.id %}" class="btn btn--icon btn-edit open-modal-btn">✏️</a>
+                    <a href="{% url 'master_dashboard:parameter-delete' param_id=parameter.id %}" class="btn btn--icon btn-delete">🗑️</a>
                 </div>
             </div>
             <div class="card__body">
