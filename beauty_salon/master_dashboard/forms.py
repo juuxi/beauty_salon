@@ -13,3 +13,9 @@ class ServiceForm(forms.ModelForm):
     class Meta:
         model = Service
         fields = ('name', 'base_class')
+
+
+class ClassifierNodeForm(forms.ModelForm):
+    class Meta:
+        model = ClassifierNode
+        fields = ('name', 'parent', 'is_terminal')

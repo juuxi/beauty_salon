@@ -12,6 +12,7 @@ from api.models import (
 
 from .forms import (
     ServiceForm,
+    ClassifierNodeForm,
 )
 
 
@@ -46,6 +47,25 @@ class ClassifierNodeView(ListView):
     template_name = 'classifier_nodes.html'
     context_object_name = 'classifier_nodes'
     ordering = 'id'
+
+
+def create_update_classifier_node(request, node_id=None):
+    instance = None
+    if node_id:
+        instance = get_object_or_404(ClassifierNode, pk=node_id)
+    form = ClassifierNodeForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:classifier_nodes')
+    context = {'form': form}
+    return render(request, 'classifier_node-create.html', context)
+
+
+class ClassifierNodeDeleteView(DeleteView):
+    model = ClassifierNode
+    success_url = reverse_lazy('master_dashboard:classifier_nodes')
+    pk_url_kwarg = 'node_id'
+    template_name = 'classifier_node-create.html'
 
 
 class ParameterView(ListView):

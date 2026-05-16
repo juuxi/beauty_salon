@@ -14,6 +14,21 @@ urlpatterns = [
         name='service-delete'
     ),
     path('classifier_nodes/list/', views.ClassifierNodeView.as_view(), name='classifier_nodes'),
+    path(
+        'classifier_nodes/create/',
+        views.create_update_classifier_node,
+        name='classifier_node-create'
+    ),
+    path(
+        'classifier_nodes/<int:node_id>/edit/',
+        views.create_update_classifier_node,
+        name='classifier_node-edit'
+    ),
+    path(
+        'classifier_nodes/<int:node_id>/delete/',
+        views.ClassifierNodeDeleteView.as_view(),
+        name='classifier_node-delete'
+    ),
     path('parameters/list/', views.ParameterView.as_view(), name='parameters'),
     path('enumerations/list/', views.EnumerationView.as_view(), name='enumerations'),
     path('measuring_units/list/', views.MeasuringUnitView.as_view(), name='measuring_units'),
