@@ -25,3 +25,9 @@ class ParameterForm(forms.ModelForm):
     class Meta:
         model = Parameter
         fields = ('name', 'data_type')
+
+
+class EnumerationForm(forms.ModelForm):
+    class Meta:
+        model = Enumeration
+        fields = ('name', 'data_type')

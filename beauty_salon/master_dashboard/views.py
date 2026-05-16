@@ -14,6 +14,7 @@ from .forms import (
     ServiceForm,
     ClassifierNodeForm,
     ParameterForm,
+    EnumerationForm,
 )
 
 
@@ -100,6 +101,25 @@ class EnumerationView(ListView):
     template_name = 'enumerations.html'
     context_object_name = 'enumerations'
     ordering = 'id'
+
+
+def create_update_enumeration(request, enumeration_id=None):
+    instance = None
+    if enumeration_id:
+        instance = get_object_or_404(Enumeration, pk=enumeration_id)
+    form = EnumerationForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:enumerations')
+    context = {'form': form}
+    return render(request, 'enumeration-create.html', context)
+
+
+class EnumerationDeleteView(DeleteView):
+    model = Enumeration
+    success_url = reverse_lazy('master_dashboard:enumerations')
+    pk_url_kwarg = 'enumeration_id'
+    template_name = 'enumeration-create.html'
 
 
 class MeasuringUnitView(ListView):
