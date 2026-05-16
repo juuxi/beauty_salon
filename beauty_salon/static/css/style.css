@@ -162,7 +162,7 @@ a {
 /* Шапка страницы с кнопкой */
 .page-header {
     width: 100%;
-    padding: 40px 15%;
+    padding: 40px 30%;
     background: rgba(253, 242, 244, 0.7);
     border-bottom: 1px solid var(--pink-main);
     margin-bottom: 30px;
@@ -363,17 +363,23 @@ a {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
+    gap: 12px;
 }
 
 .card__header h3 {
     font-size: 20px;
     color: var(--pink-dark);
     margin: 0;
+    flex: 1; /* Заголовок занимает доступное пространство */
+    min-width: 0; /* Позволяет сжиматься */
+    word-wrap: break-word; /* Перенос длинных слов */
+    overflow-wrap: break-word;
 }
 
 .card__actions {
     display: flex;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .card__meta {
@@ -402,6 +408,17 @@ a {
     font-weight: 600;
     font-size: 14px;
     align-self: flex-end;
+}
+
+@media (max-width: 480px) {
+    .card__header {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .card__actions {
+        align-self: flex-end;
+    }
 }
 
 .filter-panel {
