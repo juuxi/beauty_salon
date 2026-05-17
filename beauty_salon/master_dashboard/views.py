@@ -121,7 +121,7 @@ class ServiceValueDeleteView(DeleteView):
 
 class ClassifierNodeView(ListView):
     model = ClassifierNode
-    template_name = 'classifier_nodes.html'
+    template_name = 'classifier_node/classifier_nodes.html'
     context_object_name = 'classifier_nodes'
     ordering = 'id'
 
@@ -135,18 +135,18 @@ def create_update_classifier_node(request, node_id=None):
         form.save()
         return redirect('master_dashboard:classifier_nodes')
     context = {'form': form}
-    return render(request, 'classifier_node-create.html', context)
+    return render(request, 'classifier_node/classifier_node-create.html', context)
 
 
 class ClassifierNodeDeleteView(DeleteView):
     model = ClassifierNode
     success_url = reverse_lazy('master_dashboard:classifier_nodes')
     pk_url_kwarg = 'node_id'
-    template_name = 'classifier_node-create.html'
+    template_name = 'classifier_node/classifier_node-create.html'
 
 
 class ParameterNodeListView(ListView):
-    template_name = 'classifier_parameters.html'
+    template_name = 'classifier_node/classifier_parameters.html'
     context_object_name = 'classifier_parameters'
     ordering = 'num'
 
@@ -170,13 +170,13 @@ def create_classifier_node_parameters(request, node_id):
         return redirect('master_dashboard:classifier_parameters', node_id=node_id)
     parameters = Parameter.objects.all()
     context = {'form': form, 'parameters': parameters}
-    return render(request, 'classifier_parameter-create.html', context)
+    return render(request, 'classifier_node/classifier_parameter-create.html', context)
 
 
 class ParameterNodeDeleteView(DeleteView):
     success_url = reverse_lazy('master_dashboard:classifier_nodes')
     pk_url_kwarg = 'param_node_id'
-    template_name = 'classifier_parameter-create.html'
+    template_name = 'classifier_node/classifier_parameter-create.html'
 
     def get_queryset(self):
         return ParameterNode.objects.filter(classifiernode_id=self.kwargs['node_id'])
