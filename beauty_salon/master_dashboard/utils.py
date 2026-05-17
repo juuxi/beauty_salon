@@ -5,9 +5,9 @@ from api.models import (
 )
 
 
-def validate_value(data, enumeration):
+def validate_value(data, type_holder):
 
-    data_type = enumeration.data_type
+    data_type = type_holder.data_type
 
     if data_type == 'int':
         try:

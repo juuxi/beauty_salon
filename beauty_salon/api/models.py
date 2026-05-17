@@ -134,6 +134,9 @@ class Value(ModelWithTimestamp):
         verbose_name = 'Значение перечисления'
         verbose_name_plural = 'Значения перечисления'
 
+    def __str__(self):
+        return str(self.data.data)
+
 
 class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     name = models.CharField(max_length=200, verbose_name='Название параметра')

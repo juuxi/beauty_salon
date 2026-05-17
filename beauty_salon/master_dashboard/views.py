@@ -10,6 +10,7 @@ from api.models import (
     MeasuringUnit,
     Value,
     ParameterNode,
+    ParameterValueService,
 )
 
 from .forms import (
@@ -20,6 +21,7 @@ from .forms import (
     MeasuringUnitForm,
     EnumerationValueForm,
     ParameterNodeForm,
+    ServiceValueForm,
 )
 
 
@@ -47,6 +49,74 @@ class ServiceDeleteView(DeleteView):
     success_url = reverse_lazy('master_dashboard:services')
     pk_url_kwarg = 'service_id'
     template_name = 'service-create.html'
+
+
+class ServiceValuesListView(ListView):
+    template_name = 'service_values.html'
+    context_object_name = 'parameters_values'
+
+    def get_queryset(self):
+        service = get_object_or_404(Service, pk=self.kwargs['service_id'])
+        parameter_nodes = (
+            ParameterNode.objects.filter(classifiernode=service.base_class).order_by('num')
+        )
+        parameters = []
+        for parameter_node in parameter_nodes:
+            parameters.append(parameter_node.parameter)
+        values = []
+        for parameter in parameters:
+            try:
+                values.append(
+                    ParameterValueService.objects.get(service=service, parameter=parameter)
+                )
+            except ParameterValueService.DoesNotExist:
+                values.append(None)
+        return zip(parameters, values)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['service'] = get_object_or_404(Service, pk=self.kwargs['service_id'])
+        return context
+
+
+def create_service_values(request, service_id, param_id):
+    param = get_object_or_404(Parameter, pk=param_id)
+    get_object_or_404(Service, pk=service_id)
+    form = ServiceValueForm(request.POST or None, param_id=param.id)
+    if form.is_valid():
+        value = form.save(commit=False)
+        value.service_id = service_id
+        value.parameter_id = param_id
+        value.save()
+        return redirect('master_dashboard:service_values', service_id=service_id)
+    context = {'form': form, 'parameter': param}
+    return render(request, 'service_value-create.html', context)
+
+
+def update_service_values(request, service_id, value_id):
+    instance = get_object_or_404(ParameterValueService, pk=value_id)
+    get_object_or_404(Service, pk=service_id)
+    form = ServiceValueForm(request.POST or None, instance=instance, param_id=instance.parameter.id)
+    if form.is_valid():
+        value = form.save(commit=False)
+        value.service_id = service_id
+        value.save()
+        return redirect('master_dashboard:service_values', service_id=service_id)
+    context = {'form': form, 'parameter': instance.parameter}
+    return render(request, 'service_value-create.html', context)
+
+
+class ServiceValueDeleteView(DeleteView):
+    pk_url_kwarg = 'value_id'
+    template_name = 'service_value-create.html'
+
+    def get_queryset(self):
+        return ParameterValueService.objects.filter(service_id=self.kwargs['service_id'])
+
+    def get_success_url(self):
+        return reverse_lazy('master_dashboard:service_values', kwargs={
+            'service_id': self.kwargs['service_id'],
+        })
 
 
 class ClassifierNodeView(ListView):

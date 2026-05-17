@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if '/edit/' in request.path %}Редактирование значения{% elif '/delete/' in request.path %}Удаление значения{% else %}Создание значения{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование значения{% elif '/delete/' in request.path %}Удаление значения{% else %}Создание значения{% endif %}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+
+            {% if parameter.data_type != 'enum' %}
+            <div class="form-group">
+                {{ form.form_value.label_tag }}
+                {{ form.form_value }}
+            </div>
+            {% else %}
+            <div class="form-group">
+                {{ form.enum_value.label_tag }}
+                {{ form.enum_value }}
+            </div>
+            {% endif %}
+
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="form-group">
+                <p><strong>Данные:</strong><font class="card__tag">{% if object.parameter.data_type != 'enum' %}{{ object.value.data }}{% else %}{{ object.value.data.data }}{% endif %}</font></p>
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:services' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">{% if '/edit/' in request.path %}Сохранить{% elif '/delete/' in request.path %}Удаление{% else %}Опубликовать{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -13,6 +13,26 @@ urlpatterns = [
         views.ServiceDeleteView.as_view(),
         name='service-delete'
     ),
+    path(
+        'services/<int:service_id>/values/list/',
+        views.ServiceValuesListView.as_view(),
+        name='service_values'
+    ),
+    path(
+        'services/<int:service_id>/values/<int:param_id>/create/',
+        views.create_service_values,
+        name='service_value-create'
+    ),
+    path(
+        'services/<int:service_id>/values/<int:value_id>/edit/',
+        views.update_service_values,
+        name='service_value-edit'
+    ),
+    path(
+        'services/<int:service_id>/values/<int:value_id>/delete/',
+        views.ServiceValueDeleteView.as_view(),
+        name='service_value-delete'
+    ),
     path('classifier_nodes/list/', views.ClassifierNodeView.as_view(), name='classifier_nodes'),
     path(
         'classifier_nodes/create/',

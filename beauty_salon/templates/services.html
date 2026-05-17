@@ -50,8 +50,9 @@
                 {% endfor %}
             </div>
             <div class="card__body">
-                {{ service.description }}
                 {% if service.code %}<p>Обозначение: <strong>{{ service.code }}</strong></p>{% endif %}
+                <p>Значения параметров:</p>
+                <a href="{% url 'master_dashboard:service_values' service_id=service.id %}">Подробнее</a>
             </div>
             <a href="#" class="card__link">Подробнее →</a>
         </div>
