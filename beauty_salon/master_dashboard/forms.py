@@ -143,3 +143,18 @@ class MeasuringUnitForm(forms.ModelForm):
     class Meta:
         model = MeasuringUnit
         fields = ('name',)
+
+
+class EnumerationValueOrderingForm(forms.ModelForm):
+    class Meta:
+        model = Value
+        fields = ('id', 'num',)
+
+
+def get_enumeration_value_ordering_formset():
+    return forms.modelformset_factory(
+        Value,
+        form=EnumerationValueOrderingForm,
+        extra=0,
+        can_delete=False
+    )

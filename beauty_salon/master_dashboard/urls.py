@@ -105,6 +105,11 @@ urlpatterns = [
         views.EnumerationValueDeleteView.as_view(),
         name='enumeration_value-delete'
     ),
+    path(
+        'enumerations/<int:enumeration_id>/values/ordering/',
+        views.order_enumeration_values,
+        name='enumeration_value-ordering'
+    ),
 
     path('measuring_units/list/', views.MeasuringUnitView.as_view(), name='measuring_units'),
     path(

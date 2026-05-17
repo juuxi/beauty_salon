@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView
+from django.db import transaction
 
 from api.models import (
     Service,
@@ -22,6 +23,7 @@ from .forms import (
     EnumerationValueForm,
     ParameterNodeForm,
     ServiceValueForm,
+    get_enumeration_value_ordering_formset,
 )
 
 
@@ -237,7 +239,6 @@ class EnumerationDeleteView(DeleteView):
 class ValueListView(ListView):
     template_name = 'enumeration/enumeration_values.html'
     context_object_name = 'values'
-    ordering = '-num'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -245,7 +246,7 @@ class ValueListView(ListView):
         return context
 
     def get_queryset(self):
-        return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id'])
+        return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id']).order_by('num')
 
 
 def create_update_enumeration_values(request, enumeration_id, value_id=None):
@@ -274,6 +275,28 @@ class EnumerationValueDeleteView(DeleteView):
 
     def get_queryset(self):
         return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id'])
+
+
+@transaction.atomic
+def order_enumeration_values(request, enumeration_id):
+    enumeration = get_object_or_404(Enumeration, pk=enumeration_id)
+
+    queryset = Value.objects.filter(enumeration=enumeration).order_by('id')
+    EnumerationValueOrderingFormSet = get_enumeration_value_ordering_formset()
+    if request.method == 'GET':
+        formset = EnumerationValueOrderingFormSet(
+            queryset=queryset
+        )
+    if request.method == 'POST':
+        formset = EnumerationValueOrderingFormSet(
+            request.POST,
+            queryset=queryset
+        )
+        if formset.is_valid():
+            formset.save()
+            return redirect('master_dashboard:enumeration_values', enumeration_id=enumeration_id)
+    context = {'formset': formset}
+    return render(request, 'enumeration/enumeration_value-order.html', context)
 
 
 class MeasuringUnitView(ListView):
