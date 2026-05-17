@@ -184,7 +184,7 @@ class ParameterNodeDeleteView(DeleteView):
 
 class ParameterView(ListView):
     model = Parameter
-    template_name = 'parameters.html'
+    template_name = 'parameter/parameters.html'
     context_object_name = 'parameters'
     ordering = 'id'
 
@@ -198,14 +198,14 @@ def create_update_parameter(request, param_id=None):
         form.save()
         return redirect('master_dashboard:parameters')
     context = {'form': form}
-    return render(request, 'parameter-create.html', context)
+    return render(request, 'parameter/parameter-create.html', context)
 
 
 class ParameterDeleteView(DeleteView):
     model = Parameter
     success_url = reverse_lazy('master_dashboard:parameters')
     pk_url_kwarg = 'param_id'
-    template_name = 'parameter-create.html'
+    template_name = 'parameter/parameter-create.html'
 
 
 class EnumerationView(ListView):
