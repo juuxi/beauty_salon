@@ -22,9 +22,7 @@
             </div>
             <div class="card__body">
                 <p>Значения:</p>
-                {% for value in enumeration.values.all %}
-                <p><strong>{{ value.data.data }}</strong></p>
-                {% endfor %}
+                <a href="{% url 'master_dashboard:enumeration_values' enumeration_id=enumeration.id %}" class="btn btn--icon btn-detail">Подробнее</a>
                 {% if enumeration.code %}<p>Обозначение: <strong>{{ enumeration.code }}</strong></p>{% endif %}
             </div>
         </div>

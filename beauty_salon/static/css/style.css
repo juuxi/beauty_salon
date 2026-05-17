@@ -240,6 +240,15 @@ a {
     background: #ffcdd2;
 }
 
+.btn-detail {
+    background: #ffebee;
+    color: var(--green-main);
+}
+
+.btn-detail:hover {
+    background: #ffcdd2;
+}
+
 .section-title {
     text-align: center;
     font-size: 28px;

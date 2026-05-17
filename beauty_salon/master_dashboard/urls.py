@@ -37,6 +37,7 @@ urlpatterns = [
         views.ParameterDeleteView.as_view(),
         name='parameter-delete'
     ),
+
     path('enumerations/list/', views.EnumerationView.as_view(), name='enumerations'),
     path('enumerations/create/', views.create_update_enumeration, name='enumeration-create'),
     path(
@@ -49,6 +50,27 @@ urlpatterns = [
         views.EnumerationDeleteView.as_view(),
         name='enumeration-delete'
     ),
+    path(
+        'enumerations/<int:enumeration_id>/values/list/',
+        views.ValueListView.as_view(),
+        name='enumeration_values'
+    ),
+    path(
+        'enumerations/<int:enumeration_id>/values/create/',
+        views.create_update_enumeration_values,
+        name='enumeration_value-create'
+    ),
+    path(
+        'enumerations/<int:enumeration_id>/values/<int:value_id>/edit/',
+        views.create_update_enumeration_values,
+        name='enumeration_value-edit'
+    ),
+    path(
+        'enumerations/<int:enumeration_id>/values/<int:value_id>/delete/',
+        views.EnumerationValueDeleteView.as_view(),
+        name='enumeration_value-delete'
+    ),
+
     path('measuring_units/list/', views.MeasuringUnitView.as_view(), name='measuring_units'),
     path(
         'measuring_units/create/',

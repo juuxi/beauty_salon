@@ -8,6 +8,7 @@ from api.models import (
     Parameter,
     Enumeration,
     MeasuringUnit,
+    Value,
 )
 
 from .forms import (
@@ -16,6 +17,7 @@ from .forms import (
     ParameterForm,
     EnumerationForm,
     MeasuringUnitForm,
+    EnumerationValueForm,
 )
 
 
@@ -121,6 +123,48 @@ class EnumerationDeleteView(DeleteView):
     success_url = reverse_lazy('master_dashboard:enumerations')
     pk_url_kwarg = 'enumeration_id'
     template_name = 'enumeration-create.html'
+
+
+class ValueListView(ListView):
+    template_name = 'enumeration_values.html'
+    context_object_name = 'values'
+    ordering = '-num'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['enumeration'] = get_object_or_404(Enumeration, pk=self.kwargs['enumeration_id'])
+        return context
+
+    def get_queryset(self):
+        return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id'])
+
+
+def create_update_enumeration_values(request, enumeration_id, value_id=None):
+    instance = None
+    if value_id:
+        instance = get_object_or_404(Value, pk=value_id)
+    if enumeration_id:
+        get_object_or_404(Enumeration, pk=enumeration_id)
+    form = EnumerationValueForm(
+        request.POST or None, instance=instance,
+        enumeration_id=enumeration_id
+    )
+    if form.is_valid():
+        value = form.save(commit=False)
+        value.enumeration_id = enumeration_id
+        value.save()
+        return redirect('master_dashboard:enumeration_values', enumeration_id=enumeration_id)
+    context = {'form': form}
+    return render(request, 'enumeration_value-create.html', context)
+
+
+class EnumerationValueDeleteView(DeleteView):
+    success_url = reverse_lazy('master_dashboard:enumerations')
+    pk_url_kwarg = 'value_id'
+    template_name = 'enumeration_value-create.html'
+
+    def get_queryset(self):
+        return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id'])
 
 
 class MeasuringUnitView(ListView):
