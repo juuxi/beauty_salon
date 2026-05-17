@@ -18,19 +18,19 @@ class ServiceForm(forms.ModelForm):
 class ClassifierNodeForm(forms.ModelForm):
     class Meta:
         model = ClassifierNode
-        fields = ('name', 'parent', 'is_terminal', 'code')
+        fields = ('name', 'parent', 'is_terminal', 'measuring_unit', 'code')
 
 
 class ParameterForm(forms.ModelForm):
     class Meta:
         model = Parameter
-        fields = ('name', 'data_type', 'enumeration', 'code')
+        fields = ('name', 'data_type', 'enumeration', 'measuring_unit', 'code')
 
 
 class EnumerationForm(forms.ModelForm):
     class Meta:
         model = Enumeration
-        fields = ('name', 'data_type', 'code')
+        fields = ('name', 'data_type', 'measuring_unit', 'code')
 
 
 class MeasuringUnitForm(forms.ModelForm):
