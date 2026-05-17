@@ -104,6 +104,9 @@ class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
         verbose_name = 'Перечисление'
         verbose_name_plural = 'Перечисления'
 
+    def __str__(self):
+        return self.name
+
 
 class Value(ModelWithTimestamp):
     num = models.IntegerField(verbose_name='Позиция')

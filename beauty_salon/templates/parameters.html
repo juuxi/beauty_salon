@@ -22,6 +22,7 @@
             </div>
             <div class="card__body">
                 <p>Тип: <span class="card__tag">{{ parameter.data_type }}</span></p>
+                {% if parameter.enumeration %}<p>Перечисление: <strong>{{ parameter.enumeration.name }}</strong></p>{% endif %}
                 {% if parameter.measuring_unit %}<p>Ед. изм: <span class="card__tag">{{ parameter.measuring_unit.name }}</span></p> {% endif %}
                 {% if parameter.code %}<p>Обозначение: <strong>{{ parameter.code }}</strong></p>{% endif %}
             </div>

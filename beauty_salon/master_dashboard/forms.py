@@ -24,7 +24,7 @@ class ClassifierNodeForm(forms.ModelForm):
 class ParameterForm(forms.ModelForm):
     class Meta:
         model = Parameter
-        fields = ('name', 'data_type', 'code')
+        fields = ('name', 'data_type', 'enumeration', 'code')
 
 
 class EnumerationForm(forms.ModelForm):

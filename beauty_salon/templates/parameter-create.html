@@ -21,6 +21,11 @@
                 {{ form.data_type }}
             </div>
 
+            <div class="form-group toggle-hidden">
+                {{ form.enumeration.label_tag }}
+                {{ form.enumeration }}
+            </div>
+
             <div class="form-group">
                 {{ form.code.label_tag }}
                 {{ form.code }}
@@ -48,4 +53,25 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dataTypeField = document.querySelector('[name="data_type"]');
+    const targetField = document.querySelector('.toggle-hidden');
+    
+    function toggleVisibility() {
+        if (dataTypeField.value === 'enum') {
+            targetField.style.display = 'block';
+        } else {
+            targetField.style.display = 'none';
+        }
+    }
+    
+    toggleVisibility();
+    
+    dataTypeField.addEventListener('change', toggleVisibility);
+});
+</script>
 {% endblock %}
