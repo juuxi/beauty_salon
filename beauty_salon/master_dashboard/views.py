@@ -210,7 +210,7 @@ class ParameterDeleteView(DeleteView):
 
 class EnumerationView(ListView):
     model = Enumeration
-    template_name = 'enumerations.html'
+    template_name = 'enumeration/enumerations.html'
     context_object_name = 'enumerations'
     ordering = 'id'
 
@@ -224,18 +224,18 @@ def create_update_enumeration(request, enumeration_id=None):
         form.save()
         return redirect('master_dashboard:enumerations')
     context = {'form': form}
-    return render(request, 'enumeration-create.html', context)
+    return render(request, 'enumeration/enumeration-create.html', context)
 
 
 class EnumerationDeleteView(DeleteView):
     model = Enumeration
     success_url = reverse_lazy('master_dashboard:enumerations')
     pk_url_kwarg = 'enumeration_id'
-    template_name = 'enumeration-create.html'
+    template_name = 'enumeration/enumeration-create.html'
 
 
 class ValueListView(ListView):
-    template_name = 'enumeration_values.html'
+    template_name = 'enumeration/enumeration_values.html'
     context_object_name = 'values'
     ordering = '-num'
 
@@ -264,13 +264,13 @@ def create_update_enumeration_values(request, enumeration_id, value_id=None):
         value.save()
         return redirect('master_dashboard:enumeration_values', enumeration_id=enumeration_id)
     context = {'form': form}
-    return render(request, 'enumeration_value-create.html', context)
+    return render(request, 'enumeration/enumeration_value-create.html', context)
 
 
 class EnumerationValueDeleteView(DeleteView):
     success_url = reverse_lazy('master_dashboard:enumerations')
     pk_url_kwarg = 'value_id'
-    template_name = 'enumeration_value-create.html'
+    template_name = 'enumeration/enumeration_value-create.html'
 
     def get_queryset(self):
         return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id'])
