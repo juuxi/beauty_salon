@@ -21,6 +21,9 @@ class MeasuringUnit(models.Model):
         verbose_name = 'Единица измерения'
         verbose_name_plural = 'Единицы измерения'
 
+    def __str__(self):
+        return self.name
+
 
 class ModelWithMeasuringUnit(models.Model):
     measuring_unit = models.ForeignKey(
