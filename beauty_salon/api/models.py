@@ -87,13 +87,13 @@ class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     name = models.CharField(max_length=200, verbose_name='Название перечисления')
 
     DATA_TYPES = (
-        ('str', 'String'),
-        ('int', 'Integer'),
-        ('real', 'Real'),
-        ('pic', 'Picture'),
+        ('str', 'Строка'),
+        ('int', 'Целое число'),
+        ('real', 'Вещественное число'),
+        ('pic', 'Картинка'),
     )
 
-    data_type = models.CharField(max_length=4, choices=DATA_TYPES)
+    data_type = models.CharField(max_length=4, choices=DATA_TYPES, verbose_name='Тип данных')
 
     nodes = models.ManyToManyField(
         ClassifierNode, related_name='enumerations', verbose_name='Узлы классификатора'
@@ -136,9 +136,9 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
     name = models.CharField(max_length=200, verbose_name='Название параметра')
 
     DATA_TYPES = (
-        ('int', 'Integer'),
-        ('real', 'Real'),
-        ('enum', 'Enumeration'),
+        ('int', 'Целое число'),
+        ('real', 'Вещественное число'),
+        ('enum', 'Перечисление'),
     )
 
     data_type = models.CharField(
@@ -161,6 +161,7 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        verbose_name='Перечисление',
     )
 
     class Meta:
