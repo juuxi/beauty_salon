@@ -27,7 +27,7 @@ from .forms import (
 
 class ServiceListView(ListView):
     model = Service
-    template_name = 'services.html'
+    template_name = 'service/services.html'
     context_object_name = 'services'
     ordering = 'id'
 
@@ -41,18 +41,18 @@ def create_update_service(request, service_id=None):
         form.save()
         return redirect('master_dashboard:services')
     context = {'form': form}
-    return render(request, 'service-create.html', context)
+    return render(request, 'service/service-create.html', context)
 
 
 class ServiceDeleteView(DeleteView):
     model = Service
     success_url = reverse_lazy('master_dashboard:services')
     pk_url_kwarg = 'service_id'
-    template_name = 'service-create.html'
+    template_name = 'service/service-create.html'
 
 
 class ServiceValuesListView(ListView):
-    template_name = 'service_values.html'
+    template_name = 'service/service_values.html'
     context_object_name = 'parameters_values'
 
     def get_queryset(self):
@@ -90,7 +90,7 @@ def create_service_values(request, service_id, param_id):
         value.save()
         return redirect('master_dashboard:service_values', service_id=service_id)
     context = {'form': form, 'parameter': param}
-    return render(request, 'service_value-create.html', context)
+    return render(request, 'service/service_value-create.html', context)
 
 
 def update_service_values(request, service_id, value_id):
@@ -103,12 +103,12 @@ def update_service_values(request, service_id, value_id):
         value.save()
         return redirect('master_dashboard:service_values', service_id=service_id)
     context = {'form': form, 'parameter': instance.parameter}
-    return render(request, 'service_value-create.html', context)
+    return render(request, 'service/service_value-create.html', context)
 
 
 class ServiceValueDeleteView(DeleteView):
     pk_url_kwarg = 'value_id'
-    template_name = 'service_value-create.html'
+    template_name = 'service/service_value-create.html'
 
     def get_queryset(self):
         return ParameterValueService.objects.filter(service_id=self.kwargs['service_id'])
