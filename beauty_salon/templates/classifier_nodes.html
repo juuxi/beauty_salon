@@ -24,6 +24,7 @@
                 <p>Родитель: <strong>{{ classifier.parent|default:"Корень" }}</strong></p>
                 <p>Листовой: <span class="card__tag">{% if classifier.is_terminal == True %} Да {% else %} Нет {% endif %}</span></p>
                 {% if classifier.code %}<p>Обозначение: <strong>{{ classifier.code }}</strong></p>{% endif %}
+                <p>Параметры: <a href="{% url 'master_dashboard:classifier_parameters' node_id=classifier.id %}" class="btn btn--icon btn-detail">Подробнее</a></p>
             </div>
         </div>
         {% empty %}

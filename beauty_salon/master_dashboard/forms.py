@@ -8,6 +8,7 @@ from api.models import (
     MeasuringUnit,
     Value,
     ContentType,
+    ParameterNode,
 )
 
 from api.utils import (
@@ -80,6 +81,12 @@ class EnumerationValueForm(forms.ModelForm):
             self.save_m2m()
 
         return instance
+
+
+class ParameterNodeForm(forms.ModelForm):
+    class Meta:
+        model = ParameterNode
+        fields = ('parameter', 'num', 'min_param_value', 'max_param_value')
 
 
 class MeasuringUnitForm(forms.ModelForm):

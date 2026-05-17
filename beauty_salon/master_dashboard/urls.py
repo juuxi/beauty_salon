@@ -29,6 +29,21 @@ urlpatterns = [
         views.ClassifierNodeDeleteView.as_view(),
         name='classifier_node-delete'
     ),
+    path(
+        'classifier_nodes/<int:node_id>/classifier_parameters/list/',
+        views.ParameterNodeListView.as_view(),
+        name='classifier_parameters'
+    ),
+    path(
+        'classifier_nodes/<int:node_id>/classifier_parameters/create/',
+        views.create_classifier_node_parameters,
+        name='classifier_parameter-create'
+    ),
+    path(
+        'classifier_nodes/<int:node_id>/classifier_parameters/<int:param_node_id>/delete/',
+        views.ParameterNodeDeleteView.as_view(),
+        name='classifier_parameter-delete'
+    ),
     path('parameters/list/', views.ParameterView.as_view(), name='parameters'),
     path('parameters/create/', views.create_update_parameter, name='parameter-create'),
     path('parameters/<int:param_id>/edit/', views.create_update_parameter, name='parameter-edit'),

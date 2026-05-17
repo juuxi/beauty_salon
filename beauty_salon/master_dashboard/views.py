@@ -9,6 +9,7 @@ from api.models import (
     Enumeration,
     MeasuringUnit,
     Value,
+    ParameterNode,
 )
 
 from .forms import (
@@ -18,6 +19,7 @@ from .forms import (
     EnumerationForm,
     MeasuringUnitForm,
     EnumerationValueForm,
+    ParameterNodeForm,
 )
 
 
@@ -71,6 +73,43 @@ class ClassifierNodeDeleteView(DeleteView):
     success_url = reverse_lazy('master_dashboard:classifier_nodes')
     pk_url_kwarg = 'node_id'
     template_name = 'classifier_node-create.html'
+
+
+class ParameterNodeListView(ListView):
+    template_name = 'classifier_parameters.html'
+    context_object_name = 'classifier_parameters'
+    ordering = 'num'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['classifier'] = get_object_or_404(ClassifierNode, pk=self.kwargs['node_id'])
+        return context
+
+    def get_queryset(self):
+        return ParameterNode.objects.filter(classifiernode_id=self.kwargs['node_id'])
+
+
+def create_classifier_node_parameters(request, node_id):
+    if node_id:
+        get_object_or_404(ClassifierNode, pk=node_id)
+    form = ParameterNodeForm(request.POST or None)
+    if form.is_valid():
+        parameter_node = form.save(commit=False)
+        parameter_node.classifiernode_id = node_id
+        parameter_node.save()
+        return redirect('master_dashboard:classifier_parameters', node_id=node_id)
+    parameters = Parameter.objects.all()
+    context = {'form': form, 'parameters': parameters}
+    return render(request, 'classifier_parameter-create.html', context)
+
+
+class ParameterNodeDeleteView(DeleteView):
+    success_url = reverse_lazy('master_dashboard:classifier_nodes')
+    pk_url_kwarg = 'param_node_id'
+    template_name = 'classifier_parameter-create.html'
+
+    def get_queryset(self):
+        return ParameterNode.objects.filter(classifiernode_id=self.kwargs['node_id'])
 
 
 class ParameterView(ListView):

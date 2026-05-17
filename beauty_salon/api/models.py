@@ -172,6 +172,9 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
         verbose_name = 'Параметр'
         verbose_name_plural = 'Параметры'
 
+    def __str__(self):
+        return self.name
+
 
 class ParameterNode(models.Model):
     parameter = models.ForeignKey(

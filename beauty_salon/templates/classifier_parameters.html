@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Параметры класса {{ classifier.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Параметры класса {{ classifier.name }}</h1>
+    <a href="{% url 'master_dashboard:classifier_parameter-create' node_id=classifier.id %}" class="btn btn--primary open-modal-btn">+ Добавить параметр</a>
+</div>
+
+<div class="container">
+    <div class="list-grid">
+        {% for classifier_parameter in classifier_parameters %}
+        {% with parameter=classifier_parameter.parameter %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ parameter.name }}</h3>
+                <p>{{ parameter.data_type }}</p>
+                {% if classifier_parameter.min_param_value %}<p>Минимальное значение: {{ classifier_parameter.min_param_value }}</p>{% endif %}
+                {% if classifier_parameter.max_param_value %}<p>Максимальное значение: {{ classifier_parameter.max_param_value }}</p>{% endif %}
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:classifier_parameter-delete' node_id=classifier.id param_node_id=classifier_parameter.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% empty %}
+        <p>Параметры пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
