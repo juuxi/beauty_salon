@@ -16,14 +16,16 @@
         <div class="card">
             <div class="card__header">
                 <h3>{{ parameter.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:classifier_parameter-delete' node_id=classifier.id param_node_id=classifier_parameter.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+            <div class="card__body">
                 <p>{{ parameter.data_type }}</p>
                 {% if classifier_parameter.min_param_value %}<p>Минимальное значение: {{ classifier_parameter.min_param_value }}</p>{% endif %}
                 {% if classifier_parameter.max_param_value %}<p>Максимальное значение: {{ classifier_parameter.max_param_value }}</p>{% endif %}
             </div>
-            <div class="card__actions">
-                <a href="{% url 'master_dashboard:classifier_parameter-delete' node_id=classifier.id param_node_id=classifier_parameter.id %}" class="btn btn--icon btn-delete">🗑️</a>
-            </div>
-        </div>
+            
         {% endwith %}
         {% empty %}
         <p>Параметры пока не добавлены</p>

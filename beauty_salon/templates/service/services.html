@@ -43,18 +43,12 @@
                     <a href="{% url 'master_dashboard:service-delete' service_id=service.id %}" class="btn btn--icon btn-delete">🗑️</a>
                 </div>
             </div>
-                        <div class="card__section">
-                <div class="card__section-title">
-                    <span class="icon">📂</span>
-                    <span>Базовый класс</span>
-                </div>
-                <p style="margin: 0; font-weight: 500; color: var(--text-main);">{{ service.base_class }}</p>
-            </div>
             <div class="card__body">
+                <p>Базовый класс: <strong>{{ service.base_class }}</strong></p>
                 {% if service.code %}<p>Обозначение: <strong>{{ service.code }}</strong></p>{% endif %}
-                <p><a href="{% url 'master_dashboard:service_values' service_id=service.id %}" 
-                    class="btn-link btn--parameter-values">
-                    Значения параметров: 
+                <p>Значения параметров: <a href="{% url 'master_dashboard:service_values' service_id=service.id %}" 
+                    class="btn-link btn--beauty">
+                    см. параметры
                 </a></p>
             </div>
         </div>
