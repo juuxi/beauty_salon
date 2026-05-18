@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Единицы измерения - Flora{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Единицы измерения</h1>
+    <a href="{% url 'master_dashboard:measuring_unit-create' %}" class="btn btn--primary open-modal-btn">+ Добавить единицу</a>
+</div>
+
+<div class="container">
+    <div class="list-grid">
+        {% for unit in measuring_units %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ unit.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:measuring_unit-edit' unit_id=unit.id %}" class="btn btn--icon btn-edit open-modal-btn">✏️</a>
+                    <a href="{% url 'master_dashboard:measuring_unit-delete' unit_id=unit.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Единицы измерения пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal Window for Unit -->
+<div class="modal-overlay" id="unitModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Добавление единицы измерения</h2>
+            <button class="modal-close" data-close="unitModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form class="modal-form" id="unitForm" method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="u-name">Название <span class="required">*</span></label>
+                        <input type="text" id="u-name" name="name" placeholder="Например: Минуты" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="u-code">Код <span class="required">*</span></label>
+                        <input type="text" id="u-code" name="code" placeholder="min" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="u-desc">Описание</label>
+                    <textarea id="u-desc" name="description" rows="2" placeholder="Единица времени"></textarea>
+                </div>
+
+                <div class="form-error" id="unitError" style="display: none;">
+                    ⚠️ Пожалуйста, заполните обязательные поля корректно.
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn--outline" data-close="unitModal">Отмена</button>
+            <button type="submit" form="unitForm" class="btn btn--primary">Сохранить</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const openButtons = document.querySelectorAll('.open-modal-btn');
+    const closeButtons = document.querySelectorAll('[data-close]');
+    const overlays = document.querySelectorAll('.modal-overlay');
+
+    function openModal(modalId, isEdit = false) {
+        const modal = document.getElementById(modalId);
+        const title = document.getElementById('modalTitle');
+        
+        if (isEdit) {
+            title.textContent = 'Редактирование единицы';
+        } else {
+            title.textContent = 'Добавление единицы измерения';
+            document.getElementById('unitForm').reset();
+        }
+        
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            const error = modal.querySelector('.form-error');
+            if (error) error.style.display = 'none';
+        }
+    }
+
+    openButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal');
+            const isEdit = this.getAttribute('data-edit') === 'true';
+            openModal(modalId, isEdit);
+        });
+    });
+
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            closeModal(this.getAttribute('data-close'));
+        });
+    });
+
+    overlays.forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeModal(overlay.id);
+            }
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            overlays.forEach(overlay => {
+                if (overlay.classList.contains('active')) {
+                    closeModal(overlay.id);
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if '/delete/' in request.path %}Удаление параметра{% else %}Создание параметра{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">{% if '/delete/' in request.path %}Удаление параметра{% else %}Создание параметра{% endif %}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+
+            <div class="form-group">
+                {{ form.parameter.label_tag }}
+                {{ form.parameter }}
+            </div>
+
+            <div class="form-group">
+                {{ form.num.label_tag }}
+                {{ form.num }}
+            </div>
+
+            <div class="form-group toggle-hidden">
+                {{ form.min_param_value.label_tag }}
+                {{ form.min_param_value }}
+            </div>
+
+            <div class="form-group toggle-hidden">
+                {{ form.max_param_value.label_tag }}
+                {{ form.max_param_value }}
+            </div>
+
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="form-group">
+                <p><strong>Параметр:</strong> <font class="card__tag">{{ object.parameter.name }}</font></p>
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:classifier_nodes' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">{% if '/delete/' in request.path %}Удалить{% else %}Опубликовать{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dataTypeField = document.querySelector('[name="parameter"]');
+    const targetFields = document.querySelectorAll('.toggle-hidden');
+
+    const parameterTypeMap = { // создается один раз при загрузке документа
+        {% for parameter in parameters %}
+            {{ parameter.id }}: '{{ parameter.data_type }}'{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    function toggleVisibility() {
+        const selectedId = dataTypeField.value; // динамически узнает выбранный параметр
+        const data_type = parameterTypeMap[selectedId];
+
+        if (data_type === 'int' || data_type === 'real') {
+            targetFields.forEach(field => {
+                field.style.display = 'block';
+            });
+        } else {
+            targetFields.forEach(field => {
+                field.style.display = 'none';
+            });
+        }
+    }
+    
+    toggleVisibility();
+    
+    dataTypeField.addEventListener('change', toggleVisibility);
+});
+</script>
+{% endblock %}

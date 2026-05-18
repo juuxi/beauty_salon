@@ -5,25 +5,16 @@ from django.db.models import Deferrable
 
 
 class ModelWithTimestamp(models.Model):
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата обновления'
-    )
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
     class Meta:
         abstract = True
 
 
 class MeasuringUnit(models.Model):
-    name = models.CharField(
-        max_length=50,
-        verbose_name='Название единицы измерения'
-    )
+    name = models.CharField(max_length=50, verbose_name='Название единицы измерения')
 
     class Meta:
         db_table = 'measuring_unit'
@@ -44,11 +35,17 @@ class ModelWithMeasuringUnit(models.Model):
         abstract = True
 
 
-class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit):
-    name = models.CharField(
-        max_length=200,
-        verbose_name="Название узла"
+class CodedModel(models.Model):
+    code = models.CharField(
+        max_length=15, unique=True, blank=True, null=True, verbose_name='Обозначение'
     )
+
+    class Meta:
+        abstract = True
+
+
+class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
+    name = models.CharField(max_length=200, verbose_name="Название узла")
 
     parent = models.ForeignKey(
         'self',
@@ -56,13 +53,10 @@ class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit):
         blank=True,
         on_delete=models.CASCADE,
         related_name='children',
-        verbose_name='Родительский узел'
+        verbose_name='Родительский узел',
     )
 
-    is_terminal = models.BooleanField(
-        default=True,
-        verbose_name='Является листом'
-    )
+    is_terminal = models.BooleanField(default=True, verbose_name='Является листом')
 
     class Meta:
         db_table = 'classifier_node'
@@ -86,11 +80,8 @@ class PictureData(models.Model):
     data = models.URLField()
 
 
-class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit):
-    name = models.CharField(
-        max_length=200,
-        verbose_name='Название перечисления'
-    )
+class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
+    name = models.CharField(max_length=200, verbose_name='Название перечисления')
 
     DATA_TYPES = (
         ('str', 'String'),
@@ -102,9 +93,7 @@ class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit):
     data_type = models.CharField(max_length=4, choices=DATA_TYPES)
 
     nodes = models.ManyToManyField(
-        ClassifierNode,
-        related_name='enumerations',
-        verbose_name='Узлы классификатора'
+        ClassifierNode, related_name='enumerations', verbose_name='Узлы классификатора'
     )
 
     class Meta:
@@ -114,15 +103,13 @@ class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit):
 
 
 class Value(ModelWithTimestamp):
-    num = models.IntegerField(
-        verbose_name='Позиция'
-    )
+    num = models.IntegerField(verbose_name='Позиция')
 
     enumeration = models.ForeignKey(
         Enumeration,
         on_delete=models.CASCADE,
         related_name='values',
-        verbose_name='Перечисление'
+        verbose_name='Перечисление',
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -142,28 +129,35 @@ class Value(ModelWithTimestamp):
         verbose_name_plural = 'Значения перечисления'
 
 
-class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit):
-    name = models.CharField(
-        max_length=200,
-        verbose_name='Название параметра'
-    )
+class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
+    name = models.CharField(max_length=200, verbose_name='Название параметра')
 
     DATA_TYPES = (
         ('int', 'Integer'),
+        ('real', 'Real'),
         ('enum', 'Enumeration'),
     )
 
     data_type = models.CharField(
-        max_length=4,
-        choices=DATA_TYPES,
-        verbose_name='Тип данных'
+        max_length=9, choices=DATA_TYPES, verbose_name='Тип данных'
     )
 
     nodes = models.ManyToManyField(
         ClassifierNode,
         through='ParameterNode',
         related_name='parameters',
-        verbose_name='Узлы классификатора'
+        verbose_name='Узлы классификатора',
+    )
+
+    # очередная игра с generic-ами в данном случае была бы overkill-ом,
+    # т.к. сложно представить сслыки на другие таблицы где помимо таблицы в
+    # параметре нужен будет id
+    enumeration = models.ForeignKey(
+        Enumeration,
+        related_name='parameters_using',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
 
     class Meta:
@@ -175,46 +169,77 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit):
 class ParameterNode(models.Model):
     parameter = models.ForeignKey(
         Parameter,
+        related_name='parameters_nodes',
         on_delete=models.CASCADE,
-        verbose_name='Параметр'
+        verbose_name='Параметр',
     )
 
     classifiernode = models.ForeignKey(
         ClassifierNode,
+        related_name='parameters_nodes',
         on_delete=models.CASCADE,
-        verbose_name='Узел классификатора'
+        verbose_name='Узел классификатора',
     )
 
     min_param_value = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name='Минимальное значение'
+        null=True, blank=True, verbose_name='Минимальное значение'
     )
 
     max_param_value = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name='Максимальное значение'
+        null=True, blank=True, verbose_name='Максимальное значение'
     )
+
+    num = models.IntegerField(verbose_name='Позиция')
 
     class Meta:
         db_table = 'parameters_nodes'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['parameter', 'classifiernode'],
+                name='unique_parameter_classifiernode_constraint',
+            ),
+            models.UniqueConstraint(
+                fields=['classifiernode', 'num'],
+                name='unique_classifiernode_num_constraint',
+                deferrable=models.Deferrable.DEFERRED,
+            ),
+        ]
 
 
-class Service(ModelWithTimestamp):
-    name = models.CharField(
-        max_length=200,
-        verbose_name='Название услуги'
-    )
+class Service(ModelWithTimestamp, CodedModel):
+    name = models.CharField(max_length=200, verbose_name='Название услуги')
 
     base_class = models.ForeignKey(
         ClassifierNode,
         on_delete=models.CASCADE,
         related_name='services',
-        verbose_name='Базовый класс'
+        verbose_name='Базовый класс',
     )
 
     class Meta:
         db_table = 'services'
         verbose_name = 'Услуга'
         verbose_name_plural = 'Услуги'
+
+
+class ParameterValueService(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    data_object_id = models.PositiveIntegerField()
+    value = GenericForeignKey('content_type', 'data_object_id')
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='parameter_values',
+        verbose_name='Услуга',
+    )
+
+    parameter = models.ForeignKey(
+        Parameter,
+        on_delete=models.CASCADE,
+        related_name='values_for_services',
+        verbose_name='Услуга',
+    )
+
+    class Meta:
+        db_table = 'parameters_services'
