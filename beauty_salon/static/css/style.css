@@ -783,3 +783,76 @@ body.form-page {
         width: 100%;
     }
 }
+
+/* === Общие стили для кнопок-ссылок === */
+
+/* Базовый класс для всех кнопок-ссылок */
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background-color: transparent;
+    border: 2px solid;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* Кнопка "Параметры" - зелёная */
+.btn--parameters {
+    color: var(--green-dark);
+    border-color: var(--green-main);
+}
+
+.btn--parameters:hover {
+    background-color: var(--green-main);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(129, 178, 154, 0.3);
+}
+
+.btn--parameters:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(129, 178, 154, 0.2);
+}
+
+/* Кнопка "Значения параметров услуги" - розовая */
+.btn--parameter-values {
+    color: var(--pink-dark);
+    border-color: var(--pink-main);
+}
+
+.btn--parameter-values:hover {
+    background-color: var(--pink-main);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(232, 180, 200, 0.3);
+}
+
+.btn--parameter-values:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(232, 180, 200, 0.2);
+}
+
+/* Кнопка "Значения перечислений" - сиреневая/фиолетовая */
+.btn--enumeration-values {
+    color: #8e44ad; /* Темно-сиреневый текст */
+    border-color: #9b59b6; /* Светло-сиреневая обводка */
+}
+
+.btn--enumeration-values:hover {
+    background-color: #9b59b6;
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+}
+
+.btn--enumeration-values:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(155, 89, 182, 0.2);
+}
