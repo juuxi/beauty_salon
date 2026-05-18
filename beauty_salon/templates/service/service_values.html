@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Значения параметров {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Значения параметров {{ service.name }}</h1>
+</div>
+
+<div class="container">
+    <div class="list-grid">
+        {% for parameter, value in parameters_values %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ parameter.name }}</h3>
+                <div class="card__actions">
+                    {% if value.id %}
+                    <a href="{% url 'master_dashboard:service_value-edit' service_id=service.id value_id=value.id %}" class="btn btn--icon btn-edit open-modal-btn">✏️</a>
+                    <a href="{% url 'master_dashboard:service_value-delete' service_id=service.id value_id=value.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                    {% else %}
+                    <a href="{% url 'master_dashboard:service_value-create' service_id=service.id param_id=parameter.id %}" class="btn btn--icon btn-edit open-modal-btn">✏️</a>
+                    {% endif %}
+                </div>
+                <div class="card__body">
+                    <p>{% if value %}{% if value.parameter.data_type != 'enum' %}{{ value.value.data }}{% else %}{{ value.value.data.data}}{% endif %}{% else %}Значение не задано{% endif %}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Класс не имеет параметров</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

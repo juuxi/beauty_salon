@@ -10,7 +10,7 @@
             <nav class="nav">
                 {% with request.resolver_match.view_name as view_name %}
                 <ul class="nav__list">
-                    <li><a href="{% url 'pages:index' %}" class=".nav__link {% if view_name == 'pages:index' %}nav__link--active {% endif %}">Главная</a></li>
+                    <li><a href="{% url 'pages:index' %}" class="nav__link {% if view_name == 'pages:index' %}nav__link--active {% endif %}">Главная</a></li>
                     <li><a href="{% url 'master_dashboard:classifier_nodes' %}" class="nav__link {% if view_name == 'master_dashboard:classifier_nodes' %}nav__link--active{% endif %}">Классификатор</a></li>
                     <li><a href="{% url 'master_dashboard:services' %}" class="nav__link {% if view_name == 'master_dashboard:services' %}nav__link--active{% endif %}">Услуги</a></li>
                     <li><a href="{% url 'master_dashboard:parameters' %}" class="nav__link {% if view_name == 'master_dashboard:parameters' %}nav__link--active{% endif %}">Параметры</a></li>

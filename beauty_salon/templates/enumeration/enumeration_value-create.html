@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if '/edit/' in request.path %}Редактирование значения{% elif '/delete/' in request.path %}Удаление значения{% else %}Создание значения{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование значения{% elif '/delete/' in request.path %}Удаление значения{% else %}Создание значения{% endif %}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+
+            <div class="form-group">
+                {{ form.value.label_tag }}
+                {{ form.value }}
+            </div>
+
+            <div class="form-group">
+                {{ form.num.label_tag }}
+                {{ form.num }}
+            </div>
+
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="form-group">
+                <p><strong>Данные:</strong> <font class="card__tag">{{ object.data.data }}</font></p>
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:enumerations' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">{% if '/edit/' in request.path %}Сохранить{% elif '/delete/' in request.path %}Удалить{% else %}Опубликовать{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Сортировка значений{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">Сортировка значений</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            
+            {{ formset.management_form }}
+            
+            {% for form in formset %}
+
+            {{ form.id }}
+            {{ form.instance.data.data }}
+            <div class="form-group">
+                {{ form.num.label_tag }}
+                {{ form.num }}
+            </div>
+
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:enumerations' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">Применить</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

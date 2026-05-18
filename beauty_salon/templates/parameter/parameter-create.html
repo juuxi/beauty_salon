@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if '/edit/' in request.path %}Редактирование параметра{% elif '/delete/' in request.path %}Удаление параметра{% else %}Создание параметра{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование параметра{% elif '/delete/' in request.path %}Удаление параметра{% else %}Создание параметра{% endif %}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+
+            <div class="form-group">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+
+            <div class="form-group">
+                {{ form.data_type.label_tag }}
+                {{ form.data_type }}
+            </div>
+
+            <div class="form-group toggle-hidden">
+                {{ form.enumeration.label_tag }}
+                {{ form.enumeration }}
+            </div>
+
+            <div class="form-group">
+                {{ form.measuring_unit.label_tag }}
+                {{ form.measuring_unit }}
+            </div>
+
+            <div class="form-group">
+                {{ form.code.label_tag }}
+                {{ form.code }}
+            </div>
+
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="form-group">
+                <p><strong>Название:</strong> <font class="card__tag">{{ object.name }}</font></p>
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:parameters' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">{% if '/edit/' in request.path %}Сохранить{% elif '/delete/' in request.path %}Удалить{% else %}Опубликовать{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dataTypeField = document.querySelector('[name="data_type"]');
+    const targetField = document.querySelector('.toggle-hidden');
+    
+    function toggleVisibility() {
+        if (dataTypeField.value === 'enum') {
+            targetField.style.display = 'block';
+        } else {
+            targetField.style.display = 'none';
+        }
+    }
+    
+    toggleVisibility();
+    
+    dataTypeField.addEventListener('change', toggleVisibility);
+});
+</script>
+{% endblock %}
