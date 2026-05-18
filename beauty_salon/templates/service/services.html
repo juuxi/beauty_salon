@@ -43,6 +43,13 @@
                     <a href="{% url 'master_dashboard:service-delete' service_id=service.id %}" class="btn btn--icon btn-delete">🗑️</a>
                 </div>
             </div>
+                        <div class="card__section">
+                <div class="card__section-title">
+                    <span class="icon">📂</span>
+                    <span>Базовый класс</span>
+                </div>
+                <p style="margin: 0; font-weight: 500; color: var(--text-main);">{{ service.base_class }}</p>
+            </div>
             <div class="card__meta">
                 <span class="card__tag">{{ service.base_class }}</span>
                 {% for parameter_value in service.parameter_values.all %}
@@ -51,7 +58,10 @@
             </div>
             <div class="card__body">
                 {% if service.code %}<p>Обозначение: <strong>{{ service.code }}</strong></p>{% endif %}
-                <p>Значения параметров:</p>
+                <p><a href="{% url 'master_dashboard:service_values' service_id=service.id %}" 
+                    class="btn-link btn--parameter-values">
+                    Значение параметров: 
+                </a></p>
                 <a href="{% url 'master_dashboard:service_values' service_id=service.id %}">Подробнее</a>
             </div>
             <a href="#" class="card__link">Подробнее →</a>

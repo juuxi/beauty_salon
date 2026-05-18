@@ -21,8 +21,10 @@
                 </div>
             </div>
             <div class="card__body">
-                <p>Значения:</p>
-                <a href="{% url 'master_dashboard:enumeration_values' enumeration_id=enumeration.id %}" class="btn btn--icon btn-detail">Подробнее</a>
+                <p>Значения:<a href="{% url 'master_dashboard:enumeration_values' enumeration_id=enumeration.id %}" 
+                class="btn-link btn--enumeration-values">
+                    Значения
+                </a></p>
                 {% if enumeration.code %}<p>Обозначение: <strong>{{ enumeration.code }}</strong></p>{% endif %}
             </div>
         </div>
