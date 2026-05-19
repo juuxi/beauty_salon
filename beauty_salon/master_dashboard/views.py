@@ -24,6 +24,7 @@ from .forms import (
     ParameterNodeForm,
     ServiceValueForm,
     get_enumeration_value_ordering_formset,
+    get_parameter_node_ordering_formset,
 )
 
 
@@ -150,7 +151,6 @@ class ClassifierNodeDeleteView(DeleteView):
 class ParameterNodeListView(ListView):
     template_name = 'classifier_node/classifier_parameters.html'
     context_object_name = 'classifier_parameters'
-    ordering = 'num'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -158,7 +158,9 @@ class ParameterNodeListView(ListView):
         return context
 
     def get_queryset(self):
-        return ParameterNode.objects.filter(classifiernode_id=self.kwargs['node_id'])
+        return ParameterNode.objects.filter(
+            classifiernode_id=self.kwargs['node_id']
+            ).order_by('num')
 
 
 def create_classifier_node_parameters(request, node_id):
@@ -182,6 +184,28 @@ class ParameterNodeDeleteView(DeleteView):
 
     def get_queryset(self):
         return ParameterNode.objects.filter(classifiernode_id=self.kwargs['node_id'])
+
+
+@transaction.atomic
+def order_classifier_parameters(request, node_id):
+    classifier_node = get_object_or_404(ClassifierNode, pk=node_id)
+
+    queryset = ParameterNode.objects.filter(classifiernode=classifier_node).order_by('num')
+    ParameterNodeOrderingFormSet = get_parameter_node_ordering_formset()
+    if request.method == 'GET':
+        formset = ParameterNodeOrderingFormSet(
+            queryset=queryset
+        )
+    if request.method == 'POST':
+        formset = ParameterNodeOrderingFormSet(
+            request.POST,
+            queryset=queryset
+        )
+        if formset.is_valid():
+            formset.save()
+            return redirect('master_dashboard:classifier_parameters', node_id=node_id)
+    context = {'formset': formset}
+    return render(request, 'classifier_node/classifier_parameter-order.html', context)
 
 
 class ParameterView(ListView):
@@ -281,7 +305,7 @@ class EnumerationValueDeleteView(DeleteView):
 def order_enumeration_values(request, enumeration_id):
     enumeration = get_object_or_404(Enumeration, pk=enumeration_id)
 
-    queryset = Value.objects.filter(enumeration=enumeration).order_by('id')
+    queryset = Value.objects.filter(enumeration=enumeration).order_by('num')
     EnumerationValueOrderingFormSet = get_enumeration_value_ordering_formset()
     if request.method == 'GET':
         formset = EnumerationValueOrderingFormSet(

@@ -158,3 +158,18 @@ def get_enumeration_value_ordering_formset():
         extra=0,
         can_delete=False
     )
+
+
+class ParameterNodeOrderingForm(forms.ModelForm):
+    class Meta:
+        model = ParameterNode
+        fields = ('id', 'num',)
+
+
+def get_parameter_node_ordering_formset():
+    return forms.modelformset_factory(
+        ParameterNode,
+        form=ParameterNodeOrderingForm,
+        extra=0,
+        can_delete=False
+    )
