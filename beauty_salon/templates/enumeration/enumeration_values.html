@@ -14,7 +14,11 @@
         {% for value in values %}
         <div class="card">
             <div class="card__header">
+                {% if value.content_type.name == 'picture data' %}
+                <img src="{{ value.data.data }}" style="max-width: 180px;">
+                {% else %}
                 <h3>{{ value.data.data }}</h3>
+                {% endif %}
                 <div class="card__actions">
                     <a href="{% url 'master_dashboard:enumeration_value-edit' enumeration_id=enumeration.id value_id=value.id %}" class="btn btn--icon btn-edit open-modal-btn">✏️</a>
                     <a href="{% url 'master_dashboard:enumeration_value-delete' enumeration_id=enumeration.id value_id=value.id %}" class="btn btn--icon btn-delete">🗑️</a>
