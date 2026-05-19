@@ -4,6 +4,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Deferrable
 
 
+class ModelWithName(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Название")
+
+    class Meta:
+        abstract = True
+
+
 class ModelWithTimestamp(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
@@ -13,8 +20,7 @@ class ModelWithTimestamp(models.Model):
         abstract = True
 
 
-class MeasuringUnit(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Название единицы измерения')
+class MeasuringUnit(ModelWithName):
 
     class Meta:
         db_table = 'measuring_unit'
@@ -47,9 +53,7 @@ class CodedModel(models.Model):
         abstract = True
 
 
-class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
-    name = models.CharField(max_length=200, verbose_name="Название узла")
-
+class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
     parent = models.ForeignKey(
         'self',
         null=True,
@@ -86,9 +90,7 @@ class PictureData(models.Model):
     data = models.URLField()
 
 
-class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
-    name = models.CharField(max_length=200, verbose_name='Название перечисления')
-
+class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
     DATA_TYPES = (
         ('str', 'Строка'),
         ('int', 'Целое число'),
@@ -141,9 +143,7 @@ class Value(ModelWithTimestamp):
         return str(self.data.data)
 
 
-class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel):
-    name = models.CharField(max_length=200, verbose_name='Название параметра')
-
+class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
     DATA_TYPES = (
         ('int', 'Целое число'),
         ('real', 'Вещественное число'),
@@ -222,9 +222,7 @@ class ParameterNode(models.Model):
         ]
 
 
-class Service(ModelWithTimestamp, CodedModel):
-    name = models.CharField(max_length=200, verbose_name='Название услуги')
-
+class Service(ModelWithTimestamp, CodedModel, ModelWithName):
     base_class = models.ForeignKey(
         ClassifierNode,
         on_delete=models.CASCADE,
