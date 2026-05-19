@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="page-header">
-    <h1 class="page-title">Значения перечисления {{ enumeration.name }}</h1>
+    <h1 class="page-title">Значения перечисления "{{ enumeration.name }}"</h1>
     <a href="{% url 'master_dashboard:enumeration_value-create' enumeration_id=enumeration.id %}" class="btn btn--primary open-modal-btn">+ Создать значение</a>
 </div>
 
