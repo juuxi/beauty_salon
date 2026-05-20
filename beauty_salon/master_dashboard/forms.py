@@ -19,6 +19,7 @@ from api.utils import (
 from .utils import (
     validate_value,
     validate_num,
+    validate_transaction_num,
 )
 
 
@@ -145,6 +146,23 @@ class MeasuringUnitForm(forms.ModelForm):
         fields = ('name',)
 
 
+class BaseOrderingFormSet(forms.BaseModelFormSet):
+    def clean(self):
+        super().clean()
+
+        if any(self.errors):
+            return
+
+        seen_nums = set()
+
+        for form in self.forms:
+            if not form.is_valid():
+                continue
+
+            num = form.cleaned_data.get('num')
+            validate_transaction_num(num, seen_nums)
+
+
 class EnumerationValueOrderingForm(forms.ModelForm):
     class Meta:
         model = Value
@@ -155,6 +173,7 @@ def get_enumeration_value_ordering_formset():
     return forms.modelformset_factory(
         Value,
         form=EnumerationValueOrderingForm,
+        formset=BaseOrderingFormSet,
         extra=0,
         can_delete=False
     )
@@ -170,6 +189,7 @@ def get_parameter_node_ordering_formset():
     return forms.modelformset_factory(
         ParameterNode,
         form=ParameterNodeOrderingForm,
+        formset=BaseOrderingFormSet,
         extra=0,
         can_delete=False
     )

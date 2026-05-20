@@ -34,3 +34,10 @@ def validate_num(num, enumeration):
         raise ValidationError(f'Пара (позиция = {num}, данное перечисление) уже существует')
 
     return num
+
+
+def validate_transaction_num(curr_num, nums_set):
+    if curr_num in nums_set:
+        raise ValidationError(f'Пара (позиция = {curr_num}, данное перечисление) уже существует')
+    nums_set.add(curr_num)
+    return curr_num
