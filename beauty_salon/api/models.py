@@ -114,7 +114,7 @@ class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelW
 
 
 class Value(ModelWithTimestamp):
-    num = models.IntegerField(verbose_name='Позиция')
+    num = models.PositiveIntegerField(verbose_name='Позиция')
 
     enumeration = models.ForeignKey(
         Enumeration,
@@ -205,7 +205,7 @@ class ParameterNode(models.Model):
         null=True, blank=True, verbose_name='Максимальное значение'
     )
 
-    num = models.IntegerField(verbose_name='Позиция')
+    num = models.PositiveIntegerField(verbose_name='Позиция')
 
     class Meta:
         db_table = 'parameters_nodes'
