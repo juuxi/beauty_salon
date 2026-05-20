@@ -32,7 +32,7 @@
             {% endif %}
             {% endfor %}
             <div class="form-actions">
-                <a href="{% url 'master_dashboard:classifier_nodes' %}" class="btn btn-cancel">Отмена</a>
+                <a href="{% url 'master_dashboard:classifier_parameters' node_id=classifier.id %}" class="btn btn-cancel">Отмена</a>
                 <button type="submit" class="btn btn-save">Применить</button>
             </div>
         </form>

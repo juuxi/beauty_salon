@@ -204,7 +204,7 @@ def order_classifier_parameters(request, node_id):
         if formset.is_valid():
             formset.save()
             return redirect('master_dashboard:classifier_parameters', node_id=node_id)
-    context = {'formset': formset}
+    context = {'formset': formset, 'classifier': classifier_node}
     return render(request, 'classifier_node/classifier_parameter-order.html', context)
 
 
@@ -319,7 +319,7 @@ def order_enumeration_values(request, enumeration_id):
         if formset.is_valid():
             formset.save()
             return redirect('master_dashboard:enumeration_values', enumeration_id=enumeration_id)
-    context = {'formset': formset}
+    context = {'formset': formset, 'enumeration': enumeration}
     return render(request, 'enumeration/enumeration_value-order.html', context)
 
 
