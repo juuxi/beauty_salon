@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Deferrable
+from django.core.validators import MinValueValidator
 
 
 class ModelWithName(models.Model):
@@ -114,7 +115,7 @@ class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelW
 
 
 class Value(ModelWithTimestamp):
-    num = models.PositiveIntegerField(verbose_name='Позиция')
+    num = models.PositiveIntegerField(verbose_name='Позиция', validators=[MinValueValidator(1)])
 
     enumeration = models.ForeignKey(
         Enumeration,
@@ -205,7 +206,7 @@ class ParameterNode(models.Model):
         null=True, blank=True, verbose_name='Максимальное значение'
     )
 
-    num = models.PositiveIntegerField(verbose_name='Позиция')
+    num = models.PositiveIntegerField(verbose_name='Позиция', validators=[MinValueValidator(1)])
 
     class Meta:
         db_table = 'parameters_nodes'
