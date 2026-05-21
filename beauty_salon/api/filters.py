@@ -23,15 +23,15 @@ class ServiceFilter(django_filters.FilterSet):
             if exp_type != int and exp_type != float:
                 raise ValidationError({'values': 'mode is only availible \
                                         for number params'})
-            if mode == 'ge':
+            if mode == 'gte':
                 return Q(
                     content_type_id=content_type_id,
-                    data_object_id__in=(model.objects.filter(data__ge=param_value)),
+                    data_object_id__in=(model.objects.filter(data__gte=param_value)),
                 )
-            if mode == 'le':
+            if mode == 'lte':
                 return Q(
                     content_type_id=content_type_id,
-                    data_object_id__in=(model.objects.filter(data__le=param_value)),
+                    data_object_id__in=(model.objects.filter(data__lte=param_value)),
                 )
 
         return Q(
