@@ -41,3 +41,25 @@ def validate_transaction_num(curr_num, nums_set):
         raise ValidationError(f'Пара (позиция = {curr_num}, данное перечисление) уже существует')
     nums_set.add(curr_num)
     return curr_num
+
+
+def add_parameter_values_to_filter(filter_text, parameter, form):
+    min_value = form.cleaned_data.get('min_value')
+    max_value = form.cleaned_data.get('max_value')
+    if min_value:
+        if filter_text:
+            filter_text += '&'
+        if max_value:
+            if min_value == max_value:
+                filter_text += f'{parameter.name}={min_value}'
+            else:
+                filter_text += f'{parameter.name}__ge={min_value}&'
+                filter_text += f'{parameter.name}__le={max_value}'
+        else:
+            filter_text += f'{parameter.name}__ge={min_value}'
+    else:
+        if max_value:
+            if filter_text:
+                filter_text += '&'
+            filter_text += f'{parameter.name}__le={max_value}'
+    return filter_text

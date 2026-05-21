@@ -32,6 +32,10 @@ from .forms import (
     get_service_filter_formset,
 )
 
+from .utils import (
+    add_parameter_values_to_filter,
+)
+
 
 class ServiceListView(FilterView):
     model = Service
@@ -137,7 +141,10 @@ def filter_services(request):
         formset = ServiceFilterFormSet(request.POST)
         if formset.is_valid():
             url = reverse('master_dashboard:services')
-            return redirect(f'{url}?values=test5=55')
+            filter_text = ''
+            for parameter, form in zip(parameters, formset):
+                filter_text = add_parameter_values_to_filter(filter_text, parameter, form)
+            return redirect(f'{url}?values={filter_text}')
     context = {'formset': formset, 'parameters': parameters}
     return render(request, 'service/service-filter.html', context)
 
