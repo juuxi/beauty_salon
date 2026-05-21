@@ -193,3 +193,16 @@ def get_parameter_node_ordering_formset():
         extra=0,
         can_delete=False
     )
+
+
+class ServiceFilterForm(forms.Form):
+    min_value = forms.IntegerField(label='Мин. значение', required=False)
+    max_value = forms.IntegerField(label='Макс. значение', required=False)
+
+
+def get_service_filter_formset(extra=0):
+    return forms.formset_factory(
+        form=ServiceFilterForm,
+        extra=extra,
+        can_delete=False
+    )

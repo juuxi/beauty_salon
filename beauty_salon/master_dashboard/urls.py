@@ -33,6 +33,11 @@ urlpatterns = [
         views.ServiceValueDeleteView.as_view(),
         name='service_value-delete'
     ),
+    path(
+        'services/filter/',
+        views.filter_services,
+        name='service-filter'
+    ),
     path('classifier_nodes/list/', views.ClassifierNodeView.as_view(), name='classifier_nodes'),
     path(
         'classifier_nodes/create/',

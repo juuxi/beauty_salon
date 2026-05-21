@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView
 from django.db import transaction
 
@@ -29,6 +29,7 @@ from .forms import (
     ServiceValueForm,
     get_enumeration_value_ordering_formset,
     get_parameter_node_ordering_formset,
+    get_service_filter_formset,
 )
 
 
@@ -125,6 +126,20 @@ class ServiceValueDeleteView(DeleteView):
         return reverse_lazy('master_dashboard:service_values', kwargs={
             'service_id': self.kwargs['service_id'],
         })
+
+
+def filter_services(request):
+    parameters = Parameter.objects.all()
+    ServiceFilterFormSet = get_service_filter_formset(extra=len(parameters))
+    if request.method == 'GET':
+        formset = ServiceFilterFormSet()
+    if request.method == 'POST':
+        formset = ServiceFilterFormSet(request.POST)
+        if formset.is_valid():
+            url = reverse('master_dashboard:services')
+            return redirect(f'{url}?values=test5=55')
+    context = {'formset': formset, 'parameters': parameters}
+    return render(request, 'service/service-filter.html', context)
 
 
 class ClassifierNodeView(ListView):
