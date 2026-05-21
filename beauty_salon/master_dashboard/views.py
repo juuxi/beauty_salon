@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView
 from django.db import transaction
 
+from django_filters.views import FilterView
+
 from api.models import (
     Service,
     ClassifierNode,
@@ -13,6 +15,8 @@ from api.models import (
     ParameterNode,
     ParameterValueService,
 )
+
+from api.filters import ServiceFilter
 
 from .forms import (
     ServiceForm,
@@ -28,11 +32,12 @@ from .forms import (
 )
 
 
-class ServiceListView(ListView):
+class ServiceListView(FilterView):
     model = Service
     template_name = 'service/services.html'
     context_object_name = 'services'
     ordering = 'id'
+    filterset_class = ServiceFilter
 
 
 def create_update_service(request, service_id=None):
