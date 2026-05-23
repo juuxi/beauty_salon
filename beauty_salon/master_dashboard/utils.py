@@ -53,13 +53,13 @@ def add_parameter_values_to_filter(filter_text, parameter, form):
             if min_value == max_value:
                 filter_text += f'{parameter.name}={min_value}'
             else:
-                filter_text += f'{parameter.name}__ge={min_value}&'
-                filter_text += f'{parameter.name}__le={max_value}'
+                filter_text += f'{parameter.name}__gte={min_value}&'
+                filter_text += f'{parameter.name}__lte={max_value}'
         else:
-            filter_text += f'{parameter.name}__ge={min_value}'
+            filter_text += f'{parameter.name}__gte={min_value}'
     else:
         if max_value:
             if filter_text:
                 filter_text += '&'
-            filter_text += f'{parameter.name}__le={max_value}'
+            filter_text += f'{parameter.name}__lte={max_value}'
     return filter_text
