@@ -845,7 +845,6 @@ a {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -1061,4 +1060,135 @@ a {
     width: 16px;
     height: 16px;
     fill: currentColor; /* Иконка красится в цвет текста */
+}
+
+.filter-info {
+    display: none;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 500px;
+    padding: 10px;
+    margin: 10px auto;
+    font-family: inherit;
+    color: #333;
+}
+
+.filter-info h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #d8aeb7; /* Розовый оттенок под стиль Flora */
+}
+
+.filter-info p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 14px;
+    color: #555;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #d81b60;
+}
+
+/* Основной стиль кнопки */
+.btn-help { /* Лучше добавить класс .btn-help, но можно стилизовать и просто .btn */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;       /* Фиксированная ширина для круга */
+    height: 40px;      /* Фиксированная высота для круга */
+    padding: 0;
+    
+    background-color: #fce4ec; /* Светло-розовый фон (под стиль Flora) */
+    color: #d6608cde;            /* Темно-розовый цвет иконки */
+    border: 2px solid transparent;
+    border-radius: 50%;        /* Делает кнопку круглой */
+    
+    font-size: 20px;           /* Размер иконки вопроса */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(216, 27, 96, 0.1);
+}
+
+/* Эффект при наведении */
+.btn-help:hover {
+    background-color: #f8bbd0; /* Чуть темнее фон */
+    transform: scale(1.1);     /* Легкое увеличение */
+    box-shadow: 0 4px 8px rgba(216, 27, 96, 0.2);
+    border-color: #d6608cde;     /* Появляется рамка */
+}
+
+/* Эффект при нажатии */
+.btn-help:active {
+    transform: scale(0.95);
+}
+
+/* Фон затемнения */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный */
+    z-index: 1000;
+    
+    /* СКРЫВАЕМ ПО УМОЛЧАНИЮ */
+    display: none; 
+    
+    /* Для центрирования содержимого */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Класс, который мы будем добавлять через JS, чтобы показать окно */
+.modal-overlay.active {
+    display: flex; /* Показываем окно */
+}
+
+/* Само белое окошко */
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    margin: auto;
+    
+    /* Анимация появления (опционально) */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Кнопка закрытия (крестик) */
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #888;
 }
