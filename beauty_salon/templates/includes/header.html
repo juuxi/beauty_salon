@@ -19,6 +19,9 @@
                     <li><a href="{% url 'pages:about' %}" class="nav__link {% if view_name == 'pages:about' %}nav__link--active{% endif %}">О системе</a></li>
                 </ul>
                 {% endwith %}
+                {% if request.user.is_authenticated %}
+                <span>{{ request.user.username }}</span>
+                {% endif %}
             </nav>
         </div>
     </div>
