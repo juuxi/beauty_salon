@@ -626,12 +626,12 @@ a {
    /* === Стили для отдельной страницы формы === */
 
 /* Фон всей страницы с листьями */
-body.form-page {
+.form-page {
    
     /* Центрирование формы на экране */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
     min-height: 100vh;
     margin: 0;
 }
@@ -758,6 +758,16 @@ body.form-page {
     transform: translateY(-2px);
 }
 
+.btn-save-pink {
+    background: #e8b4c8;
+    color: white;
+    box-shadow: 0 4px 10px rgba(129, 178, 154, 0.4);
+}
+.btn-save-pink:hover {
+    background: #c291a8;
+    transform: translateY(-2px);
+}
+
 /* Адаптив для мобильных (поля в одну колонку) */
 @media (max-width: 500px) {
     .form-row {
@@ -847,4 +857,53 @@ body.form-page {
 
 .close:hover {
     color: black;
+}
+
+/* 1. Контейнер для имени и кнопок, чтобы они стояли в ряд */
+.auth-block {
+    display: flex;
+    align-items: center;
+    /* Отступ слева от последнего пункта меню */
+    margin-left: 20px; 
+    /* Расстояние между именем и кнопкой "Выйти" */
+    gap: 15px; 
+}
+
+/* 2. Стиль для имени пользователя */
+.user-username {
+    font-weight: 500; /* Жирность, как у ссылок, или чуть меньше */
+    color: #333;      /* Цвет текста (подберите под ваш дизайн) */
+    white-space: nowrap;
+}
+
+/* 3. Сброс стандартных стилей кнопки, чтобы она выглядела как ссылка <a> */
+.btn-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit; /* Наследуем шрифт от родителя */
+    font-size: inherit;   /* Наследуем размер шрифта */
+    cursor: pointer;
+    display: inline-flex; /* Чтобы иконка и текст были в одну линию */
+    align-items: center;
+    text-decoration: none; /* Убираем подчеркивание, если оно есть у ссылок */
+    color: inherit;        /* Цвет берется от родителя или класса nav__link */
+}
+
+.form-actions__left {
+    display: flex;
+    align-items: center;
+    gap: 10px;                       /* Отступ между текстом "Нет аккаунта?" и кнопкой */
+}
+
+.form-actions__left_2 {
+    display: flex;
+    align-items: center;
+    gap: 85px;                       /* Отступ между текстом "Нет аккаунта?" и кнопкой */
+}
+
+.register-text {
+    font-size: 0.9em;               /* Чуть меньше основного текста */
+    color: #666;                    /* Серый цвет, чтобы не отвлекать */
 }

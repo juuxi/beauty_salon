@@ -19,15 +19,24 @@
                     <li><a href="{% url 'pages:about' %}" class="nav__link {% if view_name == 'pages:about' %}nav__link--active{% endif %}">О системе</a></li>
                 </ul>
                 {% endwith %}
-                {% if request.user.is_authenticated %}
-                <span>{{ request.user.username }}</span>
-                <form action="{% url 'pages:logout' %}" method="post">
-                    {% csrf_token %}
-                    <button class="btn-link btn--beauty" type="submit">{% include 'includes/svg/leave.html' %} Выйти</button>
-                </form>
-                {% else %}
-                <a class="btn-link btn--beauty" href="{% url 'pages:login' %}">Войти</a>
-                {% endif %}
+
+                <!-- Блок авторизации -->
+                <div class="auth-block">
+                    {% if request.user.is_authenticated %}
+                        <!-- Имя пользователя с отступом -->
+                        <span class="user-username">{{ request.user.username }}</span>
+                        
+                        <form action="{% url 'pages:logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <!-- Кнопка выглядит как ссылка благодаря классам nav__link и btn-reset -->
+                            <button type="submit" class="nav__link btn-reset">
+                                {% include 'includes/svg/leave.html' %} Выйти
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'pages:login' %}" class="nav__link {% if view_name == 'pages:login' %}nav__link--active{% endif %}">Войти</a>
+                    {% endif %}
+                </div>
             </nav>
         </div>
     </div>
