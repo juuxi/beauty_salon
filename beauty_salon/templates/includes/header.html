@@ -29,7 +29,7 @@
                         <form action="{% url 'pages:logout' %}" method="post" style="display:inline;">
                             {% csrf_token %}
                             <!-- Кнопка выглядит как ссылка благодаря классам nav__link и btn-reset -->
-                            <button type="submit" class="nav__link btn-reset">
+                            <button type="submit" class="btn-logout">
                                 {% include 'includes/svg/leave.html' %} Выйти
                             </button>
                         </form>

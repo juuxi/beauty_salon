@@ -82,6 +82,7 @@ a {
     width: 100%;
     align-items: center;
     justify-content: space-between;
+    gap: 40px;
 }
 
 .logo {
@@ -115,14 +116,14 @@ a {
 .nav__list {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .nav__link {
     font-weight: 500;
-    padding: 8px 16px;
+    padding: 8px 10px;
     border-radius: 20px;
     transition: var(--transition);
     display: inline-block;
@@ -169,6 +170,11 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.header-actions {
+    display: flex;
+    gap: 20px; /* ← Ключевое свойство: расстояние между кнопками */
 }
 
 .page-title {
@@ -632,8 +638,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center; 
-    min-height: 100vh;
-    margin: 0;
+    margin: 20px;
 }
 
 /* Само белое окно (карточка) */
@@ -762,6 +767,7 @@ a {
     background: #e8b4c8;
     color: white;
     box-shadow: 0 4px 10px rgba(129, 178, 154, 0.4);
+    line-height: normal;
 }
 .btn-save-pink:hover {
     background: #c291a8;
@@ -880,15 +886,11 @@ a {
 .btn-reset {
     background: none;
     border: none;
-    padding: 0;
     margin: 0;
-    font-family: inherit; /* Наследуем шрифт от родителя */
-    font-size: inherit;   /* Наследуем размер шрифта */
+    font: inherit;
     cursor: pointer;
-    display: inline-flex; /* Чтобы иконка и текст были в одну линию */
-    align-items: center;
-    text-decoration: none; /* Убираем подчеркивание, если оно есть у ссылок */
-    color: inherit;        /* Цвет берется от родителя или класса nav__link */
+    display: inline-flex;
+    align-items: center;     /* Цвет берется от родителя или класса nav__link */
 }
 
 .form-actions__left {
@@ -906,4 +908,157 @@ a {
 .register-text {
     font-size: 0.9em;               /* Чуть меньше основного текста */
     color: #666;                    /* Серый цвет, чтобы не отвлекать */
+}
+
+/* 1. Исправляем контейнер авторизации */
+.auth-block {
+    display: flex;
+    align-items: center; /* Выравниваем имя и кнопку по центру по вертикали */
+    margin-left: 30px;   /* Отступ от последнего пункта меню "О системе" */
+    gap: 15px;           /* Расстояние между именем пользователя и кнопкой "Выйти" */
+}
+
+/* 2. Исправляем шрифт и вид имени пользователя */
+.user-username {
+    font-family: inherit; /* Наследуем шрифт от body/header, чтобы не отличался */
+    font-size: inherit;   /* Размер шрифта как у ссылок меню */
+    font-weight: 500;     /* Чуть жирнее, чтобы выделялось как имя, но не как заголовок */
+    color: #333;          /* Цвет текста (подстройте под ваш дизайн, если нужно) */
+    white-space: nowrap;  /* Чтобы имя не переносилось на новую строку */
+}
+
+/* 3. Сбрасываем стили кнопки "Выйти", чтобы она выглядела как ссылка меню */
+.btn-reset {
+    /* Убираем стандартные стили браузера для button */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    
+    /* Наследуем стили от родительского элемента (.nav__link или .nav) */
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;       /* Цвет берется от .nav__link */
+    cursor: pointer;
+    
+    /* Важно: если у .nav__link есть padding, кнопка должна его учитывать */
+    /* Если .nav__link имеет padding: 15px 0;, то кнопка тоже будет иметь такие отступы */
+    
+    /* Убираем синюю обводку при клике (фокус) */
+    outline: none;
+}
+
+/* 4. Дополнительно: убедимся, что форма не ломает поток */
+.auth-block form {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* 5. Если иконка внутри кнопки съезжает, выравниваем её */
+.btn-reset svg, 
+.btn-reset img {
+    vertical-align: middle;
+    margin-right: 5px; /* Отступ между иконкой и текстом "Выйти" */
+    width: 16px;       /* Фиксируем размер иконки, если нужно */
+    height: 16px;
+}
+
+/* Убедимся, что nav занимает всю доступную ширину и элементы внутри него выстраиваются в ряд */
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Распределяет пространство между списком и auth-block */
+    width: 100%;
+    gap: 20px; /* Отступ между последним пунктом меню и блоком авторизации */
+}
+
+/* Список ссылок — должен быть гибким и не занимать лишнее место */
+.nav__list {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Отступы между пунктами меню */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: nowrap; /* Запрещаем перенос пунктов меню */
+}
+
+/* Блок авторизации — тоже в одну линию */
+.auth-block {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Отступ между именем и кнопкой "Выйти" */
+    white-space: nowrap; /* Чтобы имя + кнопка не разрывались */
+}
+
+/* Сброс стилей кнопки "Выйти" */
+.btn-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Иконка внутри кнопки */
+.btn-reset svg,
+.btn-reset img {
+    vertical-align: middle;
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Имя пользователя */
+.user-username {
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+}
+
+/* Стиль для кнопки "Выйти" */
+.btn-logout {
+    /* Сброс стандартных стилей кнопки */
+    background-color: transparent;
+    border: none;
+    
+    /* Отступы: создают тот самый "овальчик" или область вокруг текста */
+    padding: 8px 16px; 
+    
+    /* Типографика: такая же, как в меню */
+    font-family: inherit;
+    font-size: 15px; /* Подберите размер под ваше меню */
+    font-weight: 500;
+    color: #333;     /* Цвет текста (темно-серый) */
+    
+    /* Внешний вид */
+    cursor: pointer;
+    border-radius: 20px; /* Скругление углов (сделайте 0, если нужны квадратные) */
+    transition: all 0.3s ease; /* Плавная анимация */
+    
+    /* Выравнивание иконки и текста */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; /* Расстояние между иконкой и словом "Выйти" */
+}
+
+/* Эффект при наведении */
+.btn-logout:hover {
+    background-color: #fce4ec; /* Светло-розовый фон (под цвет Flora) */
+    color: #d81b60;            /* Темно-розовый текст */
+}
+
+/* Иконка внутри кнопки */
+.btn-logout svg, 
+.btn-logout img {
+    width: 16px;
+    height: 16px;
+    fill: currentColor; /* Иконка красится в цвет текста */
 }
