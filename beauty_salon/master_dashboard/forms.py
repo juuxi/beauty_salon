@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from api.models import (
     Service,
@@ -196,8 +197,8 @@ def get_parameter_node_ordering_formset():
 
 
 class ServiceFilterForm(forms.Form):
-    min_value = forms.IntegerField(label='Мин. значение', required=False)
-    max_value = forms.IntegerField(label='Макс. значение', required=False)
+    min_value = forms.CharField(label='Мин. значение', required=False)
+    max_value = forms.CharField(label='Макс. значение', required=False)
 
 
 def get_service_filter_formset(extra=0):

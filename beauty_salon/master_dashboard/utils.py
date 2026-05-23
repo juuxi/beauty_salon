@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 
 from api.models import (
     Value,
+    Enumeration,
 )
 
 
@@ -63,3 +64,35 @@ def add_parameter_values_to_filter(filter_text, parameter, form):
                 filter_text += '&'
             filter_text += f'{parameter.name}__lte={max_value}'
     return filter_text
+
+
+def get_value_data_type(param):
+    if param.data_type == 'int':
+        return int
+
+    if param.data_type == 'real':
+        return float
+
+    if param.data_type == 'enum':
+        enumeration = Enumeration.objects.get(id=param.enumeration_id)
+
+        if enumeration.data_type == 'int':
+            return int
+
+        if enumeration.data_type == 'real':
+            return float
+
+        if enumeration.data_type == 'str':
+            return str
+
+
+def validate_filtering_data_type(exp_type, param_value, param):
+    if param_value == '' or param_value is None:
+        return
+    try:
+        exp_type(param_value)
+    except ValueError:
+        raise ValidationError(f'value for param \
+                                {param.name} must \
+                                be type {exp_type} \
+                                got {type(param_value).__name__}')
