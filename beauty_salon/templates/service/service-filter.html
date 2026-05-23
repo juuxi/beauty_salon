@@ -7,6 +7,18 @@
 <div class="form-page">
     <div class="form-card">
         <h2 class="form-title">Сортировка значений</h2>
+        <button id="openModalBtn" class="btn">❔</button>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Как пользоваться фильрацией</h3>
+                <p>Форма состоит из блоков <strong>название-минимальное значение-максимальное значение.</strong></p>
+                <p>Чтобы не учитывать параметр при фильтрации - оставьте оба поля пустыми</p>
+                <p>Чтобы фильтровать больше/меньше какого-либо значения - заполните только одно поле</p>
+                <p>Чтобы фильтровать по конкретному значению - заполните оба поля этим значением</p>
+            </div>
+        </div>
         <form method="post" class="styled-form">
             {% csrf_token %}
             
@@ -46,4 +58,29 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const modal = document.getElementById('myModal');
+    const btn = document.getElementById('openModalBtn');
+    const span = document.getElementsByClassName('close')[0];
+    
+    // Открыть окно
+    btn.onclick = function() {
+        modal.style.display = 'block';
+    }
+    
+    // Закрыть через крестик
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+    
+    // Закрыть при клике вне окна
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}
