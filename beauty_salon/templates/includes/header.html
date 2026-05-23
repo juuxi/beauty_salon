@@ -21,7 +21,7 @@
                 {% endwith %}
                 {% if request.user.is_authenticated %}
                 <span>{{ request.user.username }}</span>
-                <form action="{% url 'logout' %}" method="post">
+                <form action="{% url 'pages:logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit">{% include 'includes/svg/leave.html' %} Выйти</button>
                 </form>
