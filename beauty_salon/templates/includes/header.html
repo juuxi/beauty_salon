@@ -21,6 +21,7 @@
                 {% endwith %}
                 {% if request.user.is_authenticated %}
                 <span>{{ request.user.username }}</span>
+                <a href="{% url 'logout' %}"><span style="color: #e7000b;">{% include 'includes/svg/leave.html' %} Выйти</span></a>
                 {% endif %}
             </nav>
         </div>
