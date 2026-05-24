@@ -34,7 +34,7 @@ from .forms import (
 
 from .utils import (
     add_parameter_values_to_filter,
-    validate_filtering_data_type,
+    validate_filtering_data,
     get_value_data_type,
 )
 
@@ -146,12 +146,10 @@ def filter_services(request):
             filter_text = ''
             for parameter, form in zip(parameters, formset):
                 data_type = get_value_data_type(parameter)
-                validate_filtering_data_type(data_type,
-                                             form.cleaned_data.get('min_value'), parameter)
-                validate_filtering_data_type(data_type,
-                                             form.cleaned_data.get('max_value'), parameter)
+                min_value, max_value = validate_filtering_data(data_type, form, parameter)
 
-                filter_text = add_parameter_values_to_filter(filter_text, parameter, form)
+                filter_text = add_parameter_values_to_filter(filter_text, parameter,
+                                                             min_value, max_value)
 
             return redirect(f'{url}?values={filter_text}')
     context = {'formset': formset, 'parameters': parameters}

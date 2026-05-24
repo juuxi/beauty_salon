@@ -1,8 +1,10 @@
 from django.core.exceptions import ValidationError
+from django.db.models import Min, Max
 
 from api.models import (
     Value,
     Enumeration,
+    ParameterNode,
 )
 
 
@@ -44,9 +46,7 @@ def validate_transaction_num(curr_num, nums_set):
     return curr_num
 
 
-def add_parameter_values_to_filter(filter_text, parameter, form):
-    min_value = form.cleaned_data.get('min_value')
-    max_value = form.cleaned_data.get('max_value')
+def add_parameter_values_to_filter(filter_text, parameter, min_value, max_value):
     if min_value:
         if filter_text:
             filter_text += '&'
@@ -88,11 +88,40 @@ def get_value_data_type(param):
 
 def validate_filtering_data_type(exp_type, param_value, param):
     if param_value == '' or param_value is None:
-        return
+        return param_value
     try:
-        exp_type(param_value)
+        return exp_type(param_value)
     except ValueError:
         raise ValidationError(f'value for param \
                                 {param.name} must \
                                 be type {exp_type} \
                                 got {type(param_value).__name__}')
+
+
+def check_min_max_mismatch(min_value, max_value):
+    if not min_value or not max_value:
+        return
+    if max_value < min_value:
+        raise ValidationError('Минимальное значение не может быть больше максимального')
+
+
+def apply_min_max_borders(min_value, max_value, param):
+    result = ParameterNode.objects.filter(parameter=param).aggregate(
+        min_val=Min('min_param_value'),
+        max_val=Max('max_param_value')
+    )
+
+    if min_value and result['min_val'] and min_value < result['min_val']:
+        min_value = result['min_val']
+    if max_value and result['max_val'] and max_value < result['max_val']:
+        max_value = result['max_val']
+    return min_value, max_value
+
+
+def validate_filtering_data(exp_type, form, param):
+    min_value = validate_filtering_data_type(exp_type, form.cleaned_data.get('min_value'), param)
+    max_value = validate_filtering_data_type(exp_type, form.cleaned_data.get('max_value'), param)
+    check_min_max_mismatch(min_value, max_value)
+    min_value, max_value = apply_min_max_borders(min_value, max_value, param)
+
+    return min_value, max_value
