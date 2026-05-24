@@ -1244,3 +1244,7 @@ a {
 .about-text .btn-help {
     margin-bottom: 16px;
 }
+
+.form-errors {
+    color: red;
+}
