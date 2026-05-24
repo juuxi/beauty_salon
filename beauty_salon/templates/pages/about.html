@@ -17,6 +17,18 @@
                 Она позволяет гибко настраивать структуру услуг и их классов, задавать параметры для классов и их значения для услуг.
                 Также система предоставляет возможность использования единиц измерения.
             </p>
+            
+            <button id="openModalBtn" class="btn btn-help">?</button>
+
+            <div id="aboutModal" class="about-info">
+                <div class="about-modal-content">
+                    <span class="close">&times;</span>
+                    <h3>Терминология системы</h3>
+                    <p>Классификатор - набор классов услуг, который можно представить в виде дерева</p>
+                    <p>Перечисление - набор конкретных значений одного типа (целых/дробных чисел, строк)</p>
+                    <p>С примерами можно ознакомиться в соответствующих разделах</p>
+                </div>
+            </div>
 
             <h3>Основные возможности:</h3>
             <ul class="about-list">
@@ -31,4 +43,29 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const modal = document.getElementById('aboutModal');
+    const btn = document.getElementById('openModalBtn');
+    const span = document.getElementsByClassName('close')[0];
+    
+    // Открыть окно
+    btn.onclick = function() {
+        modal.style.display == 'none' || modal.style.display == '' ? modal.style.display = 'block' : modal.style.display = 'none';
+    }
+    
+    // Закрыть через крестик
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+    
+    // Закрыть при клике вне окна
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

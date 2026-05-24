@@ -1192,3 +1192,55 @@ a {
     border: none;
     color: #888;
 }
+
+.about-info {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity (the shadow effect) */
+    
+    /* Flexbox to center the content vertically and horizontally */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Content Box */
+.about-modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    
+    /* Minimal changes for vertical centering */
+    position: fixed; /* Take it out of normal flow */
+    top: 50%;         /* Move top edge to 50% of screen height */
+    left: 50%;        /* Move left edge to 50% of screen width */
+    transform: translate(-50%, -50%); /* Shift back by half its own size */
+    z-index: 1001;    /* Ensure it sits above the shadow overlay */
+}
+
+.about-info h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #d8aeb7; /* Розовый оттенок под стиль Flora */
+}
+
+.about-info p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 14px;
+    color: #555;
+}
+
+.about-text .btn-help {
+    margin-bottom: 16px;
+}
