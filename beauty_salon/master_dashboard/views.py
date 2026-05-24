@@ -98,7 +98,7 @@ class ServiceValuesListView(ListView):
 def create_service_values(request, service_id, param_id):
     param = get_object_or_404(Parameter, pk=param_id)
     get_object_or_404(Service, pk=service_id)
-    form = ServiceValueForm(request.POST or None, param_id=param.id)
+    form = ServiceValueForm(request.POST or None, param_id=param.id, service_id=service_id)
     if form.is_valid():
         value = form.save(commit=False)
         value.service_id = service_id
@@ -112,7 +112,8 @@ def create_service_values(request, service_id, param_id):
 def update_service_values(request, service_id, value_id):
     instance = get_object_or_404(ParameterValueService, pk=value_id)
     get_object_or_404(Service, pk=service_id)
-    form = ServiceValueForm(request.POST or None, instance=instance, param_id=instance.parameter.id)
+    form = ServiceValueForm(request.POST or None, instance=instance,
+                            param_id=instance.parameter.id, service_id=service_id)
     if form.is_valid():
         value = form.save(commit=False)
         value.service_id = service_id

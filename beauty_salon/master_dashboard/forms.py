@@ -43,6 +43,7 @@ class ServiceValueForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.parameter = Parameter.objects.get(pk=kwargs.pop('param_id', None))
+        self.service = Service.objects.get(pk=kwargs.pop('service_id', None))
         super().__init__(*args, **kwargs)
         self.fields['enum_value'].queryset = Value.objects.filter(
             enumeration=self.parameter.enumeration
@@ -54,7 +55,18 @@ class ServiceValueForm(forms.ModelForm):
 
     def clean_form_value(self):
         form_value = self.cleaned_data['form_value']
-        return validate_value(form_value, self.parameter)
+        form_value = validate_value(form_value, self.parameter)
+        classifiernode = self.service.base_class
+        parameter_node = ParameterNode.objects.get(
+            classifiernode=classifiernode,
+            parameter=self.parameter
+        )
+
+        if parameter_node.min_param_value and form_value < parameter_node.min_param_value:
+            form_value = parameter_node.min_param_value
+        if parameter_node.max_param_value and form_value > parameter_node.max_param_value:
+            form_value = parameter_node.max_param_value
+        return form_value
 
     def save(self, commit=True):
         form_value = self.cleaned_data.pop('form_value', None)
