@@ -48,7 +48,7 @@ class ServiceValueForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['enum_value'].queryset = Value.objects.filter(
             enumeration=self.parameter.enumeration
-        )
+        ).order_by('num')
         if self.parameter.enumeration:
             self.fields['form_value'].required = False
         else:
