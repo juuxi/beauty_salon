@@ -191,7 +191,10 @@ class BaseOrderingFormSet(forms.BaseModelFormSet):
                 continue
 
             num = form.cleaned_data.get('num')
-            validate_transaction_num(num, seen_nums)
+            try:
+                validate_transaction_num(num, seen_nums)
+            except ValidationError as e:
+                form.add_error('num', e)
 
 
 class EnumerationValueOrderingForm(forms.ModelForm):
