@@ -118,10 +118,18 @@ def apply_min_max_borders(min_value, max_value, param):
     return min_value, max_value
 
 
+def check_str_min_max(min_value, max_value):
+    if min_value != max_value:
+        raise ValidationError('Пожалуйста, укажите значение для '
+                              'фильтрации в обоих полях для строкового типа')
+
+
 def validate_filtering_data(exp_type, form, param):
     min_value = validate_filtering_data_type(exp_type, form.cleaned_data.get('min_value'), param)
     max_value = validate_filtering_data_type(exp_type, form.cleaned_data.get('max_value'), param)
     check_min_max_mismatch(min_value, max_value)
+    if exp_type == str:
+        check_str_min_max(min_value, max_value)
     min_value, max_value = apply_min_max_borders(min_value, max_value, param)
 
     return min_value, max_value
