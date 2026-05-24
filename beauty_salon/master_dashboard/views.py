@@ -207,7 +207,7 @@ class ParameterNodeListView(ListView):
 def create_classifier_node_parameters(request, node_id):
     if node_id:
         get_object_or_404(ClassifierNode, pk=node_id)
-    form = ParameterNodeForm(request.POST or None)
+    form = ParameterNodeForm(request.POST or None, node_id=node_id)
     if form.is_valid():
         parameter_node = form.save(commit=False)
         parameter_node.classifiernode_id = node_id

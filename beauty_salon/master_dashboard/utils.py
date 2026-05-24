@@ -31,10 +31,18 @@ def validate_value(data, type_holder):
     return data
 
 
-def validate_num(num, enumeration):
+def validate_enumeration_num(num, enumeration):
 
     if not (Value.objects.filter(enumeration=enumeration.id, num=num).count()) == 0:
         raise ValidationError(f'Пара (позиция = {num}, данное перечисление) уже существует')
+
+    return num
+
+
+def validate_parameter_num(num, node):
+
+    if not (ParameterNode.objects.filter(classifiernode=node.id, num=num).count()) == 0:
+        raise ValidationError(f'Пара (позиция = {num}, данный класс) уже существует')
 
     return num
 

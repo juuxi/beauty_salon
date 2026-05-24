@@ -19,7 +19,8 @@ from api.utils import (
 
 from .utils import (
     validate_value,
-    validate_num,
+    validate_enumeration_num,
+    validate_parameter_num,
     validate_transaction_num,
 )
 
@@ -135,7 +136,7 @@ class EnumerationValueForm(forms.ModelForm):
 
     def clean_num(self):
         num = self.cleaned_data['num']
-        return validate_num(num, self.enumeration)
+        return validate_enumeration_num(num, self.enumeration)
 
     def save(self, commit=True):
         value = self.cleaned_data.pop('value', None)
@@ -160,6 +161,14 @@ class ParameterNodeForm(forms.ModelForm):
     class Meta:
         model = ParameterNode
         fields = ('parameter', 'num', 'min_param_value', 'max_param_value')
+
+    def __init__(self, *args, **kwargs):
+        self.classifier_node = ClassifierNode.objects.get(pk=kwargs.pop('node_id', None))
+        super().__init__(*args, **kwargs)
+
+    def clean_num(self):
+        num = self.cleaned_data['num']
+        return validate_parameter_num(num, self.classifier_node)
 
 
 class MeasuringUnitForm(forms.ModelForm):
