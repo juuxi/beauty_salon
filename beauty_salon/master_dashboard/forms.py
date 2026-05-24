@@ -90,6 +90,14 @@ class ParameterForm(forms.ModelForm):
         model = Parameter
         fields = ('name', 'data_type', 'enumeration', 'measuring_unit', 'code')
 
+    def clean(self):
+        data = super().clean()
+        data_type = self.cleaned_data.get('data_type')
+        enumeration = self.cleaned_data.get('enumeration')
+        if data_type == 'enum' and enumeration is None:
+            raise ValidationError('Указание перечисления обязательно для типа \"Перечисление\"')
+        return data
+
 
 class EnumerationForm(forms.ModelForm):
     class Meta:
