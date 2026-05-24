@@ -21,6 +21,7 @@
                 </div>
             </div>
             <div class="card__body">
+                <p>Тип: <span class="card__tag">{{ enumeration.get_data_type_display }}</span></p>
                 <p>Значения: <a href="{% url 'master_dashboard:enumeration_values' enumeration_id=enumeration.id %}" 
                 class="btn-link btn--beauty">
                     см. значения
