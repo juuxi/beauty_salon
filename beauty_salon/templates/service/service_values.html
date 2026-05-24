@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="card__body">
-                <p>{% if value %}{% if value.parameter.data_type != 'enum' %}{{ value.value.data }}{% else %}{{ value.value.data.data}}{% endif %}{% else %}Значение не задано{% endif %}</p>
+                <p>{% if value %}{% if value.parameter.data_type != 'enum' %}{{ value.value.data }}{% else %}{{ value.value.data.data}}{% endif %}{% else %}Значение не задано{% endif %} {% if parameter.measuring_unit %}{{ parameter.measuring_unit }}{% endif %}</p>
             </div>
         </div>
         {% empty %}
