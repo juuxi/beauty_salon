@@ -68,7 +68,7 @@
     
     // Открыть окно
     btn.onclick = function() {
-        modal.style.display = 'block';
+        modal.style.display == 'none' || modal.style.display == '' ? modal.style.display = 'block' : modal.style.display = 'none';
     }
     
     // Закрыть через крестик
