@@ -35,6 +35,7 @@ class ServiceValueForm(forms.ModelForm):
     enum_value = forms.ModelChoiceField(
         queryset=Value.objects.none(),
         widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Значение',
     )
 
     class Meta:
