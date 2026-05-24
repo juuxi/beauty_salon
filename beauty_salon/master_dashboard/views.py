@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
 from django_filters.views import FilterView
 
@@ -146,7 +147,12 @@ def filter_services(request):
             filter_text = ''
             for parameter, form in zip(parameters, formset):
                 data_type = get_value_data_type(parameter)
-                min_value, max_value = validate_filtering_data(data_type, form, parameter)
+                try:
+                    min_value, max_value = validate_filtering_data(data_type, form, parameter)
+                except ValidationError as e:
+                    form.add_error(None, '; '.join(e.messages))
+                    context = {'formset': formset, 'parameters': parameters}
+                    return render(request, 'service/service-filter.html', context)
 
                 filter_text = add_parameter_values_to_filter(filter_text, parameter,
                                                              min_value, max_value)
