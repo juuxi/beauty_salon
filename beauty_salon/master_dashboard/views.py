@@ -206,7 +206,7 @@ class ParameterNodeListView(ListView):
 
 def create_classifier_node_parameters(request, node_id):
     if node_id:
-        get_object_or_404(ClassifierNode, pk=node_id)
+        classifier = get_object_or_404(ClassifierNode, pk=node_id)
     form = ParameterNodeForm(request.POST or None, node_id=node_id)
     if form.is_valid():
         parameter_node = form.save(commit=False)
@@ -214,7 +214,7 @@ def create_classifier_node_parameters(request, node_id):
         parameter_node.save()
         return redirect('master_dashboard:classifier_parameters', node_id=node_id)
     parameters = Parameter.objects.all()
-    context = {'form': form, 'parameters': parameters}
+    context = {'form': form, 'parameters': parameters, 'classifier': classifier}
     return render(request, 'classifier_node/classifier_parameter-create.html', context)
 
 

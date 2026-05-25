@@ -6,7 +6,7 @@
 {% block content %}
 <div class="form-page">
     <div class="form-card">
-        <h2 class="form-title">{% if '/delete/' in request.path %}Удаление параметра{% else %}Создание параметра{% endif %}</h2>
+        <h2 class="form-title">{% if '/delete/' in request.path %}Удаление параметра{% else %}Создание параметра{% endif %} <br>для класса "{{ classifier.name }}"</h2>
         <form method="post" class="styled-form">
             {% csrf_token %}
             {% if not '/delete/' in request.path %}
