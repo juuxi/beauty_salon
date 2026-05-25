@@ -319,7 +319,7 @@ def create_update_enumeration_values(request, enumeration_id, value_id=None):
     if value_id:
         instance = get_object_or_404(Value, pk=value_id)
     if enumeration_id:
-        get_object_or_404(Enumeration, pk=enumeration_id)
+        enumeration = get_object_or_404(Enumeration, pk=enumeration_id)
     form = EnumerationValueForm(
         request.POST or None, instance=instance,
         enumeration_id=enumeration_id
@@ -329,7 +329,7 @@ def create_update_enumeration_values(request, enumeration_id, value_id=None):
         value.enumeration_id = enumeration_id
         value.save()
         return redirect('master_dashboard:enumeration_values', enumeration_id=enumeration_id)
-    context = {'form': form}
+    context = {'form': form, 'enumeration': enumeration}
     return render(request, 'enumeration/enumeration_value-create.html', context)
 
 

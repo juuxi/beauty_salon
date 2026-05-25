@@ -6,7 +6,7 @@
 {% block content %}
 <div class="form-page">
     <div class="form-card">
-        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование значения{% elif '/delete/' in request.path %}Удаление значения{% else %}Создание значения{% endif %}</h2>
+        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование значения{% elif '/delete/' in request.path %}Удаление значения{% else %}Создание значения{% endif %}<br> для перечисления "{{ enumeration.name }}"</h2>
         <form method="post" class="styled-form">
             {% csrf_token %}
             {% if not '/delete/' in request.path %}
