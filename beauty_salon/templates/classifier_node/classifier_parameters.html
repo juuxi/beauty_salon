@@ -25,7 +25,8 @@
                 </div>
             </div>
             <div class="card__body">
-                <p>{{ parameter.data_type }}</p>
+                <p>{{ parameter.get_data_type_display }}</p>
+                {% if parameter.data_type == 'enum' %}<p>Перечисление: <strong>{{ parameter.enumeration }}</strong></p>{% endif %}
                 {% if classifier_parameter.min_param_value %}<p>Минимальное значение: {{ classifier_parameter.min_param_value }}</p>{% endif %}
                 {% if classifier_parameter.max_param_value %}<p>Максимальное значение: {{ classifier_parameter.max_param_value }}</p>{% endif %}
             </div>
