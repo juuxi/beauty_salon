@@ -1309,7 +1309,3 @@ nav[aria-label="Page navigation"] {
 .page-item:last-child .page-link {
     font-weight: 500;
 }
-
-body {
-    padding-bottom: 80px;
-}
