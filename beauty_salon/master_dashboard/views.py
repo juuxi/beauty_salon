@@ -168,6 +168,7 @@ class ClassifierNodeView(ListView):
     template_name = 'classifier_node/classifier_nodes.html'
     context_object_name = 'classifier_nodes'
     ordering = 'id'
+    paginate_by = 12
 
 
 def create_update_classifier_node(request, node_id=None):
