@@ -46,6 +46,7 @@ class ServiceListView(FilterView):
     context_object_name = 'services'
     ordering = 'id'
     filterset_class = ServiceFilter
+    paginate_by = 12
 
 
 def create_update_service(request, service_id=None):
@@ -70,6 +71,7 @@ class ServiceDeleteView(DeleteView):
 class ServiceValuesListView(ListView):
     template_name = 'service/service_values.html'
     context_object_name = 'parameters_values'
+    paginate_by = 12
 
     def get_queryset(self):
         service = get_object_or_404(Service, pk=self.kwargs['service_id'])
@@ -193,6 +195,7 @@ class ClassifierNodeDeleteView(DeleteView):
 class ParameterNodeListView(ListView):
     template_name = 'classifier_node/classifier_parameters.html'
     context_object_name = 'classifier_parameters'
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -255,6 +258,7 @@ class ParameterView(ListView):
     template_name = 'parameter/parameters.html'
     context_object_name = 'parameters'
     ordering = 'id'
+    paginate_by = 12
 
 
 def create_update_parameter(request, param_id=None):
@@ -281,6 +285,7 @@ class EnumerationView(ListView):
     template_name = 'enumeration/enumerations.html'
     context_object_name = 'enumerations'
     ordering = 'id'
+    paginate_by = 12
 
 
 def create_update_enumeration(request, enumeration_id=None):
@@ -305,6 +310,7 @@ class EnumerationDeleteView(DeleteView):
 class ValueListView(ListView):
     template_name = 'enumeration/enumeration_values.html'
     context_object_name = 'values'
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -370,6 +376,7 @@ class MeasuringUnitView(ListView):
     template_name = 'measuring_unit/measuring_units.html'
     context_object_name = 'measuring_units'
     ordering = 'id'
+    paginate_by = 12
 
 
 def create_update_measuring_unit(request, unit_id=None):
