@@ -29,7 +29,9 @@ def value_validate_data(view, data):
     data_type = enumeration.data_type
 
     if data_type == 'int':
-        if not isinstance(data, int):
+        try:
+            int(data)
+        except ValueError:
             raise serializers.ValidationError(
                 {'data': f'Expected integer for type "int", \
                 got {type(data).__name__}'}
@@ -43,12 +45,13 @@ def value_validate_data(view, data):
             )
 
     elif data_type == 'real':
-        if not isinstance(data, (int, float)):
+        try:
+            float(data)
+        except ValueError:
             raise serializers.ValidationError(
                 {'data': f'Expected number for type "real", \
                 got {type(data).__name__}'}
             )
-        data['data'] = float(data)
 
     elif data_type == 'pic':
         if not isinstance(data, str):
@@ -90,8 +93,7 @@ def parameter_validate_general(data):
     return data
 
 
-def service_validate_general(view, values, data):
-    values = data.get('values')
+def service_validate_general(view, values):
     base_class_id = view.kwargs.get('node_id')
     base_class = get_or_validation_error(ClassifierNode, base_class_id, 'base_class')
 
@@ -143,8 +145,6 @@ def service_validate_general(view, values, data):
                     {'values': f'value with id {id} is created \
                     for different enumeration'}
                 )
-
-    return data
 
 
 def parameter_node_validate_num(view, num):

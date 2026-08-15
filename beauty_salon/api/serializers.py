@@ -80,11 +80,9 @@ class EnumerationSerializer(serializers.ModelSerializer):
 
 
 class ValueSerializer(serializers.ModelSerializer):
-    data = serializers.JSONField()
-
     class Meta:
         model = Value
-        fields = ('id', 'data', 'num', 'enumeration', 'data')
+        fields = ('id', 'data', 'num', 'enumeration')
         read_only_fields = ('enumeration',)
 
     def validate_data(self, data):
@@ -96,22 +94,15 @@ class ValueSerializer(serializers.ModelSerializer):
         return value_validate_num(view, num)
 
     def create(self, validated_data):
-        data = validated_data.pop('data')
         view = self.context['view']
         enumeration_id = view.kwargs.get('enumeration_id')
 
         value_obj = Value.objects.create(
             **validated_data,
             enumeration_id=enumeration_id,
-            data=data,
         )
 
         return value_obj
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret['data'] = instance.data.data if instance.data else None
-        return ret
 
 
 class ParameterSerializer(serializers.ModelSerializer):
@@ -136,7 +127,8 @@ class ServiceSerializer(serializers.ModelSerializer):
     def validate(self, data):
         values = data.get('values')
         view = self.context['view']
-        service_validate_general(view, values, data)
+        service_validate_general(view, values)
+        return data
 
     def get_base_class(self):
         view = self.context['view']
@@ -161,6 +153,18 @@ class ServiceSerializer(serializers.ModelSerializer):
             )
 
         return service_obj
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        base_class = instance.base_class
+        values_text = {}
+        for param in base_class.parameters.all():
+            values_text[param.name] = ParameterValueService.objects.get(
+                parameter=param,
+                service=instance
+            ).value
+        ret['values'] = values_text
+        return ret
 
 
 class ParameterNodeSerializer(serializers.ModelSerializer):
