@@ -1,6 +1,4 @@
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Deferrable
 from django.core.validators import MinValueValidator
 
@@ -75,22 +73,6 @@ class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, Mod
         return self.name
 
 
-class StringData(models.Model):
-    data = models.TextField()
-
-
-class IntData(models.Model):
-    data = models.IntegerField()
-
-
-class RealData(models.Model):
-    data = models.FloatField()
-
-
-class PictureData(models.Model):
-    data = models.URLField()
-
-
 class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
     DATA_TYPES = (
         ('str', 'Строка'),
@@ -124,9 +106,7 @@ class Value(ModelWithTimestamp):
         verbose_name='Перечисление',
     )
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    data_object_id = models.PositiveIntegerField()
-    data = GenericForeignKey('content_type', 'data_object_id')
+    data = models.CharField(verbose_name='Данные')
 
     class Meta:
         db_table = 'values'
@@ -238,9 +218,7 @@ class Service(ModelWithTimestamp, CodedModel, ModelWithName):
 
 
 class ParameterValueService(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    data_object_id = models.PositiveIntegerField()
-    value = GenericForeignKey('content_type', 'data_object_id')
+    value = models.CharField(verbose_name='Значение')
 
     service = models.ForeignKey(
         Service,

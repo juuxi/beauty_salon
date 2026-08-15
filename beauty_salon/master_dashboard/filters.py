@@ -1,8 +1,6 @@
 import django_filters
 from django.db.models import Q
 from api.models import Service, ParameterValueService, Parameter
-from api.models import IntData, RealData, StringData, Value
-from api.models import Enumeration
 
 from django.core.exceptions import ValidationError
 
@@ -64,42 +62,9 @@ class ServiceFilter(django_filters.FilterSet):
             except Parameter.DoesNotExist:
                 raise ValidationError('no parameter with this name')
 
-            condition = None
-            if param.data_type == 'int':
-                condition = Q(
-                    self.get_condition(param_value, param, int, 17, IntData, mode),
-                    parameter=param,
-                )
-
-            if param.data_type == 'real':
-                condition = Q(
-                    self.get_condition(param_value, param, float, 18, RealData, mode),
-                    parameter=param,
-                )
-
-            if param.data_type == 'enum':
-                enumeration = Enumeration.objects.get(id=param.enumeration_id)
-
-                if enumeration.data_type == 'int':
-                    condition = self.get_condition(
-                        param_value, param, int, 17, IntData, mode
-                    )
-
-                if enumeration.data_type == 'real':
-                    condition = self.get_condition(
-                        param_value, param, float, 18, RealData, mode
-                    )
-
-                if enumeration.data_type == 'str':
-                    condition = self.get_condition(
-                        param_value, param, str, 19, StringData, mode
-                    )
-
-                condition = Q(
-                    content_type_id=11,
-                    data_object_id__in=Value.objects.filter(condition),
-                    parameter=param,
-                )
+            condition = Q(
+                parameter=param,
+            )
 
             matching_service_ids = (
                 ParameterValueService.objects.filter(condition)

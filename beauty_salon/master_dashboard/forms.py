@@ -8,13 +8,8 @@ from api.models import (
     Enumeration,
     MeasuringUnit,
     Value,
-    ContentType,
     ParameterNode,
     ParameterValueService,
-)
-
-from api.utils import (
-    create_type_based_data_object,
 )
 
 from .utils import (
@@ -70,28 +65,6 @@ class ServiceValueForm(forms.ModelForm):
             form_value = parameter_node.max_param_value
         return form_value
 
-    def save(self, commit=True):
-        form_value = self.cleaned_data.pop('form_value', None)
-        enum_value = self.cleaned_data.pop('enum_value', None)
-
-        instance = super().save(commit=False)
-
-        data_type = self.parameter.data_type
-        if form_value:
-            data_obj = create_type_based_data_object(data_type, form_value)
-        else:
-            data_obj = enum_value
-        content_type = ContentType.objects.get_for_model(data_obj)
-
-        instance.content_type = content_type
-        instance.data_object_id = data_obj.id
-
-        if commit:
-            instance.save()
-            self.save_m2m()
-
-        return instance
-
 
 class ClassifierNodeForm(forms.ModelForm):
     class Meta:
@@ -137,24 +110,6 @@ class EnumerationValueForm(forms.ModelForm):
     def clean_num(self):
         num = self.cleaned_data['num']
         return validate_enumeration_num(num, self.enumeration)
-
-    def save(self, commit=True):
-        value = self.cleaned_data.pop('value', None)
-
-        instance = super().save(commit=False)
-
-        data_type = self.enumeration.data_type
-        data_obj = create_type_based_data_object(data_type, value)
-        content_type = ContentType.objects.get_for_model(data_obj)
-
-        instance.content_type = content_type
-        instance.data_object_id = data_obj.id
-
-        if commit:
-            instance.save()
-            self.save_m2m()
-
-        return instance
 
 
 class ParameterNodeForm(forms.ModelForm):

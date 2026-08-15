@@ -1,13 +1,11 @@
 from rest_framework import serializers
 
 from .models import ClassifierNode, Enumeration, Value, Parameter, Service
-from .models import IntData, RealData, ContentType
 from .models import ParameterValueService
 from .models import ParameterNode
 
 from .utils import (
     common_update,
-    create_type_based_data_object,
     value_validate_data,
     value_validate_num,
     parameter_validate_general,
@@ -101,35 +99,14 @@ class ValueSerializer(serializers.ModelSerializer):
         data = validated_data.pop('data')
         view = self.context['view']
         enumeration_id = view.kwargs.get('enumeration_id')
-        data_type = Enumeration.objects.get(id=enumeration_id).data_type
-
-        data_obj = create_type_based_data_object(data_type, data)
-
-        content_type = ContentType.objects.get_for_model(data_obj)
 
         value_obj = Value.objects.create(
-            content_type=content_type,
-            data_object_id=data_obj.id,
             **validated_data,
             enumeration_id=enumeration_id,
+            data=data,
         )
 
         return value_obj
-
-    def update(self, instance, validated_data):
-        data = validated_data.pop('data', None)
-
-        common_update(instance, validated_data)
-
-        if data is not None:
-            model_class = instance.content_type.model_class()
-            data_obj = create_type_based_data_object(
-                instance.enumeration.data_type, data
-            )
-            model_class.objects.get(pk=instance.data_object_id).delete()
-            instance.data_object_id = data_obj.id
-
-        return instance
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -177,77 +154,13 @@ class ServiceSerializer(serializers.ModelSerializer):
         )
 
         for value, param in zip(values, base_class.parameters.all()):
-            if param.data_type == 'int':
-                data_obj = IntData.objects.create(data=value)
-            if param.data_type == 'real':
-                data_obj = RealData.objects.create(data=value)
-            if param.data_type == 'enum':
-                data_obj = Value.objects.get(id=value)
-
-            content_type = ContentType.objects.get_for_model(data_obj)
-
             ParameterValueService.objects.create(
-                content_type=content_type,
-                data_object_id=data_obj.id,
                 service=service_obj,
                 parameter=param,
+                value=value,
             )
 
         return service_obj
-
-    def update(self, instance, validated_data):
-        values = validated_data.pop('values', None)
-        base_class = self.get_base_class()
-
-        common_update(instance, validated_data)
-
-        if values is not None:
-            for value, param in zip(values, base_class.parameters.all()):
-                param_service_instance = (
-                    param.values_for_services.filter(service_id=instance.id)
-                )[0]
-                if param.data_type == 'int':
-                    IntData.objects.get(
-                        id=param_service_instance.data_object_id
-                    ).delete()
-                    data_obj = IntData.objects.create(data=value)
-                if param.data_type == 'real':
-                    RealData.objects.get(
-                        id=param_service_instance.data_object_id
-                    ).delete()
-                    data_obj = RealData.objects.create(data=value)
-                if param.data_type == 'enum':
-                    data_obj = Value.objects.get(id=value)
-                param_service_instance.data_object_id = data_obj.id
-                param_service_instance.save()
-
-        return instance
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        base_class = instance.base_class
-        values_text = {}
-        for param in base_class.parameters.all():
-            if param.data_type == 'int':
-                values_text[param.name] = IntData.objects.get(
-                    id=(
-                        param.values_for_services.filter(service_id=instance.id)[0]
-                    ).data_object_id
-                ).data
-            if param.data_type == 'real':
-                values_text[param.name] = RealData.objects.get(
-                    id=(
-                        param.values_for_services.filter(service_id=instance.id)[0]
-                    ).data_object_id
-                ).data
-            if param.data_type == 'enum':
-                values_text[param.name] = Value.objects.get(
-                    id=(
-                        param.values_for_services.filter(service_id=instance.id)[0]
-                    ).data_object_id
-                ).data.data
-        ret['values'] = values_text
-        return ret
 
 
 class ParameterNodeSerializer(serializers.ModelSerializer):
