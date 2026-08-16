@@ -121,7 +121,7 @@ class Value(ModelWithTimestamp):
         verbose_name_plural = 'Значения перечисления'
 
     def __str__(self):
-        return str(self.data.data)
+        return str(self.data)
 
 
 class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
