@@ -108,7 +108,9 @@ def service_validate_general(view, values):
 
     for value, param in zip(values, base_class.parameters.all()):
         if param.data_type == 'int':
-            if not isinstance(value, int):
+            try:
+                int(value)
+            except ValueError:
                 raise serializers.ValidationError(
                     {'values': f'Expected integer for value of parameter, \
                     {param.name} got {type(value).__name__}'}
@@ -125,21 +127,32 @@ def service_validate_general(view, values):
                                                     for the given class'})
 
         elif param.data_type == 'real':
-            if not isinstance(value, (int, float)):
+            try:
+                int(value)
+            except ValueError:
                 raise serializers.ValidationError(
                     {'data': f'Expected type "real" for value of, \
                     parameter {param.name} got {type(value).__name__}'}
                 )
+            param_node = base_class.parameters_nodes.get(parameter=param)
+            if param_node.min_param_value and value < param_node.min_param_value:
+                raise serializers.ValidationError({'values': f'value {value} is \
+                                                    smaller than min_val \
+                                                    for the given class'})
+            if param_node.max_param_value and value > param_node.max_param_value:
+                raise serializers.ValidationError({'values': f'value {value} is \
+                                                    bigger than max_val \
+                                                    for the given class'})
 
         elif param.data_type == 'enum':
-            if not isinstance(value, int):
+            try:
+                value = int(value)
+            except ValueError:
                 raise serializers.ValidationError(
-                    {'values': f'Expected integer for value of parameter, \
+                    {'values': f'Expected id(integer) for value of parameter, \
                     {param} got {type(value).__name__}'}
                 )
-            value_obj = Value.objects.get(id=value)
-            if not value_obj:
-                raise serializers.ValidationError({'values': f'no value with id {id}'})
+            value_obj = get_or_validation_error(Value, value, 'values')
             if value_obj.enumeration != param.enumeration:
                 raise serializers.ValidationError(
                     {'values': f'value with id {id} is created \
