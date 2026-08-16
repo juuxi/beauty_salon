@@ -1,5 +1,6 @@
 import django_filters
-from django.db.models import Q
+from django.db.models import FloatField
+from django.db.models.functions import Cast
 from .models import Service, ParameterValueService, Parameter
 
 from rest_framework.exceptions import ValidationError
@@ -8,7 +9,7 @@ from rest_framework.exceptions import ValidationError
 class ServiceFilter(django_filters.FilterSet):
     values = django_filters.CharFilter(method='filter_by_resolved_data')
 
-    def get_condition(self, param_value, param, exp_type, content_type_id, model, mode):
+    def get_matching_ids(self, param_value, param, exp_type, mode):
         try:
             param_value = exp_type(param_value)
         except ValueError:
@@ -22,19 +23,28 @@ class ServiceFilter(django_filters.FilterSet):
                 raise ValidationError({'values': 'mode is only availible \
                                         for number params'})
             if mode == 'gte':
-                return Q(
-                    content_type_id=content_type_id,
-                    data_object_id__in=(model.objects.filter(data__gte=param_value)),
-                )
-            if mode == 'lte':
-                return Q(
-                    content_type_id=content_type_id,
-                    data_object_id__in=(model.objects.filter(data__lte=param_value)),
+                return (
+                    ParameterValueService.objects
+                    .annotate(value_num=Cast("value", output_field=FloatField()))
+                    .filter(value_num__gte=param_value)
+                    .values_list('service', flat=True)
+                    .distinct()
                 )
 
-        return Q(
-            content_type_id=content_type_id,
-            data_object_id__in=(model.objects.filter(data=param_value)),
+            if mode == 'lte':
+                return (
+                    ParameterValueService.objects
+                    .annotate(value_num=Cast("value", output_field=FloatField()))
+                    .filter(value_num__lte=param_value)
+                    .values_list('service', flat=True)
+                    .distinct()
+                )
+
+        return (
+            ParameterValueService.objects
+            .filter(value=param_value)
+            .values_list('service', flat=True)
+            .distinct()
         )
 
     def format_corruption_error(self):
@@ -68,15 +78,14 @@ class ServiceFilter(django_filters.FilterSet):
             except Parameter.DoesNotExist:
                 raise ValidationError({'values': 'no parameter with this name'})
 
-            condition = Q(
-                parameter=param,
-            )
+            if param.data_type == 'int':
+                matching_service_ids = self.get_matching_ids(param_value, param, int, mode)
 
-            matching_service_ids = (
-                ParameterValueService.objects.filter(condition)
-                .values_list('service', flat=True)
-                .distinct()
-            )
+            if param.data_type == 'real':
+                matching_service_ids = self.get_matching_ids(param_value, param, float, mode)
+
+            if param.data_type == 'enum':
+                pass
 
             queryset = queryset.filter(id__in=matching_service_ids)
 
