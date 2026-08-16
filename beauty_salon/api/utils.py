@@ -18,7 +18,7 @@ def get_or_validation_error(model, id, field):
     try:
         obj = model.objects.get(id=id)
     except model.DoesNotExist:
-        raise serializers.ValidationError({'field': f'No {model} with id {id}'})
+        raise serializers.ValidationError({f'{field}': f'No {model} with id {id}'})
     return obj
 
 
