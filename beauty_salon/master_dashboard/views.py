@@ -39,14 +39,19 @@ from .utils import (
     get_value_data_type,
 )
 
+from .api_client import BackendClient
+
 
 class ServiceListView(FilterView):
     model = Service
     template_name = 'service/services.html'
     context_object_name = 'services'
-    ordering = 'id'
     filterset_class = ServiceFilter
     paginate_by = 12
+
+    def get_queryset(self):
+        client = BackendClient()
+        return client.get_services()
 
 
 def create_update_service(request, service_id=None):
@@ -74,22 +79,8 @@ class ServiceValuesListView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        service = get_object_or_404(Service, pk=self.kwargs['service_id'])
-        parameter_nodes = (
-            ParameterNode.objects.filter(classifiernode=service.base_class).order_by('num')
-        )
-        parameters = []
-        for parameter_node in parameter_nodes:
-            parameters.append(parameter_node.parameter)
-        values = []
-        for parameter in parameters:
-            try:
-                values.append(
-                    ParameterValueService.objects.get(service=service, parameter=parameter)
-                )
-            except ParameterValueService.DoesNotExist:
-                values.append(None)
-        return zip(parameters, values)
+        client = BackendClient()
+        return client.get_service_values(self.kwargs['service_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -169,8 +160,11 @@ class ClassifierNodeView(ListView):
     model = ClassifierNode
     template_name = 'classifier_node/classifier_nodes.html'
     context_object_name = 'classifier_nodes'
-    ordering = 'id'
     paginate_by = 12
+
+    def get_queryset(self):
+        client = BackendClient()
+        return client.get_classifier_nodes()
 
 
 def create_update_classifier_node(request, node_id=None):
@@ -203,9 +197,8 @@ class ParameterNodeListView(ListView):
         return context
 
     def get_queryset(self):
-        return ParameterNode.objects.filter(
-            classifiernode_id=self.kwargs['node_id']
-            ).order_by('num')
+        client = BackendClient()
+        return client.get_node_parameters(self.kwargs['node_id'])
 
 
 def create_classifier_node_parameters(request, node_id):
@@ -257,8 +250,11 @@ class ParameterView(ListView):
     model = Parameter
     template_name = 'parameter/parameters.html'
     context_object_name = 'parameters'
-    ordering = 'id'
     paginate_by = 12
+
+    def get_queryset(self):
+        client = BackendClient()
+        return client.get_parameters()
 
 
 def create_update_parameter(request, param_id=None):
@@ -284,8 +280,11 @@ class EnumerationView(ListView):
     model = Enumeration
     template_name = 'enumeration/enumerations.html'
     context_object_name = 'enumerations'
-    ordering = 'id'
     paginate_by = 12
+
+    def get_queryset(self):
+        client = BackendClient()
+        return client.get_enumerations()
 
 
 def create_update_enumeration(request, enumeration_id=None):
@@ -318,7 +317,8 @@ class ValueListView(ListView):
         return context
 
     def get_queryset(self):
-        return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id']).order_by('num')
+        client = BackendClient()
+        return client.get_values(self.kwargs['enumeration_id'])
 
 
 def create_update_enumeration_values(request, enumeration_id, value_id=None):
@@ -372,11 +372,13 @@ def order_enumeration_values(request, enumeration_id):
 
 
 class MeasuringUnitView(ListView):
-    model = MeasuringUnit
     template_name = 'measuring_unit/measuring_units.html'
     context_object_name = 'measuring_units'
-    ordering = 'id'
     paginate_by = 12
+
+    def get_queryset(self):
+        client = BackendClient()
+        return client.get_measuring_units()
 
 
 def create_update_measuring_unit(request, unit_id=None):
