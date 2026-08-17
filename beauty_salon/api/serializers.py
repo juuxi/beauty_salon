@@ -93,17 +93,6 @@ class ValueSerializer(serializers.ModelSerializer):
         view = self.context['view']
         return value_validate_num(view, num)
 
-    def create(self, validated_data):
-        view = self.context['view']
-        enumeration_id = view.kwargs.get('enumeration_id')
-
-        value_obj = Value.objects.create(
-            **validated_data,
-            enumeration_id=enumeration_id,
-        )
-
-        return value_obj
-
 
 class ParameterSerializer(serializers.ModelSerializer):
 
@@ -193,14 +182,3 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
     def validate_num(self, num):
         view = self.context['view']
         return parameter_node_validate_num(view, num)
-
-    def create(self, validated_data):
-        view = self.context['view']
-        classifiernode_id = view.kwargs.get('node_id')
-
-        param_node_obj = ParameterNode.objects.create(
-            **validated_data,
-            classifiernode_id=classifiernode_id,
-        )
-
-        return param_node_obj

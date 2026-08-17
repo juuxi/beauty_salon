@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 
 from django.db import connection, transaction
+from django.shortcuts import get_object_or_404
 
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ServiceFilter
@@ -24,6 +25,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
 
     serializer_class = ClassifierNodeSerializer
     queryset = ClassifierNode.objects.all().order_by('id')
+    lookup_url_kwarg = "id"
 
     def create(self, request, *args, **kwargs):
         children_data = request.data.pop('children', [])
@@ -113,6 +115,7 @@ class EnumerationView(viewsets.ModelViewSet):
 
     serializer_class = EnumerationSerializer
     queryset = Enumeration.objects.all().order_by('id')
+    lookup_url_kwarg = "id"
 
 
 class OrderingUpdateMixin:
@@ -169,9 +172,18 @@ class ValueView(OrderingUpdateMixin, viewsets.ModelViewSet):
 
     serializer_class = ValueSerializer
 
+    def get_enum(self):
+        return get_object_or_404(
+            Enumeration,
+            pk=self.kwargs["enumeration_id"],
+        )
+
     def get_queryset(self):
         enumeration_id = self.kwargs['enumeration_id']
         return Value.objects.filter(enumeration_id=enumeration_id).order_by('num')
+
+    def perform_create(self, serializer):
+        serializer.save(enumeration=self.get_enum())
 
 
 class ServiceView(viewsets.ModelViewSet):
@@ -192,8 +204,17 @@ class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
 
     serializer_class = ParameterNodeSerializer
 
+    def get_node(self):
+        return get_object_or_404(
+            ClassifierNode,
+            pk=self.kwargs["node_id"],
+        )
+
     def get_queryset(self):
         classifiernode_id = self.kwargs['node_id']
         return ParameterNode.objects.filter(
             classifiernode_id=classifiernode_id
         ).order_by('num')
+
+    def perform_create(self, serializer):
+        serializer.save(classifiernode=self.get_node())
