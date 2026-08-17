@@ -159,10 +159,19 @@ class ServiceSerializer(serializers.ModelSerializer):
         base_class = instance.base_class
         values_text = {}
         for param in base_class.parameters.all():
-            values_text[param.name] = ParameterValueService.objects.get(
-                parameter=param,
-                service=instance
-            ).value
+            if param.data_type == 'enum':
+                value_id = ParameterValueService.objects.get(
+                    parameter=param,
+                    service=instance
+                ).value
+                value_id = int(value_id)
+                value_obj = Value.objects.get(id=value_id)
+                values_text[param.name] = value_obj.data
+            else:
+                values_text[param.name] = ParameterValueService.objects.get(
+                    parameter=param,
+                    service=instance
+                ).value
         ret['values'] = values_text
         return ret
 
