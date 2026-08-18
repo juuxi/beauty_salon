@@ -29,6 +29,11 @@ class ClassifierNodeView(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         children_data = request.data.pop('children', [])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        node = serializer.instance
 
         if children_data:
             existing_children = ClassifierNode.objects.filter(id__in=children_data)
@@ -39,15 +44,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
             if missing_ids:
                 raise ValidationError({'children': f'Следующие узлы не существуют: \
                     {list(missing_ids)}'})
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        node = serializer.instance
-
-        if children_data:
-            ClassifierNode.objects.filter(id__in=children_data).update(parent=node)
+            existing_children.update(parent=node)
             node.is_terminal = False
 
         headers = self.get_success_headers(serializer.data)
