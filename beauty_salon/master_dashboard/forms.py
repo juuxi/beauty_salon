@@ -128,6 +128,19 @@ class EnumerationValueForm(forms.ModelForm):
         num = self.cleaned_data['num']
         return validate_enumeration_num(num, self.enumeration)
 
+    def save(self, commit=True):
+        value = self.cleaned_data.pop('value', None)
+
+        instance = super().save(commit=False)
+
+        instance.data = value
+
+        if commit:
+            instance.save()
+            self.save_m2m()
+
+        return instance
+
 
 class ParameterNodeForm(forms.ModelForm):
     class Meta:
