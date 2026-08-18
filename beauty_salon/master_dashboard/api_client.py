@@ -30,10 +30,22 @@ class BackendClient:
         values = []
         for parameter in parameters:
             try:
-                values.append(
-                    ParameterValueService.objects.get(service=service, parameter=parameter)
-                )
+                if parameter.data_type != 'enum':
+                    values.append(
+                        ParameterValueService.objects.get(service=service, parameter=parameter)
+                        .value
+                    )
+                else:
+                    value_id = ParameterValueService.objects.get(
+                        service=service,
+                        parameter=parameter
+                    ).value
+                    values.append(
+                        Value.objects.get(id=value_id).data
+                    )
             except ParameterValueService.DoesNotExist:
+                values.append(None)
+            except Value.DoesNotExist:
                 values.append(None)
         return list(zip(parameters, values))
 
