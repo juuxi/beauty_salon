@@ -42,6 +42,10 @@ from .utils import (
 from .api_client import BackendClient
 
 
+class PaginatedListView(ListView):
+    paginate_by = 12
+
+
 class ServiceListView(FilterView):
     model = Service
     template_name = 'service/services.html'
@@ -73,10 +77,9 @@ class ServiceDeleteView(DeleteView):
     template_name = 'service/service-create.html'
 
 
-class ServiceValuesListView(ListView):
+class ServiceValuesListView(PaginatedListView):
     template_name = 'service/service_values.html'
     context_object_name = 'parameters_values'
-    paginate_by = 12
 
     def get_queryset(self):
         client = BackendClient()
@@ -156,11 +159,10 @@ def filter_services(request):
     return render(request, 'service/service-filter.html', context)
 
 
-class ClassifierNodeView(ListView):
+class ClassifierNodeView(PaginatedListView):
     model = ClassifierNode
     template_name = 'classifier_node/classifier_nodes.html'
     context_object_name = 'classifier_nodes'
-    paginate_by = 12
 
     def get_queryset(self):
         client = BackendClient()
@@ -186,10 +188,9 @@ class ClassifierNodeDeleteView(DeleteView):
     template_name = 'classifier_node/classifier_node-create.html'
 
 
-class ParameterNodeListView(ListView):
+class ParameterNodeListView(PaginatedListView):
     template_name = 'classifier_node/classifier_parameters.html'
     context_object_name = 'classifier_parameters'
-    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -246,11 +247,10 @@ def order_classifier_parameters(request, node_id):
     return render(request, 'classifier_node/classifier_parameter-order.html', context)
 
 
-class ParameterView(ListView):
+class ParameterView(PaginatedListView):
     model = Parameter
     template_name = 'parameter/parameters.html'
     context_object_name = 'parameters'
-    paginate_by = 12
 
     def get_queryset(self):
         client = BackendClient()
@@ -276,11 +276,10 @@ class ParameterDeleteView(DeleteView):
     template_name = 'parameter/parameter-create.html'
 
 
-class EnumerationView(ListView):
+class EnumerationView(PaginatedListView):
     model = Enumeration
     template_name = 'enumeration/enumerations.html'
     context_object_name = 'enumerations'
-    paginate_by = 12
 
     def get_queryset(self):
         client = BackendClient()
@@ -306,10 +305,9 @@ class EnumerationDeleteView(DeleteView):
     template_name = 'enumeration/enumeration-create.html'
 
 
-class ValueListView(ListView):
+class ValueListView(PaginatedListView):
     template_name = 'enumeration/enumeration_values.html'
     context_object_name = 'values'
-    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -371,10 +369,9 @@ def order_enumeration_values(request, enumeration_id):
     return render(request, 'enumeration/enumeration_value-order.html', context)
 
 
-class MeasuringUnitView(ListView):
+class MeasuringUnitView(PaginatedListView):
     template_name = 'measuring_unit/measuring_units.html'
     context_object_name = 'measuring_units'
-    paginate_by = 12
 
     def get_queryset(self):
         client = BackendClient()
