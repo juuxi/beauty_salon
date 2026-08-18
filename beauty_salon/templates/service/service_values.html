@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="card__body">
-                <p>{% if value %}{{ value }}{% else %}Значение не задано{% endif %} {% if parameter.measuring_unit %}{{ parameter.measuring_unit }}{% endif %}</p>
+                <p>{% if value %}{{ value.value }}{% else %}Значение не задано{% endif %} {% if parameter.measuring_unit %}{{ parameter.measuring_unit }}{% endif %}</p>
             </div>
         </div>
         {% empty %}

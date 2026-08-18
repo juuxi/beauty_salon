@@ -33,16 +33,14 @@ class BackendClient:
                 if parameter.data_type != 'enum':
                     values.append(
                         ParameterValueService.objects.get(service=service, parameter=parameter)
-                        .value
                     )
                 else:
-                    value_id = ParameterValueService.objects.get(
+                    value_obj = ParameterValueService.objects.get(
                         service=service,
                         parameter=parameter
-                    ).value
-                    values.append(
-                        Value.objects.get(id=value_id).data
                     )
+                    value_obj.value = Value.objects.get(id=value_obj.value).data
+                    values.append(value_obj)
             except ParameterValueService.DoesNotExist:
                 values.append(None)
             except Value.DoesNotExist:

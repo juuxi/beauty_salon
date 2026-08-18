@@ -65,6 +65,23 @@ class ServiceValueForm(forms.ModelForm):
             form_value = parameter_node.max_param_value
         return form_value
 
+    def save(self, commit=True):
+        form_value = self.cleaned_data.pop('form_value', None)
+        enum_value = self.cleaned_data.pop('enum_value', None)
+
+        instance = super().save(commit=False)
+
+        if form_value:
+            instance.value = form_value
+        if enum_value:
+            instance.value = enum_value
+
+        if commit:
+            instance.save()
+            self.save_m2m()
+
+        return instance
+
 
 class ClassifierNodeForm(forms.ModelForm):
     class Meta:
