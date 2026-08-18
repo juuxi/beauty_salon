@@ -39,28 +39,22 @@ class ClassifierNodeSerializer(serializers.ModelSerializer):
             'parameters',
         )
 
-    def create(self, validated_data):
+    def process_extra_data(self, instance, validated_data):
         enumerations_data = validated_data.pop('enumerations', [])
         parameters_data = validated_data.pop('parameters', [])
-        node = ClassifierNode.objects.create(**validated_data)
-
         if enumerations_data:  # enumerations is a related_name in M2M creation
-            node.enumerations.set(enumerations_data)
+            instance.enumerations.set(enumerations_data)
         if parameters_data:
-            node.parameters.set(parameters_data)
+            instance.parameters.set(parameters_data)
+
+    def create(self, validated_data):
+        node = ClassifierNode.objects.create(**validated_data)
+        self.process_extra_data(node, validated_data)
         return node
 
     def update(self, instance, validated_data):
-        enumerations_data = validated_data.pop('enumerations', None)
-        parameters_data = validated_data.pop('parameters', None)
-
         common_update(instance, validated_data)
-
-        if enumerations_data is not None:
-            instance.enumerations.set(enumerations_data)
-        if parameters_data is not None:
-            instance.parameters.set(parameters_data)
-
+        self.process_extra_data(instance, validated_data)
         return instance
 
 
