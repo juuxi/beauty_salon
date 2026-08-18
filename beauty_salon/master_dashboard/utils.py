@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db.models import Min, Max
+from django.shortcuts import get_object_or_404
 
 from api.models import (
     Value,
@@ -141,3 +142,10 @@ def validate_filtering_data(exp_type, form, param):
     min_value, max_value = apply_min_max_borders(min_value, max_value, param)
 
     return min_value, max_value
+
+
+def get_form_obj(request, pk, Model, FormClass):
+    instance = None
+    if pk:
+        instance = get_object_or_404(Model, pk=pk)
+    return FormClass(request.POST or None, instance=instance)

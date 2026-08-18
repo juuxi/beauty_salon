@@ -37,6 +37,7 @@ from .utils import (
     add_parameter_values_to_filter,
     validate_filtering_data,
     get_value_data_type,
+    get_form_obj,
 )
 
 from .api_client import BackendClient
@@ -59,10 +60,7 @@ class ServiceListView(FilterView):
 
 
 def create_update_service(request, service_id=None):
-    instance = None
-    if service_id:
-        instance = get_object_or_404(Service, pk=service_id)
-    form = ServiceForm(request.POST or None, instance=instance)
+    form = get_form_obj(request, service_id, Service, ServiceForm)
     if form.is_valid():
         form.save()
         return redirect('master_dashboard:services')
@@ -170,10 +168,7 @@ class ClassifierNodeView(PaginatedListView):
 
 
 def create_update_classifier_node(request, node_id=None):
-    instance = None
-    if node_id:
-        instance = get_object_or_404(ClassifierNode, pk=node_id)
-    form = ClassifierNodeForm(request.POST or None, instance=instance)
+    form = get_form_obj(request, node_id, ClassifierNode, ClassifierNodeForm)
     if form.is_valid():
         form.save()
         return redirect('master_dashboard:classifier_nodes')
@@ -258,10 +253,7 @@ class ParameterView(PaginatedListView):
 
 
 def create_update_parameter(request, param_id=None):
-    instance = None
-    if param_id:
-        instance = get_object_or_404(Parameter, pk=param_id)
-    form = ParameterForm(request.POST or None, instance=instance)
+    form = get_form_obj(request, param_id, Parameter, ParameterForm)
     if form.is_valid():
         form.save()
         return redirect('master_dashboard:parameters')
@@ -287,10 +279,7 @@ class EnumerationView(PaginatedListView):
 
 
 def create_update_enumeration(request, enumeration_id=None):
-    instance = None
-    if enumeration_id:
-        instance = get_object_or_404(Enumeration, pk=enumeration_id)
-    form = EnumerationForm(request.POST or None, instance=instance)
+    form = get_form_obj(request, enumeration_id, Enumeration, EnumerationForm)
     if form.is_valid():
         form.save()
         return redirect('master_dashboard:enumerations')
@@ -379,10 +368,7 @@ class MeasuringUnitView(PaginatedListView):
 
 
 def create_update_measuring_unit(request, unit_id=None):
-    instance = None
-    if unit_id:
-        instance = get_object_or_404(MeasuringUnit, pk=unit_id)
-    form = MeasuringUnitForm(request.POST or None, instance=instance)
+    form = get_form_obj(request, unit_id, MeasuringUnit, MeasuringUnitForm)
     if form.is_valid():
         form.save()
         return redirect('master_dashboard:measuring_units')
