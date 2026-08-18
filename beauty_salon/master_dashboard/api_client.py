@@ -35,7 +35,7 @@ class BackendClient:
                 )
             except ParameterValueService.DoesNotExist:
                 values.append(None)
-        return zip(parameters, values)
+        return list(zip(parameters, values))
 
     def get_classifier_nodes(self):
         return ClassifierNode.objects.all().order_by('id')
