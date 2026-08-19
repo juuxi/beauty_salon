@@ -133,26 +133,23 @@ class ServiceValueDeleteView(DeleteView):
 def filter_services(request):
     parameters = Parameter.objects.all()
     ServiceFilterFormSet = get_service_filter_formset(extra=len(parameters))
-    if request.method == 'GET':
-        formset = ServiceFilterFormSet()
-    if request.method == 'POST':
-        formset = ServiceFilterFormSet(request.POST)
-        if formset.is_valid():
-            url = reverse('master_dashboard:services')
-            filter_text = ''
-            for parameter, form in zip(parameters, formset):
-                data_type = get_value_data_type(parameter)
-                try:
-                    min_value, max_value = validate_filtering_data(data_type, form, parameter)
-                except ValidationError as e:
-                    form.add_error(None, '; '.join(e.messages))
-                    context = {'formset': formset, 'parameters': parameters}
-                    return render(request, 'service/service-filter.html', context)
+    formset = ServiceFilterFormSet(request.POST or None)
+    if formset.is_valid():
+        url = reverse('master_dashboard:services')
+        filter_text = ''
+        for parameter, form in zip(parameters, formset):
+            data_type = get_value_data_type(parameter)
+            try:
+                min_value, max_value = validate_filtering_data(data_type, form, parameter)
+            except ValidationError as e:
+                form.add_error(None, '; '.join(e.messages))
+                context = {'formset': formset, 'parameters': parameters}
+                return render(request, 'service/service-filter.html', context)
 
-                filter_text = add_parameter_values_to_filter(filter_text, parameter,
-                                                             min_value, max_value)
+            filter_text = add_parameter_values_to_filter(filter_text, parameter,
+                                                         min_value, max_value)
 
-            return redirect(f'{url}?values={filter_text}')
+        return redirect(f'{url}?values={filter_text}')
     context = {'formset': formset, 'parameters': parameters}
     return render(request, 'service/service-filter.html', context)
 
@@ -226,18 +223,13 @@ def order_classifier_parameters(request, node_id):
 
     queryset = ParameterNode.objects.filter(classifiernode=classifier_node).order_by('num')
     ParameterNodeOrderingFormSet = get_parameter_node_ordering_formset()
-    if request.method == 'GET':
-        formset = ParameterNodeOrderingFormSet(
-            queryset=queryset
-        )
-    if request.method == 'POST':
-        formset = ParameterNodeOrderingFormSet(
-            request.POST,
-            queryset=queryset
-        )
-        if formset.is_valid():
-            formset.save()
-            return redirect('master_dashboard:classifier_parameters', node_id=node_id)
+    formset = ParameterNodeOrderingFormSet(
+        request.POST or None,
+        queryset=queryset
+    )
+    if formset.is_valid():
+        formset.save()
+        return redirect('master_dashboard:classifier_parameters', node_id=node_id)
     context = {'formset': formset, 'classifier': classifier_node}
     return render(request, 'classifier_node/classifier_parameter-order.html', context)
 
@@ -342,18 +334,13 @@ def order_enumeration_values(request, enumeration_id):
 
     queryset = Value.objects.filter(enumeration=enumeration).order_by('num')
     EnumerationValueOrderingFormSet = get_enumeration_value_ordering_formset()
-    if request.method == 'GET':
-        formset = EnumerationValueOrderingFormSet(
-            queryset=queryset
-        )
-    if request.method == 'POST':
-        formset = EnumerationValueOrderingFormSet(
-            request.POST,
-            queryset=queryset
-        )
-        if formset.is_valid():
-            formset.save()
-            return redirect('master_dashboard:enumeration_values', enumeration_id=enumeration_id)
+    formset = EnumerationValueOrderingFormSet(
+        request.POST or None,
+        queryset=queryset
+    )
+    if formset.is_valid():
+        formset.save()
+        return redirect('master_dashboard:enumeration_values', enumeration_id=enumeration_id)
     context = {'formset': formset, 'enumeration': enumeration}
     return render(request, 'enumeration/enumeration_value-order.html', context)
 
