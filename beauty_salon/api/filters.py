@@ -25,6 +25,7 @@ class ServiceFilter(django_filters.FilterSet):
             if mode == 'gte':
                 return (
                     ParameterValueService.objects
+                    .filter(parameter=param)
                     .annotate(value_num=Cast("value", output_field=FloatField()))
                     .filter(value_num__gte=param_value)
                     .values_list('service', flat=True)
@@ -34,6 +35,7 @@ class ServiceFilter(django_filters.FilterSet):
             if mode == 'lte':
                 return (
                     ParameterValueService.objects
+                    .filter(parameter=param)
                     .annotate(value_num=Cast("value", output_field=FloatField()))
                     .filter(value_num__lte=param_value)
                     .values_list('service', flat=True)
@@ -42,6 +44,7 @@ class ServiceFilter(django_filters.FilterSet):
 
         return (
             ParameterValueService.objects
+            .filter(parameter=param)
             .filter(value=param_value)
             .values_list('service', flat=True)
             .distinct()
