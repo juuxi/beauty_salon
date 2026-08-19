@@ -122,7 +122,7 @@ def apply_min_max_borders(min_value, max_value, param):
 
     if min_value and result['min_val'] and min_value < result['min_val']:
         min_value = result['min_val']
-    if max_value and result['max_val'] and max_value < result['max_val']:
+    if max_value and result['max_val'] and max_value > result['max_val']:
         max_value = result['max_val']
     return min_value, max_value
 
