@@ -73,6 +73,23 @@ class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, Mod
         return self.name
 
 
+class StandardNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
+    base_class = models.ForeignKey(
+        ClassifierNode,
+        on_delete=models.CASCADE,
+        related_name='standard_nodes',
+        verbose_name='Базовый класс',
+    )
+
+    class Meta:
+        db_table = 'standard_node'
+        verbose_name = 'Типовая услуга'
+        verbose_name_plural = 'Типовые услуги'
+
+    def __str__(self):
+        return self.name
+
+
 class Enumeration(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
     DATA_TYPES = (
         ('str', 'Строка'),
