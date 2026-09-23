@@ -17,6 +17,7 @@ classifier_nested_router = routers.NestedDefaultRouter(
 )
 classifier_nested_router.register('services', views.ServiceView, 'services')
 classifier_nested_router.register('parameters', views.ParameterNodeView, 'parameters')
+classifier_nested_router.register('standard_nodes', views.StandardNodeView, 'standard_nodes')
 
 app_name = 'api'
 

@@ -11,13 +11,25 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ServiceFilter
 
-from .models import ClassifierNode, Enumeration
-from .models import Value, Parameter, Service
-from .models import ParameterNode
-from .serializers import ClassifierNodeSerializer, EnumerationSerializer
-from .serializers import ValueSerializer, ParameterSerializer
-from .serializers import ClassifierNodeFunctionSerializer
-from .serializers import ServiceSerializer, ParameterNodeSerializer
+from .models import (
+    ClassifierNode,
+    Enumeration,
+    Value,
+    Parameter,
+    Service,
+    ParameterNode,
+    StandardNode,
+)
+from .serializers import (
+    ClassifierNodeSerializer,
+    EnumerationSerializer,
+    ValueSerializer,
+    ParameterSerializer,
+    ClassifierNodeFunctionSerializer,
+    ServiceSerializer,
+    ParameterNodeSerializer,
+    StandardNodeSerializer,
+)
 
 
 class ClassifierNodeView(viewsets.ModelViewSet):
@@ -215,3 +227,24 @@ class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(classifiernode=self.get_node())
+
+
+class StandardNodeView(viewsets.ModelViewSet):
+    """CRUD для параметров класса"""
+
+    serializer_class = StandardNodeSerializer
+
+    def get_node(self):
+        return get_object_or_404(
+            ClassifierNode,
+            pk=self.kwargs["node_id"],
+        )
+
+    def get_queryset(self):
+        base_class_id = self.kwargs['node_id']
+        return StandardNode.objects.filter(
+            base_class_id=base_class_id
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(base_class=self.get_node())

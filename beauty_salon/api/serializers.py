@@ -1,8 +1,15 @@
 from rest_framework import serializers
 
-from .models import ClassifierNode, Enumeration, Value, Parameter, Service
-from .models import ParameterValueService
-from .models import ParameterNode
+from .models import (
+    ClassifierNode,
+    Enumeration,
+    Value,
+    Parameter,
+    Service,
+    ParameterValueService,
+    ParameterNode,
+    StandardNode,
+)
 
 from .utils import (
     common_update,
@@ -176,3 +183,17 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
     def validate_num(self, num):
         view = self.context['view']
         return parameter_node_validate_num(view, num)
+
+
+class StandardNodeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StandardNode
+        fields = (
+            'id',
+            'name',
+            'base_class',
+            'code',
+            'measuring_unit',
+        )
+        read_only_fields = ('base_class',)
