@@ -3,8 +3,8 @@ from rest_framework import serializers
 from .models import (
     Value,
     Enumeration,
-    ClassifierNode,
     ParameterNode,
+    StandardNode,
 )
 
 
@@ -94,8 +94,8 @@ def parameter_validate_general(data):
 
 
 def service_validate_general(view, values):
-    base_class_id = view.kwargs.get('node_id')
-    base_class = get_or_validation_error(ClassifierNode, base_class_id, 'base_class')
+    base_class_id = view.kwargs.get('standard_node_id')
+    base_class = get_or_validation_error(StandardNode, base_class_id, 'base_class')
 
     if len(values) != base_class.parameters.count():
         raise serializers.ValidationError(

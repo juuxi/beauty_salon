@@ -153,10 +153,10 @@ class Parameter(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWit
     )
 
     nodes = models.ManyToManyField(
-        ClassifierNode,
+        StandardNode,
         through='ParameterNode',
         related_name='parameters',
-        verbose_name='Узлы классификатора',
+        verbose_name='Типовые классы',
     )
 
     # очередная игра с generic-ами в данном случае была бы overkill-ом,
@@ -188,11 +188,11 @@ class ParameterNode(models.Model):
         verbose_name='Параметр',
     )
 
-    classifiernode = models.ForeignKey(
-        ClassifierNode,
+    standardnode = models.ForeignKey(
+        StandardNode,
         related_name='parameters_nodes',
         on_delete=models.CASCADE,
-        verbose_name='Узел классификатора',
+        verbose_name='Типовой класс',
     )
 
     min_param_value = models.IntegerField(
@@ -209,12 +209,12 @@ class ParameterNode(models.Model):
         db_table = 'parameters_nodes'
         constraints = [
             models.UniqueConstraint(
-                fields=['parameter', 'classifiernode'],
-                name='unique_parameter_classifiernode_constraint',
+                fields=['parameter', 'standardnode'],
+                name='unique_parameter_standardnode_constraint',
             ),
             models.UniqueConstraint(
-                fields=['classifiernode', 'num'],
-                name='unique_classifiernode_num_constraint',
+                fields=['standardnode', 'num'],
+                name='unique_standardnode_num_constraint',
                 deferrable=models.Deferrable.DEFERRED,
             ),
         ]
@@ -222,7 +222,7 @@ class ParameterNode(models.Model):
 
 class Service(ModelWithTimestamp, CodedModel, ModelWithName):
     base_class = models.ForeignKey(
-        ClassifierNode,
+        StandardNode,
         on_delete=models.CASCADE,
         related_name='services',
         verbose_name='Базовый класс',

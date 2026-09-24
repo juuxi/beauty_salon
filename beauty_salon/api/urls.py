@@ -15,9 +15,13 @@ value_router.register('values', views.ValueView, 'value')
 classifier_nested_router = routers.NestedDefaultRouter(
     base_router, r'classifier', lookup='node',
 )
-classifier_nested_router.register('services', views.ServiceView, 'services')
-classifier_nested_router.register('parameters', views.ParameterNodeView, 'parameters')
 classifier_nested_router.register('standard_nodes', views.StandardNodeView, 'standard_nodes')
+
+standard_node_nested_router = routers.NestedDefaultRouter(
+    classifier_nested_router, r'standard_nodes', lookup='standard_node',
+)
+standard_node_nested_router.register('services', views.ServiceView, 'services')
+standard_node_nested_router.register('parameters', views.ParameterNodeView, 'parameters')
 
 app_name = 'api'
 
@@ -36,4 +40,5 @@ urlpatterns = [
     path(r'', include(base_router.urls)),
     path(r'', include(value_router.urls)),
     path(r'', include(classifier_nested_router.urls)),
+    path(r'', include(standard_node_nested_router.urls)),
 ]

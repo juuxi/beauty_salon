@@ -201,7 +201,7 @@ class ServiceView(viewsets.ModelViewSet):
     serializer_class = ServiceSerializer
 
     def get_queryset(self):
-        base_class_id = self.kwargs['node_id']
+        base_class_id = self.kwargs['standard_node_id']
         return Service.objects.filter(base_class_id=base_class_id).order_by('id')
 
     filter_backends = [DjangoFilterBackend]
@@ -215,24 +215,25 @@ class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
 
     def get_node(self):
         return get_object_or_404(
-            ClassifierNode,
-            pk=self.kwargs["node_id"],
+            StandardNode,
+            pk=self.kwargs["standard_node_id"],
         )
 
     def get_queryset(self):
-        classifiernode_id = self.kwargs['node_id']
+        standardnode_id = self.kwargs['standard_node_id']
         return ParameterNode.objects.filter(
-            classifiernode_id=classifiernode_id
+            standardnode_id=standardnode_id
         ).order_by('num')
 
     def perform_create(self, serializer):
-        serializer.save(classifiernode=self.get_node())
+        serializer.save(standardnode_id=self.get_node())
 
 
 class StandardNodeView(viewsets.ModelViewSet):
     """CRUD для параметров класса"""
 
     serializer_class = StandardNodeSerializer
+    lookup_url_kwarg = 'id'
 
     def get_node(self):
         return get_object_or_404(

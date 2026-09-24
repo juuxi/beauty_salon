@@ -122,8 +122,8 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def get_base_class(self):
         view = self.context['view']
-        base_class_id = view.kwargs.get('node_id')
-        base_class = ClassifierNode.objects.get(id=base_class_id)
+        base_class_id = view.kwargs.get('standard_node_id')
+        base_class = StandardNode.objects.get(id=base_class_id)
         return base_class
 
     def create(self, validated_data):
@@ -173,12 +173,12 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'parameter',
-            'classifiernode',
+            'standardnode',
             'min_param_value',
             'max_param_value',
             'num',
         )
-        read_only_fields = ('classifiernode',)
+        read_only_fields = ('standardnode',)
 
     def validate_num(self, num):
         view = self.context['view']
