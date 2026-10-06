@@ -110,12 +110,28 @@ class ParameterSerializer(serializers.ModelSerializer):
         return parameter_validate_general(data)
 
 
+class ServiceComponentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ServiceComponent
+        fields = (
+            'id',
+            'standard_node',
+            'service',
+            'component_service',
+            'component_material',
+            'amount',
+            'measuring_unit',
+        )
+
+
 class ServiceSerializer(serializers.ModelSerializer):
     values = serializers.JSONField(write_only=True)
+    components = ServiceComponentSerializer(many=True, required=False)
 
     class Meta:
         model = Service
-        fields = ('id', 'name', 'base_class', 'values')
+        fields = ('id', 'name', 'base_class', 'values', 'components')
         read_only_fields = ('base_class',)
 
     def validate(self, data):
@@ -132,11 +148,20 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         values = validated_data.pop('values')
+        components = validated_data.pop("components", [])
         base_class = self.get_base_class()
 
         service_obj = Service.objects.create(
             **validated_data,
             base_class=base_class,
+        )
+
+        ServiceComponent.objects.bulk_create(
+            ServiceComponent(
+                service=service_obj,
+                **component_data,
+            )
+            for component_data in components
         )
 
         for value, param in zip(values, base_class.parameters.all()):
@@ -187,21 +212,6 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
     def validate_num(self, num):
         view = self.context['view']
         return parameter_node_validate_num(view, num)
-
-
-class ServiceComponentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ServiceComponent
-        fields = (
-            'id',
-            'standard_node',
-            'service',
-            'component_service',
-            'component_material',
-            'amount',
-            'measuring_unit',
-        )
 
 
 class StandardNodeSerializer(serializers.ModelSerializer):
