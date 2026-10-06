@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from django.db import transaction
+
 from .models import (
     ClassifierNode,
     Enumeration,
@@ -10,6 +12,7 @@ from .models import (
     ParameterNode,
     StandardNode,
     Material,
+    ServiceComponent,
 )
 
 from .utils import (
@@ -186,7 +189,23 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
         return parameter_node_validate_num(view, num)
 
 
+class ServiceComponentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ServiceComponent
+        fields = (
+            'id',
+            'standard_node',
+            'service',
+            'component_service',
+            'component_material',
+            'amount',
+            'measuring_unit',
+        )
+
+
 class StandardNodeSerializer(serializers.ModelSerializer):
+    components = ServiceComponentSerializer(many=True, required=False)
 
     class Meta:
         model = StandardNode
@@ -196,8 +215,25 @@ class StandardNodeSerializer(serializers.ModelSerializer):
             'base_class',
             'code',
             'measuring_unit',
+            'components',
         )
         read_only_fields = ('base_class',)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        components = validated_data.pop("components", [])
+
+        standard_node = StandardNode.objects.create(**validated_data)
+
+        ServiceComponent.objects.bulk_create(
+            ServiceComponent(
+                standard_node=standard_node,
+                **component_data,
+            )
+            for component_data in components
+        )
+
+        return standard_node
 
 
 class MaterialSerializer(serializers.ModelSerializer):

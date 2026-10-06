@@ -259,3 +259,46 @@ class Material(ModelWithName, CodedModel):
 
     class Meta:
         db_table = 'materials'
+
+
+class ServiceComponent(ModelWithTimestamp, ModelWithMeasuringUnit):
+    standard_node = models.ForeignKey(
+        StandardNode,
+        on_delete=models.CASCADE,
+        related_name='components',
+        null=True,
+        blank=True,
+        verbose_name='Типовая услуга',
+    )
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='components',
+        null=True,
+        blank=True,
+        verbose_name='Услуга',
+    )
+
+    component_service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='general_services',
+        null=True,
+        blank=True,
+        verbose_name='Услуга-компонент',
+    )
+
+    component_material = models.ForeignKey(
+        Material,
+        on_delete=models.CASCADE,
+        related_name='services',
+        null=True,
+        blank=True,
+        verbose_name='Материал',
+    )
+
+    amount = models.PositiveIntegerField()
+
+    class Meta:
+        db_table = 'services_components'
