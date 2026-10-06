@@ -253,3 +253,9 @@ class ParameterValueService(models.Model):
 
     class Meta:
         db_table = 'parameters_services'
+
+
+class Material(ModelWithName, CodedModel):
+
+    class Meta:
+        db_table = 'materials'

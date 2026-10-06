@@ -9,6 +9,7 @@ from .models import (
     ParameterValueService,
     ParameterNode,
     StandardNode,
+    Material,
 )
 
 from .utils import (
@@ -197,3 +198,13 @@ class StandardNodeSerializer(serializers.ModelSerializer):
             'measuring_unit',
         )
         read_only_fields = ('base_class',)
+
+
+class MaterialSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Material
+        fields = (
+            'name',
+            'code',
+        )

@@ -19,6 +19,7 @@ from .models import (
     Service,
     ParameterNode,
     StandardNode,
+    Material,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -29,6 +30,7 @@ from .serializers import (
     ServiceSerializer,
     ParameterNodeSerializer,
     StandardNodeSerializer,
+    MaterialSerializer,
 )
 
 
@@ -249,3 +251,10 @@ class StandardNodeView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(base_class=self.get_node())
+
+
+class MaterialView(viewsets.ModelViewSet):
+    """CRUD для материалов"""
+
+    serializer_class = MaterialSerializer
+    queryset = Material.objects.all()

@@ -8,6 +8,7 @@ base_router = routers.DefaultRouter()
 base_router.register('classifier', views.ClassifierNodeView, 'classifier')
 base_router.register('enumerations', views.EnumerationView, 'enumerations')
 base_router.register('parameters', views.ParameterView, 'parameters')
+base_router.register('materials', views.MaterialView, 'materials')
 
 value_router = routers.NestedDefaultRouter(base_router, r'enumerations', lookup='enumeration')
 value_router.register('values', views.ValueView, 'value')
