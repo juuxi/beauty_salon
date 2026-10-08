@@ -73,7 +73,7 @@ class ClassifierNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, Mod
         return self.name
 
 
-class StandardNode(ModelWithTimestamp, ModelWithMeasuringUnit, CodedModel, ModelWithName):
+class StandardNode(ModelWithTimestamp, CodedModel, ModelWithName):
     base_class = models.ForeignKey(
         ClassifierNode,
         on_delete=models.CASCADE,
@@ -255,13 +255,13 @@ class ParameterValueService(models.Model):
         db_table = 'parameters_services'
 
 
-class Material(ModelWithName, CodedModel):
+class Material(ModelWithName, CodedModel, ModelWithMeasuringUnit):
 
     class Meta:
         db_table = 'materials'
 
 
-class ServiceComponent(ModelWithTimestamp, ModelWithMeasuringUnit):
+class ServiceComponent(ModelWithTimestamp):
     standard_node = models.ForeignKey(
         StandardNode,
         on_delete=models.CASCADE,

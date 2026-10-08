@@ -121,7 +121,6 @@ class ServiceComponentSerializer(serializers.ModelSerializer):
             'component_service',
             'component_material',
             'amount',
-            'measuring_unit',
         )
 
 
@@ -224,7 +223,6 @@ class StandardNodeSerializer(serializers.ModelSerializer):
             'name',
             'base_class',
             'code',
-            'measuring_unit',
             'components',
         )
         read_only_fields = ('base_class',)
@@ -253,4 +251,5 @@ class MaterialSerializer(serializers.ModelSerializer):
         fields = (
             'name',
             'code',
+            'measuring_unit',
         )
