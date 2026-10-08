@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from django.db import transaction
+from django.db import IntegrityError, transaction
 
 from .models import (
     ClassifierNode,
@@ -145,6 +145,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         base_class = StandardNode.objects.get(id=base_class_id)
         return base_class
 
+    @transaction.atomic
     def create(self, validated_data):
         values = validated_data.pop('values')
         components = validated_data.pop("components", [])
@@ -155,13 +156,46 @@ class ServiceSerializer(serializers.ModelSerializer):
             base_class=base_class,
         )
 
-        ServiceComponent.objects.bulk_create(
-            ServiceComponent(
-                service=service_obj,
-                **component_data,
+        base_components = service_obj.base_class.components.all()
+        base_components_dicts = [{
+            'component_service': comp.component_service,
+            'component_material': comp.component_material,
+            'amount': comp.amount,
+        } for comp in base_components]
+        components.extend(base_components_dicts)
+        unique_components = []
+
+        component_materials = set()
+        component_services = set()
+
+        for comp in components:
+            comp["service"] = service_obj
+
+            mat = comp.get("component_material")
+            srv = comp.get("component_service")
+
+            if mat and mat in component_materials:
+                continue
+            if srv and srv in component_services:
+                continue
+
+            if mat:
+                component_materials.add(mat)
+            if srv:
+                component_services.add(srv)
+
+            comp['service'] = service_obj
+            unique_components.append(comp)
+
+        try:
+            ServiceComponent.objects.bulk_create(
+                ServiceComponent(
+                    **component_data,
+                )
+                for component_data in unique_components
             )
-            for component_data in components
-        )
+        except IntegrityError:
+            pass
 
         for value, param in zip(values, base_class.parameters.all()):
             ParameterValueService.objects.create(

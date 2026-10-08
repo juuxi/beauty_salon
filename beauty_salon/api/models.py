@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Deferrable
+from django.db.models import Deferrable, UniqueConstraint
 from django.core.validators import MinValueValidator
 
 
@@ -302,3 +302,14 @@ class ServiceComponent(ModelWithTimestamp):
 
     class Meta:
         db_table = 'services_components'
+
+        constraints = [
+            UniqueConstraint(
+                fields=["service", "component_service"],
+                name="unique_service_component_service",
+            ),
+            UniqueConstraint(
+                fields=["service", "component_material"],
+                name="unique_service_component_material",
+            ),
+        ]
