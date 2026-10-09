@@ -1,77 +1,19 @@
-openapi: 3.0.2
+openapi: 3.0.3
 info:
-  title: ''
-  version: ''
+  title: Your Project API
+  version: 1.0.0
+  description: Your project description
 paths:
-  /api/classifier/{node_id}/list_parents/:
-    get:
-      operationId: listListParentsChildren
-      description: "\u0412\u044B\u0432\u043E\u0434 \u043F\u0440\u0435\u0434\u043A\u043E\
-        \u0432 \u0438 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u0435\u0439 \u0434\
-        \u0430\u043D\u043D\u043E\u0433\u043E \u0443\u0437\u043B\u0430"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items: {}
-          description: ''
-      tags:
-      - api
-  /api/classifier/{node_id}/list_children/:
-    get:
-      operationId: listListParentsChildren
-      description: "\u0412\u044B\u0432\u043E\u0434 \u043F\u0440\u0435\u0434\u043A\u043E\
-        \u0432 \u0438 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u0435\u0439 \u0434\
-        \u0430\u043D\u043D\u043E\u0433\u043E \u0443\u0437\u043B\u0430"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items: {}
-          description: ''
-      tags:
-      - api
-  /api/classifier/list_terminal_nodes/:
-    get:
-      operationId: listListTerminalNodes
-      description: "\u0412\u044B\u0432\u043E\u0434 \u0442\u0435\u0440\u043C\u0438\u043D\
-        \u0430\u043B\u044C\u043D\u044B\u0445 \u0443\u0437\u043B\u043E\u0432"
-      parameters: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items: {}
-          description: ''
-      tags:
-      - api
   /api/classifier/:
     get:
-      operationId: listClassifierNodes
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
-      parameters: []
+      operationId: classifier_list
+      description: CRUD для узла классификатора услуг
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -81,14 +23,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/ClassifierNode'
           description: ''
-      tags:
-      - api
     post:
-      operationId: createClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
-      parameters: []
+      operationId: classifier_create
+      description: CRUD для узла классификатора услуг
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
@@ -100,6 +39,11 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ClassifierNode'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '201':
           content:
@@ -107,23 +51,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClassifierNode'
           description: ''
-      tags:
-      - api
   /api/classifier/{id}/:
     get:
-      operationId: retrieveClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      operationId: classifier_retrieve
+      description: CRUD для узла классификатора услуг
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
-          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
-          \u0440\u0430."
+      - in: path
+        name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this Узел классификатора.
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -131,22 +75,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClassifierNode'
           description: ''
-      tags:
-      - api
     put:
-      operationId: updateClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      operationId: classifier_update
+      description: CRUD для узла классификатора услуг
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
-          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
-          \u0440\u0430."
+      - in: path
+        name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this Узел классификатора.
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
@@ -158,6 +98,11 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ClassifierNode'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -165,33 +110,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClassifierNode'
           description: ''
-      tags:
-      - api
     patch:
-      operationId: partialUpdateClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      operationId: classifier_partial_update
+      description: CRUD для узла классификатора услуг
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
-          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
-          \u0440\u0430."
+      - in: path
+        name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this Узел классификатора.
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ClassifierNode'
+              $ref: '#/components/schemas/PatchedClassifierNode'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ClassifierNode'
+              $ref: '#/components/schemas/PatchedClassifierNode'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ClassifierNode'
+              $ref: '#/components/schemas/PatchedClassifierNode'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -199,33 +144,79 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClassifierNode'
           description: ''
-      tags:
-      - api
     delete:
-      operationId: destroyClassifierNode
-      description: "CRUD \u0434\u043B\u044F \u0443\u0437\u043B\u0430 \u043A\u043B\u0430\
-        \u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0443\u0441\
-        \u043B\u0443\u0433"
+      operationId: classifier_destroy
+      description: CRUD для узла классификатора услуг
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u0423\u0437\u0435\u043B\
-          \ \u043A\u043B\u0430\u0441\u0441\u0438\u0444\u0438\u043A\u0430\u0442\u043E\
-          \u0440\u0430."
+      - in: path
+        name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this Узел классификатора.
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '204':
-          description: ''
-      tags:
-      - api
-  /api/enumerations/:
+          description: No response body
+  /api/classifier/{node_id}/list_children/:
     get:
-      operationId: listEnumerations
-      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
-        \u043B\u0435\u043D\u0438\u0439"
-      parameters: []
+      operationId: classifier_list_children_retrieve
+      description: Вывод предков и родителей данного узла
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/classifier/{node_id}/list_parents/:
+    get:
+      operationId: classifier_list_parents_retrieve
+      description: Вывод предков и родителей данного узла
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/:
+    get:
+      operationId: classifier_standard_nodes_list
+      description: CRUD для параметров класса
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -233,649 +224,191 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Enumeration'
+                  $ref: '#/components/schemas/StandardNode'
           description: ''
-      tags:
-      - api
     post:
-      operationId: createEnumeration
-      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
-        \u043B\u0435\u043D\u0438\u0439"
-      parameters: []
+      operationId: classifier_standard_nodes_create
+      description: CRUD для параметров класса
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/StandardNode'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/StandardNode'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/StandardNode'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Enumeration'
+                $ref: '#/components/schemas/StandardNode'
           description: ''
-      tags:
-      - api
-  /api/enumerations/{id}/:
+  /api/classifier/{node_id}/standard_nodes/{id}/:
     get:
-      operationId: retrieveEnumeration
-      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
-        \u043B\u0435\u043D\u0438\u0439"
+      operationId: classifier_standard_nodes_retrieve
+      description: CRUD для параметров класса
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
-          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+      - in: path
+        name: id
         schema:
           type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Enumeration'
+                $ref: '#/components/schemas/StandardNode'
           description: ''
-      tags:
-      - api
     put:
-      operationId: updateEnumeration
-      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
-        \u043B\u0435\u043D\u0438\u0439"
+      operationId: classifier_standard_nodes_update
+      description: CRUD для параметров класса
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
-          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+      - in: path
+        name: id
         schema:
           type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/StandardNode'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/StandardNode'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/StandardNode'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Enumeration'
+                $ref: '#/components/schemas/StandardNode'
           description: ''
-      tags:
-      - api
     patch:
-      operationId: partialUpdateEnumeration
-      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
-        \u043B\u0435\u043D\u0438\u0439"
+      operationId: classifier_standard_nodes_partial_update
+      description: CRUD для параметров класса
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
-          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+      - in: path
+        name: id
         schema:
           type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/PatchedStandardNode'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/PatchedStandardNode'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Enumeration'
+              $ref: '#/components/schemas/PatchedStandardNode'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Enumeration'
+                $ref: '#/components/schemas/StandardNode'
           description: ''
-      tags:
-      - api
     delete:
-      operationId: destroyEnumeration
-      description: "CRUD \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0447\u0438\u0441\
-        \u043B\u0435\u043D\u0438\u0439"
+      operationId: classifier_standard_nodes_destroy
+      description: CRUD для параметров класса
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0435\u0440\u0435\
-          \u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435."
+      - in: path
+        name: id
         schema:
           type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '204':
-          description: ''
-      tags:
-      - api
-  /api/parameters/:
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/parameters/:
     get:
-      operationId: listParameters
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Parameter'
-          description: ''
-      tags:
-      - api
-    post:
-      operationId: createParameter
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Parameter'
-          description: ''
-      tags:
-      - api
-  /api/parameters/{id}/:
-    get:
-      operationId: retrieveParameter
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
+      operationId: classifier_standard_nodes_parameters_list
+      description: CRUD для параметров класса
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
-          \u043C\u0435\u0442\u0440."
+      - in: path
+        name: node_id
         schema:
           type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Parameter'
-          description: ''
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
       tags:
-      - api
-    put:
-      operationId: updateParameter
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
-          \u043C\u0435\u0442\u0440."
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Parameter'
-          description: ''
-      tags:
-      - api
-    patch:
-      operationId: partialUpdateParameter
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
-          \u043C\u0435\u0442\u0440."
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Parameter'
-          description: ''
-      tags:
-      - api
-    delete:
-      operationId: destroyParameter
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: "A unique integer value identifying this \u041F\u0430\u0440\u0430\
-          \u043C\u0435\u0442\u0440."
-        schema:
-          type: string
-      responses:
-        '204':
-          description: ''
-      tags:
-      - api
-  /api/enumerations/{enumeration_id}/values/:
-    get:
-      operationId: listValues
-      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
-      parameters:
-      - name: enumeration_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Value'
-          description: ''
-      tags:
-      - api
-    post:
-      operationId: createValue
-      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
-      parameters:
-      - name: enumeration_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Value'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Value'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Value'
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Value'
-          description: ''
-      tags:
-      - api
-  /api/enumerations/{enumeration_id}/values/{id}/:
-    get:
-      operationId: retrieveValue
-      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
-      parameters:
-      - name: enumeration_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Value'
-          description: ''
-      tags:
-      - api
-    put:
-      operationId: updateValue
-      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
-      parameters:
-      - name: enumeration_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Value'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Value'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Value'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Value'
-          description: ''
-      tags:
-      - api
-    patch:
-      operationId: partialUpdateValue
-      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
-      parameters:
-      - name: enumeration_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Value'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Value'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Value'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Value'
-          description: ''
-      tags:
-      - api
-    delete:
-      operationId: destroyValue
-      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
-      parameters:
-      - name: enumeration_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '204':
-          description: ''
-      tags:
-      - api
-  /api/classifier/{node_id}/services/:
-    get:
-      operationId: listServices
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Service'
-          description: ''
-      tags:
-      - api
-    post:
-      operationId: createService
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Service'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Service'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Service'
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Service'
-          description: ''
-      tags:
-      - api
-  /api/classifier/{node_id}/services/{id}/:
-    get:
-      operationId: retrieveService
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Service'
-          description: ''
-      tags:
-      - api
-    put:
-      operationId: updateService
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Service'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Service'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Service'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Service'
-          description: ''
-      tags:
-      - api
-    patch:
-      operationId: partialUpdateService
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Service'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Service'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Service'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Service'
-          description: ''
-      tags:
-      - api
-    delete:
-      operationId: destroyService
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '204':
-          description: ''
-      tags:
-      - api
-  /api/classifier/{node_id}/parameters/:
-    get:
-      operationId: listParameterNodes
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
-      parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -885,19 +418,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/ParameterNode'
           description: ''
-      tags:
-      - api
     post:
-      operationId: createParameterNode
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      operationId: classifier_standard_nodes_parameters_create
+      description: CRUD для параметров класса
       parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
+      - in: path
+        name: node_id
         schema:
           type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
@@ -909,6 +445,11 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ParameterNode'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '201':
           content:
@@ -916,26 +457,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParameterNode'
           description: ''
-      tags:
-      - api
-  /api/classifier/{node_id}/parameters/{id}/:
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/parameters/{id}/:
     get:
-      operationId: retrieveParameterNode
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      operationId: classifier_standard_nodes_parameters_retrieve
+      description: CRUD для параметров класса
       parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
+      - in: path
+        name: id
         schema:
           type: string
-      - name: id
-        in: path
         required: true
-        description: ''
+      - in: path
+        name: node_id
         schema:
           type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -943,25 +490,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParameterNode'
           description: ''
-      tags:
-      - api
     put:
-      operationId: updateParameterNode
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      operationId: classifier_standard_nodes_parameters_update
+      description: CRUD для параметров класса
       parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
+      - in: path
+        name: id
         schema:
           type: string
-      - name: id
-        in: path
         required: true
-        description: ''
+      - in: path
+        name: node_id
         schema:
           type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
@@ -973,6 +522,11 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ParameterNode'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -980,36 +534,42 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParameterNode'
           description: ''
-      tags:
-      - api
     patch:
-      operationId: partialUpdateParameterNode
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      operationId: classifier_standard_nodes_parameters_partial_update
+      description: CRUD для параметров класса
       parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
+      - in: path
+        name: id
         schema:
           type: string
-      - name: id
-        in: path
         required: true
-        description: ''
+      - in: path
+        name: node_id
         schema:
           type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterNode'
+              $ref: '#/components/schemas/PatchedParameterNode'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ParameterNode'
+              $ref: '#/components/schemas/PatchedParameterNode'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ParameterNode'
+              $ref: '#/components/schemas/PatchedParameterNode'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -1017,42 +577,444 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParameterNode'
           description: ''
-      tags:
-      - api
     delete:
-      operationId: destroyParameterNode
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+      operationId: classifier_standard_nodes_parameters_destroy
+      description: CRUD для параметров класса
       parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
+      - in: path
+        name: id
         schema:
           type: string
-      - name: id
-        in: path
         required: true
-        description: ''
+      - in: path
+        name: node_id
         schema:
           type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '204':
-          description: ''
-      tags:
-      - api
-  /api/enumerations/{enumeration_id}/values/ordering/:
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/parameters/ordering/:
     patch:
-      operationId: handleOrderingUpdateValue
-      description: "CRUD \u0434\u043B\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-        \u0439 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0439"
+      operationId: classifier_standard_nodes_parameters_ordering_partial_update
+      description: CRUD для параметров класса
       parameters:
-      - name: enumeration_id
-        in: path
-        required: true
-        description: ''
+      - in: path
+        name: node_id
         schema:
           type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedParameterNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedParameterNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedParameterNode'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterNode'
+          description: ''
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/:
+    get:
+      operationId: classifier_standard_nodes_services_list
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+          description: ''
+    post:
+      operationId: classifier_standard_nodes_services_create
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Service'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Service'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/{id}/:
+    get:
+      operationId: classifier_standard_nodes_services_retrieve
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+    put:
+      operationId: classifier_standard_nodes_services_update
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Service'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Service'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+    patch:
+      operationId: classifier_standard_nodes_services_partial_update
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedService'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedService'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          description: ''
+    delete:
+      operationId: classifier_standard_nodes_services_destroy
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/{service_id}/calc_bom/:
+    get:
+      operationId: classifier_standard_nodes_services_calc_bom_retrieve
+      description: Поиск полного состава изделия по дереву BOM
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: service_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/{service_id}/find_bom/:
+    get:
+      operationId: classifier_standard_nodes_services_find_bom_retrieve
+      description: Поиск полного состава изделия по дереву BOM
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: service_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/classifier/list_terminal_nodes/:
+    get:
+      operationId: classifier_list_terminal_nodes_retrieve
+      description: Вывод терминальных узлов
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/enumerations/:
+    get:
+      operationId: enumerations_list
+      description: CRUD для перечислений
+      tags:
+      - enumerations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enumeration'
+          description: ''
+    post:
+      operationId: enumerations_create
+      description: CRUD для перечислений
+      tags:
+      - enumerations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+  /api/enumerations/{enumeration_id}/values/:
+    get:
+      operationId: enumerations_values_list
+      description: CRUD для значений перечислений
+      parameters:
+      - in: path
+        name: enumeration_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - enumerations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Value'
+          description: ''
+    post:
+      operationId: enumerations_values_create
+      description: CRUD для значений перечислений
+      parameters:
+      - in: path
+        name: enumeration_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - enumerations
       requestBody:
         content:
           application/json:
@@ -1064,6 +1026,39 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/Value'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: ''
+  /api/enumerations/{enumeration_id}/values/{id}/:
+    get:
+      operationId: enumerations_values_retrieve
+      description: CRUD для значений перечислений
+      parameters:
+      - in: path
+        name: enumeration_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - enumerations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -1071,40 +1066,570 @@ paths:
               schema:
                 $ref: '#/components/schemas/Value'
           description: ''
-      tags:
-      - api
-  /api/classifier/{node_id}/parameters/ordering/:
-    patch:
-      operationId: handleOrderingUpdateParameterNode
-      description: "CRUD \u0434\u043B\u044F \u043F\u0430\u0440\u0430\u043C\u0435\u0442\
-        \u0440\u043E\u0432 \u043A\u043B\u0430\u0441\u0441\u0430"
+    put:
+      operationId: enumerations_values_update
+      description: CRUD для значений перечислений
       parameters:
-      - name: node_id
-        in: path
-        required: true
-        description: ''
+      - in: path
+        name: enumeration_id
         schema:
           type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - enumerations
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterNode'
+              $ref: '#/components/schemas/Value'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ParameterNode'
+              $ref: '#/components/schemas/Value'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ParameterNode'
+              $ref: '#/components/schemas/Value'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParameterNode'
+                $ref: '#/components/schemas/Value'
           description: ''
+    patch:
+      operationId: enumerations_values_partial_update
+      description: CRUD для значений перечислений
+      parameters:
+      - in: path
+        name: enumeration_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
       tags:
-      - api
+      - enumerations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedValue'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedValue'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedValue'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: ''
+    delete:
+      operationId: enumerations_values_destroy
+      description: CRUD для значений перечислений
+      parameters:
+      - in: path
+        name: enumeration_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - enumerations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/enumerations/{enumeration_id}/values/ordering/:
+    patch:
+      operationId: enumerations_values_ordering_partial_update
+      description: CRUD для значений перечислений
+      parameters:
+      - in: path
+        name: enumeration_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - enumerations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedValue'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedValue'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedValue'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+          description: ''
+  /api/enumerations/{id}/:
+    get:
+      operationId: enumerations_retrieve
+      description: CRUD для перечислений
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Перечисление.
+        required: true
+      tags:
+      - enumerations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+    put:
+      operationId: enumerations_update
+      description: CRUD для перечислений
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Перечисление.
+        required: true
+      tags:
+      - enumerations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Enumeration'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+    patch:
+      operationId: enumerations_partial_update
+      description: CRUD для перечислений
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Перечисление.
+        required: true
+      tags:
+      - enumerations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEnumeration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEnumeration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEnumeration'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enumeration'
+          description: ''
+    delete:
+      operationId: enumerations_destroy
+      description: CRUD для перечислений
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Перечисление.
+        required: true
+      tags:
+      - enumerations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/materials/:
+    get:
+      operationId: materials_list
+      description: CRUD для материалов
+      tags:
+      - materials
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+          description: ''
+    post:
+      operationId: materials_create
+      description: CRUD для материалов
+      tags:
+      - materials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Material'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Material'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Material'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+          description: ''
+  /api/materials/{id}/:
+    get:
+      operationId: materials_retrieve
+      description: CRUD для материалов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this material.
+        required: true
+      tags:
+      - materials
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+          description: ''
+    put:
+      operationId: materials_update
+      description: CRUD для материалов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this material.
+        required: true
+      tags:
+      - materials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Material'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Material'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Material'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+          description: ''
+    patch:
+      operationId: materials_partial_update
+      description: CRUD для материалов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this material.
+        required: true
+      tags:
+      - materials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMaterial'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMaterial'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMaterial'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+          description: ''
+    delete:
+      operationId: materials_destroy
+      description: CRUD для материалов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this material.
+        required: true
+      tags:
+      - materials
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/parameters/:
+    get:
+      operationId: parameters_list
+      description: CRUD для параметров
+      tags:
+      - parameters
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parameter'
+          description: ''
+    post:
+      operationId: parameters_create
+      description: CRUD для параметров
+      tags:
+      - parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+  /api/parameters/{id}/:
+    get:
+      operationId: parameters_retrieve
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Параметр.
+        required: true
+      tags:
+      - parameters
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+    put:
+      operationId: parameters_update
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Параметр.
+        required: true
+      tags:
+      - parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+    patch:
+      operationId: parameters_partial_update
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Параметр.
+        required: true
+      tags:
+      - parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedParameter'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedParameter'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedParameter'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
+          description: ''
+    delete:
+      operationId: parameters_destroy
+      description: CRUD для параметров
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Параметр.
+        required: true
+      tags:
+      - parameters
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
 components:
   schemas:
     ClassifierNode:
@@ -1115,15 +1640,19 @@ components:
           readOnly: true
         name:
           type: string
+          title: Название
           maxLength: 200
         parent:
           type: integer
           nullable: true
+          title: Родительский узел
         is_terminal:
           type: boolean
+          title: Является листом
         measuring_unit:
           type: integer
           nullable: true
+          title: Единица измерения
         children:
           type: array
           items: {}
@@ -1136,7 +1665,9 @@ components:
           type: string
           readOnly: true
       required:
+      - id
       - name
+      - parameters
     Enumeration:
       type: object
       properties:
@@ -1145,20 +1676,50 @@ components:
           readOnly: true
         name:
           type: string
+          title: Название
           maxLength: 200
         measuring_unit:
           type: integer
           nullable: true
+          title: Единица измерения
         data_type:
-          enum:
-          - str
-          - int
-          - real
-          - pic
+          allOf:
+          - $ref: '#/components/schemas/EnumerationDataTypeEnum'
+          title: Тип данных
+      required:
+      - data_type
+      - id
+      - name
+    EnumerationDataTypeEnum:
+      enum:
+      - str
+      - int
+      - real
+      - pic
+      type: string
+      description: |-
+        * `str` - Строка
+        * `int` - Целое число
+        * `real` - Вещественное число
+        * `pic` - Картинка
+    Material:
+      type: object
+      properties:
+        name:
           type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+        measuring_unit:
+          type: integer
+          nullable: true
+          title: Единица измерения
       required:
       - name
-      - data_type
     Parameter:
       type: object
       properties:
@@ -1167,62 +1728,34 @@ components:
           readOnly: true
         name:
           type: string
+          title: Название
           maxLength: 200
         data_type:
-          enum:
-          - int
-          - real
-          - enum
-          - aggregate
-          type: string
+          allOf:
+          - $ref: '#/components/schemas/ParameterDataTypeEnum'
+          title: Тип данных
         enumeration:
           type: integer
           nullable: true
-        aggregate_members:
-          type: object
-          writeOnly: true
+          title: Перечисление
         measuring_unit:
           type: integer
           nullable: true
+          title: Единица измерения
       required:
-      - name
       - data_type
-    Value:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        data:
-          type: object
-        num:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        enumeration:
-          type: string
-          readOnly: true
-      required:
-      - data
-      - num
-    Service:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 200
-        base_class:
-          type: string
-          readOnly: true
-        values:
-          type: object
-          writeOnly: true
-      required:
+      - id
       - name
-      - values
+    ParameterDataTypeEnum:
+      enum:
+      - int
+      - real
+      - enum
+      type: string
+      description: |-
+        * `int` - Целое число
+        * `real` - Вещественное число
+        * `enum` - Перечисление
     ParameterNode:
       type: object
       properties:
@@ -1231,23 +1764,321 @@ components:
           readOnly: true
         parameter:
           type: integer
-        classifiernode:
-          type: string
+          title: Параметр
+        standardnode:
+          type: integer
           readOnly: true
+          title: Типовой класс
         min_param_value:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
+          title: Минимальное значение
         max_param_value:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
+          title: Максимальное значение
         num:
           type: integer
           maximum: 2147483647
-          minimum: -2147483648
+          minimum: 1
+          title: Позиция
       required:
-      - parameter
+      - id
       - num
+      - parameter
+      - standardnode
+    PatchedClassifierNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        parent:
+          type: integer
+          nullable: true
+          title: Родительский узел
+        is_terminal:
+          type: boolean
+          title: Является листом
+        measuring_unit:
+          type: integer
+          nullable: true
+          title: Единица измерения
+        children:
+          type: array
+          items: {}
+          writeOnly: true
+        enumerations:
+          type: array
+          items:
+            type: integer
+        parameters:
+          type: string
+          readOnly: true
+    PatchedEnumeration:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        measuring_unit:
+          type: integer
+          nullable: true
+          title: Единица измерения
+        data_type:
+          allOf:
+          - $ref: '#/components/schemas/EnumerationDataTypeEnum'
+          title: Тип данных
+    PatchedMaterial:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+        measuring_unit:
+          type: integer
+          nullable: true
+          title: Единица измерения
+    PatchedParameter:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        data_type:
+          allOf:
+          - $ref: '#/components/schemas/ParameterDataTypeEnum'
+          title: Тип данных
+        enumeration:
+          type: integer
+          nullable: true
+          title: Перечисление
+        measuring_unit:
+          type: integer
+          nullable: true
+          title: Единица измерения
+    PatchedParameterNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        parameter:
+          type: integer
+          title: Параметр
+        standardnode:
+          type: integer
+          readOnly: true
+          title: Типовой класс
+        min_param_value:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Минимальное значение
+        max_param_value:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Максимальное значение
+        num:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+          title: Позиция
+    PatchedService:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        base_class:
+          type: integer
+          readOnly: true
+          title: Базовый класс
+        values:
+          writeOnly: true
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceComponent'
+    PatchedStandardNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        base_class:
+          type: integer
+          readOnly: true
+          title: Базовый класс
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceComponent'
+    PatchedValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        data:
+          type: string
+          title: Данные
+        num:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+          title: Позиция
+        enumeration:
+          type: integer
+          readOnly: true
+          title: Перечисление
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        base_class:
+          type: integer
+          readOnly: true
+          title: Базовый класс
+        values:
+          writeOnly: true
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceComponent'
+      required:
+      - base_class
+      - id
+      - name
+      - values
+    ServiceComponent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        standard_node:
+          type: integer
+          nullable: true
+          title: Типовая услуга
+        service:
+          type: integer
+          nullable: true
+          title: Услуга
+        component_service:
+          type: integer
+          nullable: true
+          title: Услуга-компонент
+        component_material:
+          type: integer
+          nullable: true
+          title: Материал
+        amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - amount
+      - id
+    StandardNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        base_class:
+          type: integer
+          readOnly: true
+          title: Базовый класс
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceComponent'
+      required:
+      - base_class
+      - id
+      - name
+    Value:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        data:
+          type: string
+          title: Данные
+        num:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+          title: Позиция
+        enumeration:
+          type: integer
+          readOnly: true
+          title: Перечисление
+      required:
+      - data
+      - enumeration
+      - id
+      - num
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
