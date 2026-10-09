@@ -145,17 +145,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         base_class = StandardNode.objects.get(id=base_class_id)
         return base_class
 
-    @transaction.atomic
-    def create(self, validated_data):
-        values = validated_data.pop('values')
-        components = validated_data.pop("components", [])
-        base_class = self.get_base_class()
-
-        service_obj = Service.objects.create(
-            **validated_data,
-            base_class=base_class,
-        )
-
+    def create_components(self, service_obj, components):
         base_components = service_obj.base_class.components.all()
         base_components_dicts = [{
             'component_service': comp.component_service,
@@ -197,6 +187,19 @@ class ServiceSerializer(serializers.ModelSerializer):
         except IntegrityError:
             pass
 
+    @transaction.atomic
+    def create(self, validated_data):
+        values = validated_data.pop('values')
+        components = validated_data.pop("components", [])
+        base_class = self.get_base_class()
+
+        service_obj = Service.objects.create(
+            **validated_data,
+            base_class=base_class,
+        )
+
+        self.create_components(service_obj, components)
+
         for value, param in zip(values, base_class.parameters.all()):
             ParameterValueService.objects.create(
                 service=service_obj,
@@ -205,6 +208,31 @@ class ServiceSerializer(serializers.ModelSerializer):
             )
 
         return service_obj
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        values = validated_data.pop('values', [])
+        components = validated_data.pop("components", [])
+        base_class = self.get_base_class()
+
+        common_update(instance, validated_data)
+
+        if components is not None:
+            instance.components.all().delete()
+
+            self.create_components(instance, components)
+
+        if values:
+            instance.parameter_values.all().delete()
+
+            for value, param in zip(values, base_class.parameters.all()):
+                ParameterValueService.objects.create(
+                    service=instance,
+                    parameter=param,
+                    value=value,
+                )
+
+        return instance
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -261,12 +289,7 @@ class StandardNodeSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('base_class',)
 
-    @transaction.atomic
-    def create(self, validated_data):
-        components = validated_data.pop("components", [])
-
-        standard_node = StandardNode.objects.create(**validated_data)
-
+    def create_components(self, standard_node, components):
         ServiceComponent.objects.bulk_create(
             ServiceComponent(
                 standard_node=standard_node,
@@ -275,7 +298,28 @@ class StandardNodeSerializer(serializers.ModelSerializer):
             for component_data in components
         )
 
+    @transaction.atomic
+    def create(self, validated_data):
+        components = validated_data.pop("components", [])
+
+        standard_node = StandardNode.objects.create(**validated_data)
+
+        self.create_components(standard_node, components)
+
         return standard_node
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        components = validated_data.pop("components", None)
+
+        common_update(instance, validated_data)
+
+        if components is not None:
+            instance.components.all().delete()
+
+            self.create_components(instance, components)
+
+        return instance
 
 
 class MaterialSerializer(serializers.ModelSerializer):
