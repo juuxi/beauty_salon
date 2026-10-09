@@ -31,6 +31,8 @@ from .serializers import (
     ParameterNodeSerializer,
     StandardNodeSerializer,
     MaterialSerializer,
+    CalcBomSerializer,
+    FindBomSerializer,
 )
 
 
@@ -258,3 +260,51 @@ class MaterialView(viewsets.ModelViewSet):
 
     serializer_class = MaterialSerializer
     queryset = Material.objects.all()
+
+
+class FindBomView(APIView):
+    """Поиск полного состава изделия по дереву BOM"""
+
+    def get(self, request, node_id, standard_node_id, service_id):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    'SELECT * FROM find_bom(%s)',
+                    [service_id]
+                )
+                columns = [col[0] for col in cursor.description]
+
+                results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            serializer = FindBomSerializer(results, many=True)
+
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class CalcBomView(APIView):
+    """Поиск полного состава изделия по дереву BOM"""
+
+    def get(self, request, node_id, standard_node_id, service_id):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    'SELECT * FROM calc_bom(%s)',
+                    [service_id]
+                )
+                columns = [col[0] for col in cursor.description]
+
+                results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            serializer = CalcBomSerializer(results, many=True)
+
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

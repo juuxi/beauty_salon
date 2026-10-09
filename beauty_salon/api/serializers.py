@@ -287,3 +287,14 @@ class MaterialSerializer(serializers.ModelSerializer):
             'code',
             'measuring_unit',
         )
+
+
+class FindBomSerializer(serializers.Serializer):
+    level = serializers.IntegerField()
+    service_name = serializers.CharField(max_length=200)
+    amount = serializers.IntegerField()
+
+
+class CalcBomSerializer(serializers.Serializer):
+    material_name = serializers.CharField(max_length=200)
+    total_amount = serializers.IntegerField()

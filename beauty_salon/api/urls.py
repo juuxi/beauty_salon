@@ -38,6 +38,18 @@ urlpatterns = [
         name='list_children',
     ),
     path('classifier/list_terminal_nodes/', views.ListTerminalNodes.as_view()),
+    path(
+        'classifier/<int:node_id>/standard_nodes/<int:standard_node_id>/'
+        'services/<int:service_id>/find_bom/',
+        views.FindBomView.as_view(),
+        name='find_bom',
+    ),
+    path(
+        'classifier/<int:node_id>/standard_nodes/<int:standard_node_id>/'
+        'services/<int:service_id>/calc_bom/',
+        views.CalcBomView.as_view(),
+        name='calc_bom',
+    ),
     path(r'', include(base_router.urls)),
     path(r'', include(value_router.urls)),
     path(r'', include(classifier_nested_router.urls)),
