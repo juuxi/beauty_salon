@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 
 
 class ModelWithName(models.Model):
-    name = models.CharField(max_length=200, verbose_name="Название")
+    name = models.CharField(max_length=200, verbose_name='Название')
 
     class Meta:
         abstract = True
@@ -305,11 +305,11 @@ class ServiceComponent(ModelWithTimestamp):
 
         constraints = [
             UniqueConstraint(
-                fields=["service", "component_service"],
-                name="unique_service_component_service",
+                fields=['service', 'component_service'],
+                name='unique_service_component_service',
             ),
             UniqueConstraint(
-                fields=["service", "component_material"],
-                name="unique_service_component_material",
+                fields=['service', 'component_material'],
+                name='unique_service_component_material',
             ),
         ]

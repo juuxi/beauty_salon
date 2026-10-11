@@ -159,10 +159,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         component_services = set()
 
         for comp in components:
-            comp["service"] = service_obj
-
-            mat = comp.get("component_material")
-            srv = comp.get("component_service")
+            mat = comp.get('component_material')
+            srv = comp.get('component_service')
 
             if mat and mat in component_materials:
                 continue
@@ -190,7 +188,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         values = validated_data.pop('values')
-        components = validated_data.pop("components", [])
+        components = validated_data.pop('components', [])
         base_class = self.get_base_class()
 
         service_obj = Service.objects.create(
@@ -212,7 +210,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         values = validated_data.pop('values', [])
-        components = validated_data.pop("components", [])
+        components = validated_data.pop('components', [])
         base_class = self.get_base_class()
 
         common_update(instance, validated_data)
@@ -300,7 +298,7 @@ class StandardNodeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        components = validated_data.pop("components", [])
+        components = validated_data.pop('components', [])
 
         standard_node = StandardNode.objects.create(**validated_data)
 
@@ -310,7 +308,7 @@ class StandardNodeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        components = validated_data.pop("components", None)
+        components = validated_data.pop('components', None)
 
         common_update(instance, validated_data)
 

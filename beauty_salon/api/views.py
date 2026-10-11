@@ -41,7 +41,7 @@ class ClassifierNodeView(viewsets.ModelViewSet):
 
     serializer_class = ClassifierNodeSerializer
     queryset = ClassifierNode.objects.all().order_by('id')
-    lookup_url_kwarg = "id"
+    lookup_url_kwarg = 'id'
 
     def create(self, request, *args, **kwargs):
         children_data = request.data.pop('children', [])
@@ -128,7 +128,7 @@ class EnumerationView(viewsets.ModelViewSet):
 
     serializer_class = EnumerationSerializer
     queryset = Enumeration.objects.all().order_by('id')
-    lookup_url_kwarg = "id"
+    lookup_url_kwarg = 'id'
 
 
 class OrderingUpdateMixin:
@@ -188,7 +188,7 @@ class ValueView(OrderingUpdateMixin, viewsets.ModelViewSet):
     def get_enum(self):
         return get_object_or_404(
             Enumeration,
-            pk=self.kwargs["enumeration_id"],
+            pk=self.kwargs['enumeration_id'],
         )
 
     def get_queryset(self):
@@ -220,7 +220,7 @@ class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
     def get_node(self):
         return get_object_or_404(
             StandardNode,
-            pk=self.kwargs["standard_node_id"],
+            pk=self.kwargs['standard_node_id'],
         )
 
     def get_queryset(self):
@@ -242,7 +242,7 @@ class StandardNodeView(viewsets.ModelViewSet):
     def get_node(self):
         return get_object_or_404(
             ClassifierNode,
-            pk=self.kwargs["node_id"],
+            pk=self.kwargs['node_id'],
         )
 
     def get_queryset(self):
