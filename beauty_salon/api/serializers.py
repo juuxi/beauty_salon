@@ -30,12 +30,6 @@ class ClassifierNodeSerializer(serializers.ModelSerializer):
     enumerations = serializers.PrimaryKeyRelatedField(
         required=False, many=True, queryset=Enumeration.objects.all()
     )
-    parameters = serializers.SerializerMethodField()
-
-    def get_parameters(self, obj):
-        return list(
-            obj.parameters_nodes.order_by('num').values_list('parameter_id', flat=True)
-        )
 
     class Meta:
         model = ClassifierNode
@@ -47,7 +41,6 @@ class ClassifierNodeSerializer(serializers.ModelSerializer):
             'measuring_unit',
             'children',
             'enumerations',
-            'parameters',
         )
 
     def process_extra_data(self, instance, validated_data):
