@@ -376,5 +376,41 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
 
     class Meta:
         db_table = 'technical_operations'
-        verbose_name = 'Техническая операция'
-        verbose_name_plural = 'Технические операции'
+        verbose_name = 'Технологическая операция'
+        verbose_name_plural = 'Технологические операции'
+
+
+class TypicalTechnologicalRoute(ModelWithTimestamp, ModelWithName):
+
+    class Meta:
+        db_table = 'typical_technological_routes'
+        verbose_name = 'Типовой технологический маршрут'
+        verbose_name_plural = 'Типовые технологические маршруты'
+
+
+class TypicalTechnologicalRouteOperation(models.Model):
+    typical_technological_route = models.ForeignKey(
+        TypicalTechnologicalRoute,
+        on_delete=models.CASCADE,
+        related_name='operations',
+        verbose_name='Типовой технологический маршрут',
+    )
+
+    technological_operation = models.ForeignKey(
+        TechnologicalOperation,
+        on_delete=models.CASCADE,
+        related_name='typical_routes',
+        verbose_name='Технологическая операция',
+    )
+
+    num = models.PositiveIntegerField(verbose_name='Позиция', validators=[MinValueValidator(1)])
+
+    class Meta:
+        db_table = 'typical_technological_route_operations'
+        constraints = [
+            UniqueConstraint(
+                fields=['typical_technological_route', 'num'],
+                name='unique_typical_technological_route_num_constraint',
+                deferrable=Deferrable.DEFERRED,
+            )
+        ]

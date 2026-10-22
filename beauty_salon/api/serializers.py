@@ -17,6 +17,8 @@ from .models import (
     Profession,
     Qualification,
     TechnologicalOperation,
+    TypicalTechnologicalRoute,
+    TypicalTechnologicalRouteOperation,
 )
 
 from .utils import (
@@ -384,3 +386,53 @@ class TechnologicalOperationSerializer(serializers.ModelSerializer):
             'qualification',
             'parent',
         )
+
+
+class TypicalTechnologicalRouteSerializer(serializers.ModelSerializer):
+    operation_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=TechnologicalOperation.objects.all(),
+        write_only=True,  # reading is done via find_tm
+    )
+
+    class Meta:
+        model = TypicalTechnologicalRoute
+        fields = (
+            'id',
+            'name',
+            'operation_ids',
+        )
+
+    def create(self, validated_data):
+        operations = validated_data.pop('operation_ids')
+        route = TypicalTechnologicalRoute.objects.create(**validated_data)
+
+        TypicalTechnologicalRouteOperation.objects.bulk_create(
+            TypicalTechnologicalRouteOperation(
+                typical_technological_route=route,
+                technological_operation=operation,
+                num=num,
+            )
+            for num, operation in enumerate(operations, start=1)
+        )
+
+        return route
+
+    def update(self, instance, validated_data):
+        operations = validated_data.pop('operation_ids', None)
+
+        instance = super().update(instance, validated_data)
+
+        if operations is not None:
+            with transaction.atomic():
+                instance.operations.all().delete()
+                TypicalTechnologicalRouteOperation.objects.bulk_create(
+                    TypicalTechnologicalRouteOperation(
+                        typical_technological_route=instance,
+                        technological_operation=operation,
+                        num=num,
+                    )
+                    for num, operation in enumerate(operations, start=1)
+                )
+
+        return instance

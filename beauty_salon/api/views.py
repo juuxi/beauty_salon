@@ -24,6 +24,7 @@ from .models import (
     Profession,
     Qualification,
     TechnologicalOperation,
+    TypicalTechnologicalRoute,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -41,6 +42,7 @@ from .serializers import (
     ProfessionSerializer,
     QualificationSerializer,
     TechnologicalOperationSerializer,
+    TypicalTechnologicalRouteSerializer,
 )
 
 
@@ -344,3 +346,10 @@ class TechnologicalOperationView(viewsets.ModelViewSet):
 
     serializer_class = TechnologicalOperationSerializer
     queryset = TechnologicalOperation.objects.all()
+
+
+class TypicalTechnologicalRouteView(viewsets.ModelViewSet):
+    """CRUD для типовых технологических маршрутов"""
+
+    serializer_class = TypicalTechnologicalRouteSerializer
+    queryset = TypicalTechnologicalRoute.objects.all()
