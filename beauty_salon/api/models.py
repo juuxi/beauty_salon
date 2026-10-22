@@ -337,3 +337,44 @@ class Qualification(ModelWithName, CodedModel):
         db_table = 'qualifications'
         verbose_name = 'Квалификация'
         verbose_name_plural = 'Квалификации'
+
+
+class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
+    profession = models.ForeignKey(
+        Profession,
+        on_delete=models.CASCADE,
+        related_name='technological_operations',
+        verbose_name='Профессия',
+    )
+
+    qualification = models.ForeignKey(
+        Qualification,
+        on_delete=models.CASCADE,
+        related_name='technological_operations',
+        null=True,
+        blank=True,
+        verbose_name='Квалификация',
+    )
+
+    tool = models.ForeignKey(
+        Tool,
+        on_delete=models.CASCADE,
+        related_name='technological_operations',
+        null=True,
+        blank=True,
+        verbose_name='Инструмент',
+    )
+
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='children',
+        verbose_name='Родительский узел',
+    )
+
+    class Meta:
+        db_table = 'technical_operations'
+        verbose_name = 'Техническая операция'
+        verbose_name_plural = 'Технические операции'

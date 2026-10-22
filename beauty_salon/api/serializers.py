@@ -16,6 +16,7 @@ from .models import (
     Tool,
     Profession,
     Qualification,
+    TechnologicalOperation,
 )
 
 from .utils import (
@@ -368,4 +369,18 @@ class QualificationSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'code',
+        )
+
+
+class TechnologicalOperationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TechnologicalOperation
+        fields = (
+            'id',
+            'name',
+            'tool',
+            'profession',
+            'qualification',
+            'parent',
         )

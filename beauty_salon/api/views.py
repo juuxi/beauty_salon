@@ -23,6 +23,7 @@ from .models import (
     Tool,
     Profession,
     Qualification,
+    TechnologicalOperation,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -39,6 +40,7 @@ from .serializers import (
     ToolSerializer,
     ProfessionSerializer,
     QualificationSerializer,
+    TechnologicalOperationSerializer,
 )
 
 
@@ -335,3 +337,10 @@ class QualificationView(viewsets.ModelViewSet):
 
     serializer_class = QualificationSerializer
     queryset = Qualification.objects.all()
+
+
+class TechnologicalOperationView(viewsets.ModelViewSet):
+    """CRUD для технических операций"""
+
+    serializer_class = TechnologicalOperationSerializer
+    queryset = TechnologicalOperation.objects.all()

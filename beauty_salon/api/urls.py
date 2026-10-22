@@ -12,6 +12,8 @@ base_router.register('materials', views.MaterialView, 'materials')
 base_router.register('tools', views.ToolView, 'tools')
 base_router.register('professions', views.ProfessionView, 'professions')
 base_router.register('qualifications', views.QualificationView, 'qualifications')
+base_router.register('technological_operations',
+                     views.TechnologicalOperationView, 'technological_operations')
 
 value_router = routers.NestedDefaultRouter(base_router, r'enumerations', lookup='enumeration')
 value_router.register('values', views.ValueView, 'value')
