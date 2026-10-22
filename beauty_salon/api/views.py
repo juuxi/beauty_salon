@@ -20,6 +20,9 @@ from .models import (
     ParameterNode,
     StandardNode,
     Material,
+    Tool,
+    Profession,
+    Qualification,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -33,6 +36,9 @@ from .serializers import (
     MaterialSerializer,
     CalcBomSerializer,
     FindBomSerializer,
+    ToolSerializer,
+    ProfessionSerializer,
+    QualificationSerializer,
 )
 
 
@@ -308,3 +314,24 @@ class CalcBomView(APIView):
             return Response(
                 {'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class ToolView(viewsets.ModelViewSet):
+    """CRUD для инструментов"""
+
+    serializer_class = ToolSerializer
+    queryset = Tool.objects.all()
+
+
+class ProfessionView(viewsets.ModelViewSet):
+    """CRUD для профессий"""
+
+    serializer_class = ProfessionSerializer
+    queryset = Profession.objects.all()
+
+
+class QualificationView(viewsets.ModelViewSet):
+    """CRUD для квалификаций"""
+
+    serializer_class = QualificationSerializer
+    queryset = Qualification.objects.all()

@@ -313,3 +313,27 @@ class ServiceComponent(ModelWithTimestamp):
                 name='unique_service_component_material',
             ),
         ]
+
+
+class Tool(ModelWithName, CodedModel):
+
+    class Meta:
+        db_table = 'tools'
+        verbose_name = 'Инструмент'
+        verbose_name_plural = 'Инструменты'
+
+
+class Profession(ModelWithName, CodedModel):
+
+    class Meta:
+        db_table = 'professions'
+        verbose_name = 'Профессия'
+        verbose_name_plural = 'Профессии'
+
+
+class Qualification(ModelWithName, CodedModel):
+
+    class Meta:
+        db_table = 'qualifications'
+        verbose_name = 'Квалификация'
+        verbose_name_plural = 'Квалификации'
