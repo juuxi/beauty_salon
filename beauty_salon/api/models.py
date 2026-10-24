@@ -381,11 +381,18 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
 
 
 class TypicalTechnologicalRoute(ModelWithTimestamp, ModelWithName):
+    standard_node = models.ForeignKey(
+        StandardNode,
+        on_delete=models.CASCADE,
+        related_name='technological_route',
+        verbose_name='Типовая услуга',
+    )
+
     parameters = models.ManyToManyField(
         Parameter,
         db_table='typical_technological_route_parameters',
         blank=True,
-        related_name='typical_routes',
+        related_name='technological_routes',
         verbose_name='Параметры',
     )
 
