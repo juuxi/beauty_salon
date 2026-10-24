@@ -375,7 +375,7 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
     )
 
     class Meta:
-        db_table = 'technical_operations'
+        db_table = 'technological_operations'
         verbose_name = 'Технологическая операция'
         verbose_name_plural = 'Технологические операции'
 
