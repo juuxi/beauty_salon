@@ -381,6 +381,13 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
 
 
 class TypicalTechnologicalRoute(ModelWithTimestamp, ModelWithName):
+    parameters = models.ManyToManyField(
+        Parameter,
+        db_table='typical_technological_route_parameters',
+        blank=True,
+        related_name='typical_routes',
+        verbose_name='Параметры',
+    )
 
     class Meta:
         db_table = 'typical_technological_routes'

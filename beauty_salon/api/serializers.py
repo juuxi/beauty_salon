@@ -401,6 +401,7 @@ class TypicalTechnologicalRouteSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'operation_ids',
+            'parameters',
         )
 
     def create(self, validated_data):
