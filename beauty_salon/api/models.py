@@ -370,6 +370,16 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
         validators=[MinValueValidator(1)],
     )
 
+    time_unit = models.ForeignKey(
+        MeasuringUnit,
+        on_delete=models.CASCADE,
+        related_name='technological_operations',
+        default=2,
+        null=True,
+        blank=True,
+        verbose_name='Единица измерения времени',
+    )
+
     parent = models.ForeignKey(
         'self',
         null=True,

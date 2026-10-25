@@ -5,6 +5,7 @@ from django.db import IntegrityError, transaction
 from .models import (
     ClassifierNode,
     Enumeration,
+    MeasuringUnit,
     Value,
     Parameter,
     Service,
@@ -375,6 +376,19 @@ class QualificationSerializer(serializers.ModelSerializer):
 
 
 class TechnologicalOperationSerializer(serializers.ModelSerializer):
+    time_unit_id = serializers.PrimaryKeyRelatedField(
+        queryset=MeasuringUnit.objects.all(),
+        source='time_unit',
+        required=False,
+        allow_null=True,
+        write_only=True,
+    )
+
+    time_unit = serializers.CharField(
+        source='time_unit.name',
+        read_only=True,
+        allow_null=True,
+    )
 
     class Meta:
         model = TechnologicalOperation
@@ -386,6 +400,8 @@ class TechnologicalOperationSerializer(serializers.ModelSerializer):
             'qualification',
             'parent',
             'time',
+            'time_unit',
+            'time_unit_id',
         )
 
 
