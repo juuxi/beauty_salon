@@ -385,6 +385,7 @@ class TechnologicalOperationSerializer(serializers.ModelSerializer):
             'profession',
             'qualification',
             'parent',
+            'time',
         )
 
 

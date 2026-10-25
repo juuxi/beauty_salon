@@ -365,6 +365,11 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
         verbose_name='Инструмент',
     )
 
+    time = models.PositiveIntegerField(
+        verbose_name='Время выполнения (мин.)',
+        validators=[MinValueValidator(1)],
+    )
+
     parent = models.ForeignKey(
         'self',
         null=True,
