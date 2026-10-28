@@ -325,6 +325,7 @@ class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
         fields = (
+            'id',
             'name',
             'code',
             'measuring_unit',
