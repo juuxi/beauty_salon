@@ -240,7 +240,7 @@ class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
         ).order_by('num')
 
     def perform_create(self, serializer):
-        serializer.save(standardnode_id=self.get_node())
+        serializer.save(standardnode=self.get_node())
 
 
 class StandardNodeView(viewsets.ModelViewSet):

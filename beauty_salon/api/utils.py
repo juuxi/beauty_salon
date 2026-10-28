@@ -161,19 +161,19 @@ def service_validate_general(view, values):
 
 
 def parameter_node_validate_num(view, num):
-    classifiernode_id = view.kwargs.get('node_id')
+    standardnode_id = view.kwargs.get('standardnode_id')
 
     if (
         not (
             ParameterNode.objects.filter(
-                classifiernode_id=classifiernode_id, num=num
+                standardnode_id=standardnode_id, num=num
             ).count()
         )
         == 0
     ):
         raise serializers.ValidationError(
             {
-                'num': f'Pair (num={num}, classifiernode={classifiernode_id}) '
+                'num': f'Pair (num={num}, standardnode_id={standardnode_id}) '
                 'already exists'
             }
         )
