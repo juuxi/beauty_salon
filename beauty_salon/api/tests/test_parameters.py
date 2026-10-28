@@ -114,15 +114,16 @@ class TestParameterCRUD:
         # Cleanup
         api_session.delete(f"{base_url}/api/parameters/{data['id']}/")
 
-    def test_parameter_data_types(self, api_session, base_url):
+    def test_parameter_data_types(self, api_session, base_url, created_enumeration):
         """Test creating parameters with different data types"""
         data_types = ["int", "real", "enum"]
 
+        enum_id = created_enumeration["id"]
         for data_type in data_types:
             param_data = {
                 "name": f"Test Parameter {data_type}",
                 "data_type": data_type,
-                "enumeration": None if data_type != "enum" else None,
+                "enumeration": None if data_type != "enum" else enum_id,
                 "measuring_unit": None
             }
 

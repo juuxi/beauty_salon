@@ -254,7 +254,7 @@ class TestEnumerationValuesCRUD:
             )
             values.append(response.json())
 
-        ordering_data = {"ordering": []}
+        ordering_data = {"ordering": [value["id"] for value in values]}
 
         response = api_session.patch(
             f"{base_url}/api/enumerations/{enum_id}/values/ordering/",
