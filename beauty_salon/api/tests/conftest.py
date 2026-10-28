@@ -18,12 +18,12 @@ def base_url():
 def api_session():
     """Create a requests session with authentication"""
     session = requests.Session()
-    
+
     session.headers.update({
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     })
-    
+
     yield session
     session.close()
 
@@ -48,9 +48,9 @@ def created_classifier_node(api_session, base_url, classifier_node_data):
     )
     assert response.status_code == 201
     node_data = response.json()
-    
+
     yield node_data
-    
+
     try:
         api_session.delete(f"{base_url}/api/classifier/{node_data['id']}/")
     except Exception:
@@ -76,9 +76,9 @@ def created_enumeration(api_session, base_url, enumeration_data):
     )
     assert response.status_code == 201
     enum_data = response.json()
-    
+
     yield enum_data
-    
+
     try:
         api_session.delete(f"{base_url}/api/enumerations/{enum_data['id']}/")
     except Exception:
@@ -114,9 +114,9 @@ def created_material(api_session, base_url, material_data):
     )
     assert response.status_code == 201
     material = response.json()
-    
+
     yield material
-    
+
     try:
         api_session.delete(f"{base_url}/api/materials/{material['id']}/")
     except Exception:
@@ -143,9 +143,9 @@ def created_parameter(api_session, base_url, parameter_data):
     )
     assert response.status_code == 201
     param = response.json()
-    
+
     yield param
-    
+
     try:
         api_session.delete(f"{base_url}/api/parameters/{param['id']}/")
     except Exception:
@@ -171,9 +171,9 @@ def created_standard_node(api_session, base_url, created_classifier_node, standa
     )
     assert response.status_code == 201
     std_node = response.json()
-    
+
     yield std_node
-    
+
     try:
         api_session.delete(
             f"{base_url}/api/classifier/{node_id}/standard_nodes/{std_node['id']}/"
@@ -194,20 +194,20 @@ def service_data(created_standard_node):
 
 @pytest.fixture
 def created_service(api_session, base_url, created_classifier_node, 
-                   created_standard_node, service_data):
+                    created_standard_node, service_data):
     """Create a service and return its ID, then clean up after test"""
     node_id = created_classifier_node["id"]
     std_node_id = created_standard_node["id"]
-    
+
     response = api_session.post(
         f"{base_url}/api/classifier/{node_id}/standard_nodes/{std_node_id}/services/",
         json=service_data
     )
     assert response.status_code == 201
     service = response.json()
-    
+
     yield service
-    
+
     try:
         api_session.delete(
             f"{base_url}/api/classifier/{node_id}/standard_nodes/{std_node_id}/services/{service['id']}/"
@@ -229,24 +229,23 @@ def parameter_node_data(created_standard_node, created_parameter):
 
 @pytest.fixture
 def created_parameter_node(api_session, base_url, created_classifier_node,
-                          created_standard_node, parameter_node_data):
+                           created_standard_node, parameter_node_data):
     """Create a parameter node and return its ID, then clean up after test"""
     node_id = created_classifier_node["id"]
     std_node_id = created_standard_node["id"]
-    
+
     response = api_session.post(
         f"{base_url}/api/classifier/{node_id}/standard_nodes/{std_node_id}/parameters/",
         json=parameter_node_data
     )
     assert response.status_code == 201
     param_node = response.json()
-    
+
     yield param_node
-    
+
     try:
         api_session.delete(
             f"{base_url}/api/classifier/{node_id}/standard_nodes/{std_node_id}/parameters/{param_node['id']}/"
         )
     except Exception:
         pass
-
