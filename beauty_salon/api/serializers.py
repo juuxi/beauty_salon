@@ -525,3 +525,20 @@ class TypicalTechnologicalRouteSerializer(serializers.ModelSerializer):
                 )
 
         return instance
+
+
+class FindTmSerializer(serializers.Serializer):
+    num = serializers.IntegerField()
+    operation_id = serializers.IntegerField()
+    operation_name = serializers.CharField(max_length=255)
+    operation_parent_id = serializers.IntegerField()
+    operation_profession_id = serializers.IntegerField()
+    operation_qualification_id = serializers.IntegerField()
+    operation_tool_id = serializers.IntegerField()
+    operation_time = serializers.DecimalField(max_digits=10, decimal_places=2)
+    operation_time_unit_id = serializers.IntegerField()
+
+
+class TrToSerializer(serializers.Serializer):
+    total_time = serializers.IntegerField()
+    time_unit_name = serializers.CharField()

@@ -58,6 +58,45 @@ urlpatterns = [
         views.CalcBomView.as_view(),
         name='calc_bom',
     ),
+    path(
+        'typical_technological_routes/<int:route_id>/find_tm/',
+        views.FindTmView.as_view(),
+        name='find_tm',
+    ),
+    path(
+        'technological_opertations/<int:operation_id>/mr_q/',
+        views.MrQView.as_view(),
+        name='mr_q',
+    ),
+    path(
+        'technological_opertations/<int:operation_id>/mr_q_n/<int:n>/',
+        views.MrQNView.as_view(),
+        name='mr_q_n',
+    ),
+    path(
+        'classifier/<int:node_id>/standard_nodes/<int:standard_node_id>/'
+        'services/<int:service_id>/sum_mr/',
+        views.SumMrView.as_view(),
+        name='sum_mr',
+    ),
+    path(
+        'classifier/<int:node_id>/standard_nodes/<int:standard_node_id>/'
+        'services/<int:service_id>/sum_mr_n/<int:n>/',
+        views.SumMrNView.as_view(),
+        name='sum_mr_n',
+    ),
+    path(
+        'classifier/<int:node_id>/standard_nodes/<int:standard_node_id>/'
+        'services/<int:service_id>/tr_to/',
+        views.TrToView.as_view(),
+        name='tr_to',
+    ),
+    path(
+        'classifier/<int:node_id>/standard_nodes/<int:standard_node_id>/'
+        'services/<int:service_id>/tr_to_n/<int:n>/',
+        views.TrToNView.as_view(),
+        name='tr_to_n',
+    ),
     path(r'', include(base_router.urls)),
     path(r'', include(value_router.urls)),
     path(r'', include(classifier_nested_router.urls)),

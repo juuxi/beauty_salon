@@ -45,6 +45,8 @@ from .serializers import (
     TechnologicalOperationSerializer,
     TypicalTechnologicalRouteSerializer,
     MeasuringUnitSerializer,
+    FindTmSerializer,
+    TrToSerializer,
 )
 
 
@@ -362,3 +364,74 @@ class TypicalTechnologicalRouteView(viewsets.ModelViewSet):
 
     serializer_class = TypicalTechnologicalRouteSerializer
     queryset = TypicalTechnologicalRoute.objects.all()
+
+
+def call_stored_procedure(proc_name, params):
+    with connection.cursor() as cursor:
+        cursor.callproc(proc_name, params)
+        columns = [col[0] for col in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    return results
+
+
+class FindTmView(APIView):
+    """Поиск операций технологического маршрута"""
+
+    def get(self, request, route_id):
+        results = call_stored_procedure('find_tm', [route_id])
+        serializer = FindTmSerializer(results, many=True)
+        return Response(serializer.data)
+
+
+class MrQView(APIView):
+    """Норма мат. расходов на операцию"""
+
+    def get(self, request, operation_id):
+        results = call_stored_procedure('mr_q', [operation_id])
+        serializer = CalcBomSerializer(results, many=True)
+        return Response(serializer.data)
+
+
+class MrQNView(APIView):
+    """Норма мат. расходов на N операций"""
+
+    def get(self, request, operation_id, n):
+        results = call_stored_procedure('mr_q_n', [operation_id, n])
+        serializer = CalcBomSerializer(results, many=True)
+        return Response(serializer.data)
+
+
+class SumMrView(APIView):
+    """Поиск операций технологического маршрута"""
+
+    def get(self, request, node_id, standard_node_id, service_id):
+        results = call_stored_procedure('sum_mr', [service_id])
+        serializer = CalcBomSerializer(results, many=True)
+        return Response(serializer.data)
+
+
+class SumMrNView(APIView):
+    """Поиск операций технологического маршрута"""
+
+    def get(self, request, node_id, standard_node_id, service_id, n):
+        results = call_stored_procedure('sum_mr_n', [service_id, n])
+        serializer = CalcBomSerializer(results, many=True)
+        return Response(serializer.data)
+
+
+class TrToView(APIView):
+    """Поиск операций технологического маршрута"""
+
+    def get(self, request, node_id, standard_node_id, service_id):
+        results = call_stored_procedure('tr_to', [service_id])
+        serializer = TrToSerializer(results, many=True)
+        return Response(serializer.data)
+
+
+class TrToNView(APIView):
+    """Поиск операций технологического маршрута"""
+
+    def get(self, request, node_id, standard_node_id, service_id, n):
+        results = call_stored_procedure('tr_to_n', [service_id, n])
+        serializer = TrToSerializer(results, many=True)
+        return Response(serializer.data)
