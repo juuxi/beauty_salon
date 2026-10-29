@@ -396,7 +396,7 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
 
 
 class TypicalTechnologicalRoute(ModelWithTimestamp, ModelWithName):
-    standard_node = models.ForeignKey(
+    standard_node = models.OneToOneField(
         StandardNode,
         on_delete=models.CASCADE,
         related_name='technological_route',

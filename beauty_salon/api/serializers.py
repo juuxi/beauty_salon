@@ -34,7 +34,7 @@ from .utils import (
 
 
 class MeasuringUnitSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = MeasuringUnit
         fields = (
@@ -143,6 +143,17 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = ('id', 'name', 'base_class', 'values', 'components')
         read_only_fields = ('base_class',)
+
+    # workaround to include technological_route in the serialized output
+    # TypicalTechnologicalRouteSerializer is defined later, putting technological_route
+    # in the fields of ServiceSerializer directly would cause an "field not in model" error
+    def get_fields(self):
+        fields = super().get_fields()
+        fields['technological_route'] = TypicalTechnologicalRouteSerializer(
+            source='base_class.technological_route',
+            read_only=True,
+        )
+        return fields
 
     def validate(self, data):
         values = data.get('values')
@@ -449,7 +460,6 @@ class TechnologicalOperationSerializer(serializers.ModelSerializer):
         self.create_components(operation_obj, components)
 
         return operation_obj
-
 
     @transaction.atomic
     def update(self, instance, validated_data):
