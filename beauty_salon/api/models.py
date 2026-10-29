@@ -443,3 +443,48 @@ class TypicalTechnologicalRouteOperation(models.Model):
                 deferrable=Deferrable.DEFERRED,
             )
         ]
+
+
+class OperationComponent(ModelWithTimestamp):
+    operation = models.ForeignKey(
+        TechnologicalOperation,
+        on_delete=models.CASCADE,
+        related_name='components',
+        null=True,
+        blank=True,
+        verbose_name='Операция',
+    )
+
+    component_service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='dependent_operations',
+        null=True,
+        blank=True,
+        verbose_name='Услуга-компонент',
+    )
+
+    component_material = models.ForeignKey(
+        Material,
+        on_delete=models.CASCADE,
+        related_name='operations',
+        null=True,
+        blank=True,
+        verbose_name='Материал',
+    )
+
+    amount = models.PositiveIntegerField()
+
+    class Meta:
+        db_table = 'operations_components'
+
+        constraints = [
+            UniqueConstraint(
+                fields=['operation', 'component_service'],
+                name='unique_operation_component_service',
+            ),
+            UniqueConstraint(
+                fields=['operation', 'component_material'],
+                name='unique_operation_component_material',
+            ),
+        ]

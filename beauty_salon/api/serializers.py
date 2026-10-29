@@ -20,6 +20,7 @@ from .models import (
     TechnologicalOperation,
     TypicalTechnologicalRoute,
     TypicalTechnologicalRouteOperation,
+    OperationComponent,
 )
 
 from .utils import (
@@ -376,6 +377,18 @@ class QualificationSerializer(serializers.ModelSerializer):
         )
 
 
+class OperationComponentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OperationComponent
+        fields = (
+            'id',
+            'component_service',
+            'component_material',
+            'amount',
+        )
+
+
 class TechnologicalOperationSerializer(serializers.ModelSerializer):
     time_unit_id = serializers.PrimaryKeyRelatedField(
         queryset=MeasuringUnit.objects.all(),
@@ -391,6 +404,8 @@ class TechnologicalOperationSerializer(serializers.ModelSerializer):
         allow_null=True,
     )
 
+    components = OperationComponentSerializer(many=True, required=False)
+
     class Meta:
         model = TechnologicalOperation
         fields = (
@@ -403,7 +418,41 @@ class TechnologicalOperationSerializer(serializers.ModelSerializer):
             'time',
             'time_unit',
             'time_unit_id',
+            'components',
         )
+
+    def create_components(self, operation, components):
+        for component_data in components:
+            OperationComponent.objects.create(
+                **component_data,
+                operation=operation
+            )
+
+    @transaction.atomic
+    def create(self, validated_data):
+        components = validated_data.pop('components', [])
+
+        operation_obj = TechnologicalOperation.objects.create(
+            **validated_data,
+        )
+
+        self.create_components(operation_obj, components)
+
+        return operation_obj
+
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        components = validated_data.pop('components', [])
+
+        common_update(instance, validated_data)
+
+        if components is not None:
+            instance.components.all().delete()
+
+            self.create_components(instance, components)
+
+        return instance
 
 
 class TypicalTechnologicalRouteSerializer(serializers.ModelSerializer):
