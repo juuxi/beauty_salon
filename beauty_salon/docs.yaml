@@ -919,6 +919,132 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/{service_id}/sum_mr/:
+    get:
+      operationId: classifier_standard_nodes_services_sum_mr_retrieve
+      description: Поиск операций технологического маршрута
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: service_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/{service_id}/sum_mr_n/{n}/:
+    get:
+      operationId: classifier_standard_nodes_services_sum_mr_n_retrieve
+      description: Поиск операций технологического маршрута
+      parameters:
+      - in: path
+        name: n
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: service_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/{service_id}/tr_to/:
+    get:
+      operationId: classifier_standard_nodes_services_tr_to_retrieve
+      description: Поиск операций технологического маршрута
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: service_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/classifier/{node_id}/standard_nodes/{standard_node_id}/services/{service_id}/tr_to_n/{n}/:
+    get:
+      operationId: classifier_standard_nodes_services_tr_to_n_retrieve
+      description: Поиск операций технологического маршрута
+      parameters:
+      - in: path
+        name: n
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: node_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: service_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: standard_node_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/classifier/list_terminal_nodes/:
     get:
       operationId: classifier_list_terminal_nodes_retrieve
@@ -2266,6 +2392,49 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/technological_opertations/{operation_id}/mr_q/:
+    get:
+      operationId: technological_opertations_mr_q_retrieve
+      description: Норма мат. расходов на операцию
+      parameters:
+      - in: path
+        name: operation_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - technological_opertations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/technological_opertations/{operation_id}/mr_q_n/{n}/:
+    get:
+      operationId: technological_opertations_mr_q_n_retrieve
+      description: Норма мат. расходов на N операций
+      parameters:
+      - in: path
+        name: n
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: operation_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - technological_opertations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/tools/:
     get:
       operationId: tools_list
@@ -2587,6 +2756,25 @@ paths:
       - {}
       responses:
         '204':
+          description: No response body
+  /api/typical_technological_routes/{route_id}/find_tm/:
+    get:
+      operationId: typical_technological_routes_find_tm_retrieve
+      description: Поиск операций технологического маршрута
+      parameters:
+      - in: path
+        name: route_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - typical_technological_routes
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
           description: No response body
 components:
   schemas:
@@ -2961,6 +3149,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ServiceComponent'
+        technological_route:
+          allOf:
+          - $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          readOnly: true
     PatchedStandardNode:
       type: object
       properties:
@@ -3140,10 +3332,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ServiceComponent'
+        technological_route:
+          allOf:
+          - $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          readOnly: true
       required:
       - base_class
       - id
       - name
+      - technological_route
       - values
     ServiceComponent:
       type: object
