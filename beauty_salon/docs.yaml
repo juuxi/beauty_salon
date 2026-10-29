@@ -1471,6 +1471,165 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/measuring_units/:
+    get:
+      operationId: measuring_units_list
+      description: CRUD для единиц измерения
+      tags:
+      - measuring_units
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeasuringUnit'
+          description: ''
+    post:
+      operationId: measuring_units_create
+      description: CRUD для единиц измерения
+      tags:
+      - measuring_units
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasuringUnit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MeasuringUnit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MeasuringUnit'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasuringUnit'
+          description: ''
+  /api/measuring_units/{id}/:
+    get:
+      operationId: measuring_units_retrieve
+      description: CRUD для единиц измерения
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Единица измерения.
+        required: true
+      tags:
+      - measuring_units
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasuringUnit'
+          description: ''
+    put:
+      operationId: measuring_units_update
+      description: CRUD для единиц измерения
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Единица измерения.
+        required: true
+      tags:
+      - measuring_units
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasuringUnit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MeasuringUnit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MeasuringUnit'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasuringUnit'
+          description: ''
+    patch:
+      operationId: measuring_units_partial_update
+      description: CRUD для единиц измерения
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Единица измерения.
+        required: true
+      tags:
+      - measuring_units
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMeasuringUnit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMeasuringUnit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMeasuringUnit'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasuringUnit'
+          description: ''
+    delete:
+      operationId: measuring_units_destroy
+      description: CRUD для единиц измерения
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Единица измерения.
+        required: true
+      tags:
+      - measuring_units
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
   /api/parameters/:
     get:
       operationId: parameters_list
@@ -1630,6 +1789,805 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/professions/:
+    get:
+      operationId: professions_list
+      description: CRUD для профессий
+      tags:
+      - professions
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profession'
+          description: ''
+    post:
+      operationId: professions_create
+      description: CRUD для профессий
+      tags:
+      - professions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Profession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Profession'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profession'
+          description: ''
+  /api/professions/{id}/:
+    get:
+      operationId: professions_retrieve
+      description: CRUD для профессий
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Профессия.
+        required: true
+      tags:
+      - professions
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profession'
+          description: ''
+    put:
+      operationId: professions_update
+      description: CRUD для профессий
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Профессия.
+        required: true
+      tags:
+      - professions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Profession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Profession'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profession'
+          description: ''
+    patch:
+      operationId: professions_partial_update
+      description: CRUD для профессий
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Профессия.
+        required: true
+      tags:
+      - professions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProfession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProfession'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profession'
+          description: ''
+    delete:
+      operationId: professions_destroy
+      description: CRUD для профессий
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Профессия.
+        required: true
+      tags:
+      - professions
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/qualifications/:
+    get:
+      operationId: qualifications_list
+      description: CRUD для квалификаций
+      tags:
+      - qualifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Qualification'
+          description: ''
+    post:
+      operationId: qualifications_create
+      description: CRUD для квалификаций
+      tags:
+      - qualifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Qualification'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Qualification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Qualification'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Qualification'
+          description: ''
+  /api/qualifications/{id}/:
+    get:
+      operationId: qualifications_retrieve
+      description: CRUD для квалификаций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Квалификация.
+        required: true
+      tags:
+      - qualifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Qualification'
+          description: ''
+    put:
+      operationId: qualifications_update
+      description: CRUD для квалификаций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Квалификация.
+        required: true
+      tags:
+      - qualifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Qualification'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Qualification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Qualification'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Qualification'
+          description: ''
+    patch:
+      operationId: qualifications_partial_update
+      description: CRUD для квалификаций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Квалификация.
+        required: true
+      tags:
+      - qualifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQualification'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedQualification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedQualification'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Qualification'
+          description: ''
+    delete:
+      operationId: qualifications_destroy
+      description: CRUD для квалификаций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Квалификация.
+        required: true
+      tags:
+      - qualifications
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/technological_operations/:
+    get:
+      operationId: technological_operations_list
+      description: CRUD для технических операций
+      tags:
+      - technological_operations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TechnologicalOperation'
+          description: ''
+    post:
+      operationId: technological_operations_create
+      description: CRUD для технических операций
+      tags:
+      - technological_operations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnologicalOperation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TechnologicalOperation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TechnologicalOperation'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TechnologicalOperation'
+          description: ''
+  /api/technological_operations/{id}/:
+    get:
+      operationId: technological_operations_retrieve
+      description: CRUD для технических операций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Технологическая операция.
+        required: true
+      tags:
+      - technological_operations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TechnologicalOperation'
+          description: ''
+    put:
+      operationId: technological_operations_update
+      description: CRUD для технических операций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Технологическая операция.
+        required: true
+      tags:
+      - technological_operations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnologicalOperation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TechnologicalOperation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TechnologicalOperation'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TechnologicalOperation'
+          description: ''
+    patch:
+      operationId: technological_operations_partial_update
+      description: CRUD для технических операций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Технологическая операция.
+        required: true
+      tags:
+      - technological_operations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTechnologicalOperation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTechnologicalOperation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTechnologicalOperation'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TechnologicalOperation'
+          description: ''
+    delete:
+      operationId: technological_operations_destroy
+      description: CRUD для технических операций
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Технологическая операция.
+        required: true
+      tags:
+      - technological_operations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/tools/:
+    get:
+      operationId: tools_list
+      description: CRUD для инструментов
+      tags:
+      - tools
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tool'
+          description: ''
+    post:
+      operationId: tools_create
+      description: CRUD для инструментов
+      tags:
+      - tools
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tool'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Tool'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Tool'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+          description: ''
+  /api/tools/{id}/:
+    get:
+      operationId: tools_retrieve
+      description: CRUD для инструментов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инструмент.
+        required: true
+      tags:
+      - tools
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+          description: ''
+    put:
+      operationId: tools_update
+      description: CRUD для инструментов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инструмент.
+        required: true
+      tags:
+      - tools
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tool'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Tool'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Tool'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+          description: ''
+    patch:
+      operationId: tools_partial_update
+      description: CRUD для инструментов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инструмент.
+        required: true
+      tags:
+      - tools
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTool'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTool'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTool'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+          description: ''
+    delete:
+      operationId: tools_destroy
+      description: CRUD для инструментов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Инструмент.
+        required: true
+      tags:
+      - tools
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/typical_technological_routes/:
+    get:
+      operationId: typical_technological_routes_list
+      description: CRUD для типовых технологических маршрутов
+      tags:
+      - typical_technological_routes
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          description: ''
+    post:
+      operationId: typical_technological_routes_create
+      description: CRUD для типовых технологических маршрутов
+      tags:
+      - typical_technological_routes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TypicalTechnologicalRoute'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          description: ''
+  /api/typical_technological_routes/{id}/:
+    get:
+      operationId: typical_technological_routes_retrieve
+      description: CRUD для типовых технологических маршрутов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Типовой технологический
+          маршрут.
+        required: true
+      tags:
+      - typical_technological_routes
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          description: ''
+    put:
+      operationId: typical_technological_routes_update
+      description: CRUD для типовых технологических маршрутов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Типовой технологический
+          маршрут.
+        required: true
+      tags:
+      - typical_technological_routes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TypicalTechnologicalRoute'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          description: ''
+    patch:
+      operationId: typical_technological_routes_partial_update
+      description: CRUD для типовых технологических маршрутов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Типовой технологический
+          маршрут.
+        required: true
+      tags:
+      - typical_technological_routes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTypicalTechnologicalRoute'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTypicalTechnologicalRoute'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTypicalTechnologicalRoute'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypicalTechnologicalRoute'
+          description: ''
+    delete:
+      operationId: typical_technological_routes_destroy
+      description: CRUD для типовых технологических маршрутов
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Типовой технологический
+          маршрут.
+        required: true
+      tags:
+      - typical_technological_routes
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
 components:
   schemas:
     ClassifierNode:
@@ -1661,13 +2619,9 @@ components:
           type: array
           items:
             type: integer
-        parameters:
-          type: string
-          readOnly: true
       required:
       - id
       - name
-      - parameters
     Enumeration:
       type: object
       properties:
@@ -1705,6 +2659,9 @@ components:
     Material:
       type: object
       properties:
+        id:
+          type: integer
+          readOnly: true
         name:
           type: string
           title: Название
@@ -1719,7 +2676,42 @@ components:
           nullable: true
           title: Единица измерения
       required:
+      - id
       - name
+    MeasuringUnit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+      required:
+      - id
+      - name
+    OperationComponent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        component_service:
+          type: integer
+          nullable: true
+          title: Услуга-компонент
+        component_material:
+          type: integer
+          nullable: true
+          title: Материал
+        amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - amount
+      - id
     Parameter:
       type: object
       properties:
@@ -1820,9 +2812,6 @@ components:
           type: array
           items:
             type: integer
-        parameters:
-          type: string
-          readOnly: true
     PatchedEnumeration:
       type: object
       properties:
@@ -1844,6 +2833,9 @@ components:
     PatchedMaterial:
       type: object
       properties:
+        id:
+          type: integer
+          readOnly: true
         name:
           type: string
           title: Название
@@ -1857,6 +2849,16 @@ components:
           type: integer
           nullable: true
           title: Единица измерения
+    PatchedMeasuringUnit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
     PatchedParameter:
       type: object
       properties:
@@ -1909,6 +2911,36 @@ components:
           maximum: 2147483647
           minimum: 1
           title: Позиция
+    PatchedProfession:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+    PatchedQualification:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
     PatchedService:
       type: object
       properties:
@@ -1952,6 +2984,88 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ServiceComponent'
+    PatchedTechnologicalOperation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        tool:
+          type: integer
+          nullable: true
+          title: Инструмент
+        profession:
+          type: integer
+          title: Профессия
+        qualification:
+          type: integer
+          nullable: true
+          title: Квалификация
+        parent:
+          type: integer
+          nullable: true
+          title: Родительский узел
+        time:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+          title: Время выполнения (мин.)
+        time_unit:
+          type: string
+          readOnly: true
+          nullable: true
+        time_unit_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationComponent'
+    PatchedTool:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+    PatchedTypicalTechnologicalRoute:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        operation_ids:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        parameters:
+          type: array
+          items:
+            type: integer
+            title: Параметры
+          title: Параметры
+        standard_node:
+          type: integer
+          title: Типовая услуга
     PatchedValue:
       type: object
       properties:
@@ -1970,6 +3084,42 @@ components:
           type: integer
           readOnly: true
           title: Перечисление
+    Profession:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+      required:
+      - id
+      - name
+    Qualification:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+      required:
+      - id
+      - name
     Service:
       type: object
       properties:
@@ -2051,6 +3201,102 @@ components:
       - base_class
       - id
       - name
+    TechnologicalOperation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        tool:
+          type: integer
+          nullable: true
+          title: Инструмент
+        profession:
+          type: integer
+          title: Профессия
+        qualification:
+          type: integer
+          nullable: true
+          title: Квалификация
+        parent:
+          type: integer
+          nullable: true
+          title: Родительский узел
+        time:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+          title: Время выполнения (мин.)
+        time_unit:
+          type: string
+          readOnly: true
+          nullable: true
+        time_unit_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationComponent'
+      required:
+      - id
+      - name
+      - profession
+      - time
+      - time_unit
+    Tool:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        code:
+          type: string
+          nullable: true
+          title: Обозначение
+          maxLength: 15
+      required:
+      - id
+      - name
+    TypicalTechnologicalRoute:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        operation_ids:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        parameters:
+          type: array
+          items:
+            type: integer
+            title: Параметры
+          title: Параметры
+        standard_node:
+          type: integer
+          title: Типовая услуга
+      required:
+      - id
+      - name
+      - operation_ids
+      - standard_node
     Value:
       type: object
       properties:
