@@ -25,6 +25,7 @@ from .models import (
     Qualification,
     TechnologicalOperation,
     TypicalTechnologicalRoute,
+    MeasuringUnit,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -43,7 +44,15 @@ from .serializers import (
     QualificationSerializer,
     TechnologicalOperationSerializer,
     TypicalTechnologicalRouteSerializer,
+    MeasuringUnitSerializer,
 )
+
+
+class MeasuringUnitView(viewsets.ModelViewSet):
+    """CRUD для единиц измерения"""
+
+    serializer_class = MeasuringUnitSerializer
+    queryset = MeasuringUnit.objects.all()
 
 
 class ClassifierNodeView(viewsets.ModelViewSet):

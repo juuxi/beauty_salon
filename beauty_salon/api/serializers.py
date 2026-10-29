@@ -33,6 +33,16 @@ from .utils import (
 )
 
 
+class MeasuringUnitSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = MeasuringUnit
+        fields = (
+            'id',
+            'name',
+        )
+
+
 class ClassifierNodeSerializer(serializers.ModelSerializer):
     children = serializers.ListField(write_only=True, required=False)
     enumerations = serializers.PrimaryKeyRelatedField(
