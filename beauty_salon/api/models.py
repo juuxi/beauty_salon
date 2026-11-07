@@ -45,7 +45,7 @@ class ModelWithMeasuringUnit(models.Model):
 
 class CodedModel(models.Model):
     code = models.CharField(
-        max_length=15, unique=True, blank=True, null=True, verbose_name='Обозначение'
+        max_length=30, unique=True, blank=True, null=True, verbose_name='Обозначение'
     )
 
     class Meta:
