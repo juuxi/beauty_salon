@@ -17,6 +17,8 @@ base_router.register('technological_operations',
                      views.TechnologicalOperationView, 'technological_operations')
 base_router.register('typical_technological_routes',
                      views.TypicalTechnologicalRouteView, 'typical_technological_routes')
+base_router.register('economic_activity_subjects',
+                     views.EconomicActivitySubjectView, 'economic_activity_subjects')
 
 value_router = routers.NestedDefaultRouter(base_router, r'enumerations', lookup='enumeration')
 value_router.register('values', views.ValueView, 'value')

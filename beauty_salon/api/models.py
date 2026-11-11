@@ -488,3 +488,10 @@ class OperationComponent(ModelWithTimestamp):
                 name='unique_operation_component_material',
             ),
         ]
+
+
+class EconomicActivitySubject(models.Model):
+    name = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = 'economic_activity_subjects'

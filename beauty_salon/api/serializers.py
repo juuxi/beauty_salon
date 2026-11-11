@@ -21,6 +21,7 @@ from .models import (
     TypicalTechnologicalRoute,
     TypicalTechnologicalRouteOperation,
     OperationComponent,
+    EconomicActivitySubject,
 )
 
 from .utils import (
@@ -542,3 +543,10 @@ class FindTmSerializer(serializers.Serializer):
 class TrToSerializer(serializers.Serializer):
     total_time = serializers.IntegerField()
     time_unit_name = serializers.CharField()
+
+
+class EconomicActivitySubjectSerializer(serializers.Serializer):
+
+    class Meta:
+        model = EconomicActivitySubject
+        field = ('id', 'name')

@@ -26,6 +26,7 @@ from .models import (
     TechnologicalOperation,
     TypicalTechnologicalRoute,
     MeasuringUnit,
+    EconomicActivitySubject,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -47,6 +48,7 @@ from .serializers import (
     MeasuringUnitSerializer,
     FindTmSerializer,
     TrToSerializer,
+    EconomicActivitySubjectSerializer,
 )
 
 
@@ -435,3 +437,8 @@ class TrToNView(APIView):
         results = call_stored_procedure('tr_to_n', [service_id, n])
         serializer = TrToSerializer(results, many=True)
         return Response(serializer.data)
+
+
+class EconomicActivitySubjectView(viewsets.ModelViewSet):
+    serializer = EconomicActivitySubjectSerializer
+    queryset = EconomicActivitySubject.objects.all()
