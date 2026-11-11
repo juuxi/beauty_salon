@@ -112,10 +112,10 @@ class TestMaterialCRUD:
         api_session.delete(f"{base_url}/api/materials/{data['id']}/")
 
     def test_material_code_max_length(self, api_session, base_url):
-        """Test that material code respects max length of 15 characters"""
+        """Test that material code respects max length of 30 characters"""
         material_data = {
             "name": "Material with Long Code",
-            "code": "A" * 16,  # Exceeds max length of 15
+            "code": "A" * 31,  # Exceeds max length of 30
             "measuring_unit": None
         }
 
