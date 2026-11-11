@@ -22,6 +22,7 @@ from .models import (
     TypicalTechnologicalRouteOperation,
     OperationComponent,
     EconomicActivitySubject,
+    Order,
 )
 
 from .utils import (
@@ -550,3 +551,14 @@ class EconomicActivitySubjectSerializer(serializers.Serializer):
     class Meta:
         model = EconomicActivitySubject
         field = ('id', 'name')
+
+
+class OrderSerializer(serializers.Serializer):
+
+    class Meta:
+        model = Order
+        fields = (
+            'id',
+            'due_time',
+            'client',
+        )

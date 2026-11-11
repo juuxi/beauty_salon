@@ -27,6 +27,7 @@ from .models import (
     TypicalTechnologicalRoute,
     MeasuringUnit,
     EconomicActivitySubject,
+    Order,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -49,6 +50,7 @@ from .serializers import (
     FindTmSerializer,
     TrToSerializer,
     EconomicActivitySubjectSerializer,
+    OrderSerializer,
 )
 
 
@@ -442,3 +444,8 @@ class TrToNView(APIView):
 class EconomicActivitySubjectView(viewsets.ModelViewSet):
     serializer = EconomicActivitySubjectSerializer
     queryset = EconomicActivitySubject.objects.all()
+
+
+class OrderView(viewsets.ModelViewSet):
+    serializer = OrderSerializer
+    queryset = Order.objects.all()

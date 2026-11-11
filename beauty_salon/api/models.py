@@ -495,3 +495,17 @@ class EconomicActivitySubject(models.Model):
 
     class Meta:
         db_table = 'economic_activity_subjects'
+
+
+class Order(models.Model):
+    due_time = models.DateTimeField(verbose_name='Дата и время исполнения')
+
+    client = models.ForeignKey(
+        EconomicActivitySubject,
+        on_delete=models.CASCADE,
+        related_name='orders',
+        verbose_name='Заказчик',
+    )
+
+    class Meta:
+        db_table = 'orders'
