@@ -6,10 +6,8 @@ from rest_framework_nested import routers
 
 base_router = routers.DefaultRouter()
 base_router.register('classifier', views.ClassifierNodeView, 'classifier')
-base_router.register('enumerations', views.EnumerationView, 'enumerations')
 base_router.register('parameters', views.ParameterView, 'parameters')
 base_router.register('measuring_units', views.MeasuringUnitView, 'measuring_units')
-base_router.register('materials', views.MaterialView, 'materials')
 base_router.register('tools', views.ToolView, 'tools')
 base_router.register('professions', views.ProfessionView, 'professions')
 base_router.register('qualifications', views.QualificationView, 'qualifications')
@@ -20,9 +18,6 @@ base_router.register('typical_technological_routes',
 base_router.register('economic_activity_subjects',
                      views.EconomicActivitySubjectView, 'economic_activity_subjects')
 base_router.register('orders', views.OrderView, 'orders')
-
-value_router = routers.NestedDefaultRouter(base_router, r'enumerations', lookup='enumeration')
-value_router.register('values', views.ValueView, 'value')
 
 classifier_nested_router = routers.NestedDefaultRouter(
     base_router, r'classifier', lookup='node',
@@ -101,7 +96,8 @@ urlpatterns = [
         name='tr_to_n',
     ),
     path(r'', include(base_router.urls)),
-    path(r'', include(value_router.urls)),
+    path(r'', include('api.materials.urls')),
+    path(r'', include('api.enumerations.urls')),
     path(r'', include(classifier_nested_router.urls)),
     path(r'', include(standard_node_nested_router.urls)),
 ]

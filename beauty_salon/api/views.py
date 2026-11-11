@@ -2,24 +2,21 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 
-from django.db import connection, transaction
+from django.db import connection
 from django.shortcuts import get_object_or_404
 
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ServiceFilter
+from .mixins import OrderingUpdateMixin
 
 from .models import (
     ClassifierNode,
-    Enumeration,
-    Value,
     Parameter,
     Service,
     ParameterNode,
     StandardNode,
-    Material,
     Tool,
     Profession,
     Qualification,
@@ -31,14 +28,11 @@ from .models import (
 )
 from .serializers import (
     ClassifierNodeSerializer,
-    EnumerationSerializer,
-    ValueSerializer,
     ParameterSerializer,
     ClassifierNodeFunctionSerializer,
     ServiceSerializer,
     ParameterNodeSerializer,
     StandardNodeSerializer,
-    MaterialSerializer,
     CalcBomSerializer,
     FindBomSerializer,
     ToolSerializer,
@@ -148,80 +142,11 @@ class ListTerminalNodes(APIView):
             )
 
 
-class EnumerationView(viewsets.ModelViewSet):
-    """CRUD для перечислений"""
-
-    serializer_class = EnumerationSerializer
-    queryset = Enumeration.objects.all().order_by('id')
-    lookup_url_kwarg = 'id'
-
-
-class OrderingUpdateMixin:
-    @action(detail=False, methods=['patch'], url_path='ordering')
-    @transaction.atomic
-    def handle_ordering_update(viewset, request, *args, **kwargs):
-        new_ordering = request.data['ordering']
-        if not isinstance(new_ordering, list):
-            return Response(
-                {
-                    'ordering': 'Expected a list of objects, '
-                    'containing id-s in new order'
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        queryset = viewset.get_queryset()
-        if not queryset.count() == len(new_ordering):
-            return Response(
-                {'ordering': 'amount of object ' f'must equal {queryset.count()}'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        for obj_id in new_ordering:
-            try:
-                queryset.get(id=obj_id)
-            except viewset.get_queryset().model.DoesNotExist:
-                return Response(
-                    {
-                        'ordering': 'object with id '
-                        f'{obj_id} does not exist in current queryset'
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-        for i in range(len(new_ordering)):
-            # current value while looping through new_order
-            curr_v = queryset.get(id=new_ordering[i])
-            curr_v.num = i + 1
-            curr_v.save()
-
-        return Response(status=status.HTTP_200_OK)
-
-
 class ParameterView(viewsets.ModelViewSet):
     """CRUD для параметров"""
 
     serializer_class = ParameterSerializer
     queryset = Parameter.objects.all()
-
-
-class ValueView(OrderingUpdateMixin, viewsets.ModelViewSet):
-    """CRUD для значений перечислений"""
-
-    serializer_class = ValueSerializer
-
-    def get_enum(self):
-        return get_object_or_404(
-            Enumeration,
-            pk=self.kwargs['enumeration_id'],
-        )
-
-    def get_queryset(self):
-        enumeration_id = self.kwargs['enumeration_id']
-        return Value.objects.filter(enumeration_id=enumeration_id).order_by('num')
-
-    def perform_create(self, serializer):
-        serializer.save(enumeration=self.get_enum())
 
 
 class ServiceView(viewsets.ModelViewSet):
@@ -278,13 +203,6 @@ class StandardNodeView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(base_class=self.get_node())
-
-
-class MaterialView(viewsets.ModelViewSet):
-    """CRUD для материалов"""
-
-    serializer_class = MaterialSerializer
-    queryset = Material.objects.all()
 
 
 class FindBomView(APIView):

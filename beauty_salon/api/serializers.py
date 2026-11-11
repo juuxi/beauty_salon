@@ -12,7 +12,6 @@ from .models import (
     ParameterValueService,
     ParameterNode,
     StandardNode,
-    Material,
     ServiceComponent,
     Tool,
     Profession,
@@ -27,8 +26,6 @@ from .models import (
 
 from .utils import (
     common_update,
-    value_validate_data,
-    value_validate_num,
     parameter_validate_general,
     service_validate_general,
     parameter_node_validate_num,
@@ -88,28 +85,6 @@ class ClassifierNodeFunctionSerializer(serializers.Serializer):
     parent_id = serializers.IntegerField(allow_null=True)
     is_terminal = serializers.BooleanField()
     measuring_unit_id = serializers.IntegerField()
-
-
-class EnumerationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Enumeration
-        fields = ('id', 'name', 'measuring_unit', 'data_type')
-
-
-class ValueSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Value
-        fields = ('id', 'data', 'num', 'enumeration')
-        read_only_fields = ('enumeration',)
-
-    def validate_data(self, data):
-        view = self.context['view']
-        return value_validate_data(view, data)
-
-    def validate_num(self, num):
-        view = self.context['view']
-        return value_validate_num(view, num)
 
 
 class ParameterSerializer(serializers.ModelSerializer):
@@ -342,18 +317,6 @@ class StandardNodeSerializer(serializers.ModelSerializer):
             self.create_components(instance, components)
 
         return instance
-
-
-class MaterialSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Material
-        fields = (
-            'id',
-            'name',
-            'code',
-            'measuring_unit',
-        )
 
 
 class FindBomSerializer(serializers.Serializer):
