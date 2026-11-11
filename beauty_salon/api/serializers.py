@@ -546,14 +546,14 @@ class TrToSerializer(serializers.Serializer):
     time_unit_name = serializers.CharField()
 
 
-class EconomicActivitySubjectSerializer(serializers.Serializer):
+class EconomicActivitySubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EconomicActivitySubject
-        field = ('id', 'name')
+        fields = ('id', 'name')
 
 
-class OrderSerializer(serializers.Serializer):
+class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order

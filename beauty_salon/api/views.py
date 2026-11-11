@@ -442,10 +442,10 @@ class TrToNView(APIView):
 
 
 class EconomicActivitySubjectView(viewsets.ModelViewSet):
-    serializer = EconomicActivitySubjectSerializer
+    serializer_class = EconomicActivitySubjectSerializer
     queryset = EconomicActivitySubject.objects.all()
 
 
 class OrderView(viewsets.ModelViewSet):
-    serializer = OrderSerializer
+    serializer_class = OrderSerializer
     queryset = Order.objects.all()
