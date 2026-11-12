@@ -5,9 +5,9 @@ from api.models import (
     ParameterValueService,
     ClassifierNode,
     Parameter,
-    Enumeration,
-    Value,
 )
+
+from api.enumerations.models import Enumeration, Value
 
 from django.shortcuts import get_object_or_404
 

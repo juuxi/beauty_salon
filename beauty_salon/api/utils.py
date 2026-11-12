@@ -1,10 +1,11 @@
 from rest_framework import serializers
 
 from .models import (
-    Value,
     ParameterNode,
     StandardNode,
 )
+
+from .enumerations.models import Value
 
 
 def common_update(instance, validated_data):

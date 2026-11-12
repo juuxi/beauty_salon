@@ -3,10 +3,10 @@ from django.db.models import Min, Max
 from django.shortcuts import get_object_or_404
 
 from api.models import (
-    Value,
-    Enumeration,
     ParameterNode,
 )
+
+from api.enumerations.models import Enumeration, Value
 
 
 def validate_value(data, type_holder):

@@ -5,12 +5,12 @@ from api.models import (
     Service,
     ClassifierNode,
     Parameter,
-    Enumeration,
     MeasuringUnit,
-    Value,
     ParameterNode,
     ParameterValueService,
 )
+
+from api.enumerations.models import Enumeration, Value
 
 from .utils import (
     validate_value,

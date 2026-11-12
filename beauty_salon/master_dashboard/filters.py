@@ -1,7 +1,8 @@
 import django_filters
 from django.db.models import FloatField
 from django.db.models.functions import Cast
-from api.models import Service, ParameterValueService, Parameter, Value, Enumeration
+from api.models import Service, ParameterValueService, Parameter
+from api.enumerations.models import Enumeration, Value
 
 from django.core.exceptions import ValidationError
 

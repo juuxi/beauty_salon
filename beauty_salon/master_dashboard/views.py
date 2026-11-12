@@ -10,12 +10,12 @@ from api.models import (
     Service,
     ClassifierNode,
     Parameter,
-    Enumeration,
     MeasuringUnit,
-    Value,
     ParameterNode,
     ParameterValueService,
 )
+
+from api.enumerations.models import Enumeration, Value
 
 from .filters import ServiceFilter
 
