@@ -20,8 +20,6 @@ from .models import (
     Tool,
     Profession,
     Qualification,
-    TechnologicalOperation,
-    TypicalTechnologicalRoute,
     MeasuringUnit,
     EconomicActivitySubject,
     Order,
@@ -38,8 +36,6 @@ from .serializers import (
     ToolSerializer,
     ProfessionSerializer,
     QualificationSerializer,
-    TechnologicalOperationSerializer,
-    TypicalTechnologicalRouteSerializer,
     MeasuringUnitSerializer,
     FindTmSerializer,
     TrToSerializer,
@@ -272,20 +268,6 @@ class QualificationView(viewsets.ModelViewSet):
 
     serializer_class = QualificationSerializer
     queryset = Qualification.objects.all()
-
-
-class TechnologicalOperationView(viewsets.ModelViewSet):
-    """CRUD для технических операций"""
-
-    serializer_class = TechnologicalOperationSerializer
-    queryset = TechnologicalOperation.objects.all()
-
-
-class TypicalTechnologicalRouteView(viewsets.ModelViewSet):
-    """CRUD для типовых технологических маршрутов"""
-
-    serializer_class = TypicalTechnologicalRouteSerializer
-    queryset = TypicalTechnologicalRoute.objects.all()
 
 
 def call_stored_procedure(proc_name, params):

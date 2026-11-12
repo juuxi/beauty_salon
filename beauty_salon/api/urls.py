@@ -11,10 +11,6 @@ base_router.register('measuring_units', views.MeasuringUnitView, 'measuring_unit
 base_router.register('tools', views.ToolView, 'tools')
 base_router.register('professions', views.ProfessionView, 'professions')
 base_router.register('qualifications', views.QualificationView, 'qualifications')
-base_router.register('technological_operations',
-                     views.TechnologicalOperationView, 'technological_operations')
-base_router.register('typical_technological_routes',
-                     views.TypicalTechnologicalRouteView, 'typical_technological_routes')
 base_router.register('economic_activity_subjects',
                      views.EconomicActivitySubjectView, 'economic_activity_subjects')
 base_router.register('orders', views.OrderView, 'orders')
@@ -98,6 +94,7 @@ urlpatterns = [
     path(r'', include(base_router.urls)),
     path(r'', include('api.materials.urls')),
     path(r'', include('api.enumerations.urls')),
+    path(r'', include('api.technological_routes.urls')),
     path(r'', include(classifier_nested_router.urls)),
     path(r'', include(standard_node_nested_router.urls)),
 ]
