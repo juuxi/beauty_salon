@@ -1058,6 +1058,159 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/economic_activity_subjects/:
+    get:
+      operationId: economic_activity_subjects_list
+      tags:
+      - economic_activity_subjects
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EconomicActivitySubject'
+          description: ''
+    post:
+      operationId: economic_activity_subjects_create
+      tags:
+      - economic_activity_subjects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EconomicActivitySubject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EconomicActivitySubject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EconomicActivitySubject'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EconomicActivitySubject'
+          description: ''
+  /api/economic_activity_subjects/{id}/:
+    get:
+      operationId: economic_activity_subjects_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this economic activity subject.
+        required: true
+      tags:
+      - economic_activity_subjects
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EconomicActivitySubject'
+          description: ''
+    put:
+      operationId: economic_activity_subjects_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this economic activity subject.
+        required: true
+      tags:
+      - economic_activity_subjects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EconomicActivitySubject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EconomicActivitySubject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EconomicActivitySubject'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EconomicActivitySubject'
+          description: ''
+    patch:
+      operationId: economic_activity_subjects_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this economic activity subject.
+        required: true
+      tags:
+      - economic_activity_subjects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEconomicActivitySubject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEconomicActivitySubject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEconomicActivitySubject'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EconomicActivitySubject'
+          description: ''
+    delete:
+      operationId: economic_activity_subjects_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this economic activity subject.
+        required: true
+      tags:
+      - economic_activity_subjects
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
   /api/enumerations/:
     get:
       operationId: enumerations_list
@@ -1749,6 +1902,312 @@ paths:
         required: true
       tags:
       - measuring_units
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/order_positions/:
+    get:
+      operationId: order_positions_list
+      tags:
+      - order_positions
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderPosition'
+          description: ''
+    post:
+      operationId: order_positions_create
+      tags:
+      - order_positions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderPosition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderPosition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderPosition'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderPosition'
+          description: ''
+  /api/order_positions/{id}/:
+    get:
+      operationId: order_positions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order position.
+        required: true
+      tags:
+      - order_positions
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderPosition'
+          description: ''
+    put:
+      operationId: order_positions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order position.
+        required: true
+      tags:
+      - order_positions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderPosition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderPosition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderPosition'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderPosition'
+          description: ''
+    patch:
+      operationId: order_positions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order position.
+        required: true
+      tags:
+      - order_positions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderPosition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderPosition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderPosition'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderPosition'
+          description: ''
+    delete:
+      operationId: order_positions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order position.
+        required: true
+      tags:
+      - order_positions
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/orders/:
+    get:
+      operationId: orders_list
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+          description: ''
+    post:
+      operationId: orders_create
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/orders/{id}/:
+    get:
+      operationId: orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+    put:
+      operationId: orders_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+    patch:
+      operationId: orders_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrder'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+    delete:
+      operationId: orders_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this order.
+        required: true
+      tags:
+      - orders
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -2810,6 +3269,18 @@ components:
       required:
       - id
       - name
+    EconomicActivitySubject:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+      required:
+      - id
+      - name
     Enumeration:
       type: object
       properties:
@@ -2858,7 +3329,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
         measuring_unit:
           type: integer
           nullable: true
@@ -2900,6 +3371,44 @@ components:
       required:
       - amount
       - id
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        due_time:
+          type: string
+          format: date-time
+          title: Дата и время исполнения
+        client:
+          type: integer
+          title: Заказчик
+      required:
+      - client
+      - due_time
+      - id
+    OrderPosition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        order:
+          type: integer
+          title: Заказ
+        service:
+          type: integer
+          title: Услуга
+        amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - amount
+      - id
+      - order
+      - service
     Parameter:
       type: object
       properties:
@@ -3000,6 +3509,15 @@ components:
           type: array
           items:
             type: integer
+    PatchedEconomicActivitySubject:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
     PatchedEnumeration:
       type: object
       properties:
@@ -3032,7 +3550,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
         measuring_unit:
           type: integer
           nullable: true
@@ -3047,6 +3565,35 @@ components:
           type: string
           title: Название
           maxLength: 200
+    PatchedOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        due_time:
+          type: string
+          format: date-time
+          title: Дата и время исполнения
+        client:
+          type: integer
+          title: Заказчик
+    PatchedOrderPosition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        order:
+          type: integer
+          title: Заказ
+        service:
+          type: integer
+          title: Услуга
+        amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
     PatchedParameter:
       type: object
       properties:
@@ -3113,7 +3660,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
     PatchedQualification:
       type: object
       properties:
@@ -3128,7 +3675,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
     PatchedService:
       type: object
       properties:
@@ -3171,7 +3718,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
         components:
           type: array
           items:
@@ -3232,7 +3779,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
     PatchedTypicalTechnologicalRoute:
       type: object
       properties:
@@ -3290,7 +3837,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
       required:
       - id
       - name
@@ -3308,7 +3855,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
       required:
       - id
       - name
@@ -3389,7 +3936,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
         components:
           type: array
           items:
@@ -3460,7 +4007,7 @@ components:
           type: string
           nullable: true
           title: Обозначение
-          maxLength: 15
+          maxLength: 30
       required:
       - id
       - name
