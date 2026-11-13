@@ -112,12 +112,19 @@ class ServiceComponentSerializer(serializers.ModelSerializer):
 
 
 class ServiceSerializer(serializers.ModelSerializer):
-    values = serializers.JSONField(write_only=True)
+    values = serializers.JSONField(write_only=True, required=False)
     components = ServiceComponentSerializer(many=True, required=False)
 
     class Meta:
         model = Service
-        fields = ('id', 'name', 'base_class', 'values', 'components')
+        fields = (
+            'id',
+            'name',
+            'base_class',
+            'values',
+            'components',
+            'is_variant',
+        )
         read_only_fields = ('base_class',)
 
     # workaround to include technological_route in the serialized output;
@@ -131,9 +138,10 @@ class ServiceSerializer(serializers.ModelSerializer):
         return fields
 
     def validate(self, data):
-        values = data.get('values')
-        view = self.context['view']
-        service_validate_general(view, values)
+        if data['is_variant']:
+            values = data.get('values')
+            view = self.context['view']
+            service_validate_general(view, values)
         return data
 
     def get_base_class(self):
@@ -184,7 +192,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        values = validated_data.pop('values')
+        values = validated_data.pop('values', [])
         components = validated_data.pop('components', [])
         base_class = self.get_base_class()
 
@@ -195,12 +203,13 @@ class ServiceSerializer(serializers.ModelSerializer):
 
         self.create_components(service_obj, components)
 
-        for value, param in zip(values, base_class.parameters.all()):
-            ParameterValueService.objects.create(
-                service=service_obj,
-                parameter=param,
-                value=value,
-            )
+        if values:
+            for value, param in zip(values, base_class.parameters.all()):
+                ParameterValueService.objects.create(
+                    service=service_obj,
+                    parameter=param,
+                    value=value,
+                )
 
         return service_obj
 
@@ -247,7 +256,8 @@ class ServiceSerializer(serializers.ModelSerializer):
                     parameter=param,
                     service=instance
                 ).value
-        ret['values'] = values_text
+        if instance.is_varinat:
+            ret['values'] = values_text
         return ret
 
 
