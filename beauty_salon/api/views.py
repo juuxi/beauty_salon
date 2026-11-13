@@ -23,6 +23,7 @@ from .models import (
     MeasuringUnit,
     EconomicActivitySubject,
     Order,
+    OrderPosition,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -41,6 +42,7 @@ from .serializers import (
     TrToSerializer,
     EconomicActivitySubjectSerializer,
     OrderSerializer,
+    OrderPositionSerializer,
 )
 
 
@@ -349,3 +351,8 @@ class EconomicActivitySubjectView(viewsets.ModelViewSet):
 class OrderView(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
+
+
+class OrderPositionView(viewsets.ModelViewSet):
+    serializer_class = OrderPositionSerializer
+    queryset = OrderPosition.objects.all()

@@ -307,3 +307,24 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'orders'
+
+
+class OrderPosition(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name='positions',
+        verbose_name='Заказ',
+    )
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='order_positions',
+        verbose_name='Услуга',
+    )
+
+    amount = models.PositiveIntegerField()
+
+    class Meta:
+        db_table = 'order_positions'

@@ -16,6 +16,7 @@ from .models import (
     Qualification,
     EconomicActivitySubject,
     Order,
+    OrderPosition,
 )
 
 from .enumerations.models import Enumeration, Value
@@ -392,4 +393,16 @@ class OrderSerializer(serializers.ModelSerializer):
             'id',
             'due_time',
             'client',
+        )
+
+
+class OrderPositionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderPosition
+        fields = (
+            'id',
+            'order',
+            'service',
+            'amount',
         )
