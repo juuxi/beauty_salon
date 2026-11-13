@@ -422,3 +422,88 @@ def created_typical_technological_route(
         )
     except Exception:
         pass
+
+
+@pytest.fixture
+def economic_activity_subject_data():
+    """Sample economic activity subject data for testing"""
+    return {
+        "name": "Test Economic Activity Subject"
+    }
+
+
+@pytest.fixture
+def created_economic_activity_subject(api_session, base_url, economic_activity_subject_data):
+    """Create an economic activity subject and return its data, then clean up"""
+    response = api_session.post(
+        f"{base_url}/api/economic_activity_subjects/",
+        json=economic_activity_subject_data
+    )
+    assert response.status_code == 201
+    subject = response.json()
+
+    yield subject
+
+    try:
+        api_session.delete(
+            f"{base_url}/api/economic_activity_subjects/{subject['id']}/"
+        )
+    except Exception:
+        pass
+
+
+@pytest.fixture
+def order_data(created_economic_activity_subject):
+    """Sample order data for testing"""
+    return {
+        "due_time": "2030-01-01T12:00:00Z",
+        "client": created_economic_activity_subject["id"]
+    }
+
+
+@pytest.fixture
+def created_order(api_session, base_url, order_data):
+    """Create an order and return its data, then clean up"""
+    response = api_session.post(
+        f"{base_url}/api/orders/",
+        json=order_data
+    )
+    assert response.status_code == 201
+    order = response.json()
+
+    yield order
+
+    try:
+        api_session.delete(f"{base_url}/api/orders/{order['id']}/")
+    except Exception:
+        pass
+
+
+@pytest.fixture
+def order_position_data(created_order, created_service):
+    """Sample order position data for testing"""
+    return {
+        "order": created_order["id"],
+        "service": created_service["id"],
+        "amount": 5
+    }
+
+
+@pytest.fixture
+def created_order_position(api_session, base_url, order_position_data):
+    """Create an order position and return its data, then clean up"""
+    response = api_session.post(
+        f"{base_url}/api/order_positions/",
+        json=order_position_data
+    )
+    assert response.status_code == 201
+    position = response.json()
+
+    yield position
+
+    try:
+        api_session.delete(
+            f"{base_url}/api/order_positions/{position['id']}/"
+        )
+    except Exception:
+        pass
