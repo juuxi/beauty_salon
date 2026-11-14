@@ -376,7 +376,8 @@ class TestServicesCRUD:
         updated_data = {
             "name": "Updated Service",
             "values": [],
-            "components": []
+            "components": [],
+            "is_variant": False,
         }
 
         response = api_session.put(

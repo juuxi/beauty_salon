@@ -187,7 +187,8 @@ def service_data(created_standard_node):
     return {
         "name": "Test Service",
         "values": [],
-        "components": []
+        "components": [],
+        "is_variant": False,
     }
 
 

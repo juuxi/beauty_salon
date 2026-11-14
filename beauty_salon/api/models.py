@@ -178,8 +178,8 @@ class Service(ModelWithTimestamp, CodedModel, ModelWithName):
         on_delete=models.CASCADE,
         related_name='services',
         verbose_name='Базовый класс',
-    )  
-    # Разделение на ссылку на StandardNode и ClassifierNode невозможно 
+    )
+    # Разделение на ссылку на StandardNode и ClassifierNode невозможно
     # из-за поддержки маршрутов и компонентов
 
     is_variant = models.BooleanField()
