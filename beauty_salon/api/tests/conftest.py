@@ -429,16 +429,19 @@ def created_typical_technological_route(
 def economic_activity_subject_data():
     """Sample economic activity subject data for testing"""
     return {
-        "name": "Test Economic Activity Subject"
+        "name": "Test Economic Activity Subject",
+        "address": "123 Test Street, Test City",
     }
 
 
 @pytest.fixture
-def created_economic_activity_subject(api_session, base_url, economic_activity_subject_data):
+def created_economic_activity_subject(
+    api_session, base_url, economic_activity_subject_data
+):
     """Create an economic activity subject and return its data, then clean up"""
     response = api_session.post(
         f"{base_url}/api/economic_activity_subjects/",
-        json=economic_activity_subject_data
+        json=economic_activity_subject_data,
     )
     assert response.status_code == 201
     subject = response.json()

@@ -292,8 +292,8 @@ class Qualification(ModelWithName, CodedModel):
         verbose_name_plural = 'Квалификации'
 
 
-class EconomicActivitySubject(models.Model):
-    name = models.CharField(max_length=200)
+class EconomicActivitySubject(ModelWithName):
+    address = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         db_table = 'economic_activity_subjects'

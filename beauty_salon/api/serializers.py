@@ -392,7 +392,7 @@ class EconomicActivitySubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EconomicActivitySubject
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'address')
 
 
 class OrderSerializer(serializers.ModelSerializer):
