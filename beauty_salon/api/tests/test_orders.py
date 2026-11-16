@@ -24,7 +24,6 @@ class TestOrdersCreate:
         self, api_session, base_url, created_economic_activity_subject
     ):
         payload = {
-            "due_time": VALID_DUE_TIME,
             "client": created_economic_activity_subject["id"],
         }
         response = api_session.post(f"{base_url}/api/orders/", json=payload)
@@ -38,28 +37,6 @@ class TestOrdersCreate:
     def test_create_without_client_returns_400(self, api_session, base_url):
         response = api_session.post(
             f"{base_url}/api/orders/",
-            json={"due_time": VALID_DUE_TIME}
-        )
-        assert response.status_code == 400
-
-    def test_create_without_due_time_returns_400(
-        self, api_session, base_url, created_economic_activity_subject
-    ):
-        response = api_session.post(
-            f"{base_url}/api/orders/",
-            json={"client": created_economic_activity_subject["id"]}
-        )
-        assert response.status_code == 400
-
-    def test_create_with_invalid_due_time_format_returns_400(
-        self, api_session, base_url, created_economic_activity_subject
-    ):
-        response = api_session.post(
-            f"{base_url}/api/orders/",
-            json={
-                "due_time": "not-a-date",
-                "client": created_economic_activity_subject["id"],
-            }
         )
         assert response.status_code == 400
 
@@ -68,7 +45,7 @@ class TestOrdersCreate:
     ):
         response = api_session.post(
             f"{base_url}/api/orders/",
-            json={"due_time": VALID_DUE_TIME, "client": 999999}
+            json={"client": 999999}
         )
         assert response.status_code == 400
 
@@ -93,7 +70,6 @@ class TestOrdersUpdate:
     ):
         order_id = created_order["id"]
         payload = {
-            "due_time": "2031-06-15T08:30:00Z",
             "client": created_economic_activity_subject["id"],
         }
         response = api_session.put(
@@ -102,18 +78,6 @@ class TestOrdersUpdate:
         assert response.status_code == 200
         data = response.json()
         assert data["client"] == payload["client"]
-        assert data["due_time"].startswith("2031-06-15")
-
-    def test_partial_update_due_time(
-        self, api_session, base_url, created_order
-    ):
-        order_id = created_order["id"]
-        response = api_session.patch(
-            f"{base_url}/api/orders/{order_id}/",
-            json={"due_time": "2032-12-31T23:59:59Z"}
-        )
-        assert response.status_code == 200
-        assert response.json()["due_time"].startswith("2032-12-31")
 
     def test_partial_update_client(
         self, api_session, base_url, created_order
@@ -147,7 +111,6 @@ class TestOrdersDelete:
         create_resp = api_session.post(
             f"{base_url}/api/orders/",
             json={
-                "due_time": VALID_DUE_TIME,
                 "client": created_economic_activity_subject["id"],
             }
         )

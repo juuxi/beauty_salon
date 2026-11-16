@@ -300,14 +300,14 @@ class EconomicActivitySubject(models.Model):
 
 
 class Order(models.Model):
-    due_time = models.DateTimeField(verbose_name='Дата и время исполнения')
-
     client = models.ForeignKey(
         EconomicActivitySubject,
         on_delete=models.CASCADE,
         related_name='orders',
         verbose_name='Заказчик',
     )
+
+    agreed = models.BooleanField(default=False, verbose_name='Согласован')
 
     class Meta:
         db_table = 'orders'
