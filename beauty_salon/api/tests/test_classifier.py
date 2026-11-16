@@ -378,6 +378,7 @@ class TestServicesCRUD:
             "values": [],
             "components": [],
             "is_variant": False,
+            "cost": 100,
         }
 
         response = api_session.put(

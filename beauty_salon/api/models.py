@@ -184,6 +184,8 @@ class Service(ModelWithTimestamp, CodedModel, ModelWithName):
 
     is_variant = models.BooleanField()
 
+    cost = models.PositiveIntegerField()
+
     class Meta:
         db_table = 'services'
         verbose_name = 'Услуга'

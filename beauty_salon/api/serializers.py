@@ -124,6 +124,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'values',
             'components',
             'is_variant',
+            'cost',
         )
         read_only_fields = ('base_class',)
 

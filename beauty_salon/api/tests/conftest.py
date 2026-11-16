@@ -189,6 +189,7 @@ def service_data(created_standard_node):
         "values": [],
         "components": [],
         "is_variant": False,
+        'cost': 100,
     }
 
 
