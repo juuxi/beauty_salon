@@ -147,6 +147,7 @@ class TestOrderPositionsCreate:
             "order": created_order["id"],
             "service": created_service["id"],
             "amount": 3,
+            "provision_time": "2030-05-05T05:05:05",
         }
         response = api_session.post(
             f"{base_url}/api/order_positions/", json=payload
@@ -165,7 +166,7 @@ class TestOrderPositionsCreate:
     ):
         response = api_session.post(
             f"{base_url}/api/order_positions/",
-            json={"service": created_service["id"], "amount": 1}
+            json={"service": created_service["id"], "amount": 1, "provision_time": "2030-05-05T05:05:05"}
         )
         assert response.status_code == 400
 
@@ -174,7 +175,7 @@ class TestOrderPositionsCreate:
     ):
         response = api_session.post(
             f"{base_url}/api/order_positions/",
-            json={"order": created_order["id"], "amount": 1}
+            json={"order": created_order["id"], "amount": 1, "provision_time": "2030-05-05T05:05:05"}
         )
         assert response.status_code == 400
 
@@ -186,6 +187,7 @@ class TestOrderPositionsCreate:
             json={
                 "order": created_order["id"],
                 "service": created_service["id"],
+                "provision_time": "2030-05-05T05:05:05",
             }
         )
         assert response.status_code == 400
@@ -199,6 +201,7 @@ class TestOrderPositionsCreate:
                 "order": created_order["id"],
                 "service": created_service["id"],
                 "amount": -1,
+                "provision_time": "2030-05-05T05:05:05",
             }
         )
         assert response.status_code == 400
@@ -212,6 +215,7 @@ class TestOrderPositionsCreate:
                 "order": created_order["id"],
                 "service": created_service["id"],
                 "amount": 2147483648,  # max int32 + 1
+                "provision_time": "2030-05-05T05:05:05",
             }
         )
         assert response.status_code == 400
@@ -221,7 +225,12 @@ class TestOrderPositionsCreate:
     ):
         response = api_session.post(
             f"{base_url}/api/order_positions/",
-            json={"order": 999999, "service": created_service["id"], "amount": 1}
+            json={
+                "order": 999999,
+                "service": created_service["id"],
+                "amount": 1,
+                "provision_time": "2030-05-05T05:05:05",
+            }
         )
         assert response.status_code == 400
 
@@ -230,7 +239,12 @@ class TestOrderPositionsCreate:
     ):
         response = api_session.post(
             f"{base_url}/api/order_positions/",
-            json={"order": created_order["id"], "service": 999999, "amount": 1}
+            json={
+                "order": created_order["id"],
+                "service": 999999,
+                "amount": 1,
+                "provision_time": "2030-05-05T05:05:05",
+            }
         )
         assert response.status_code == 400
 
@@ -249,6 +263,7 @@ class TestOrderPositionsRetrieve:
         assert data["order"] == created_order_position["order"]
         assert data["service"] == created_order_position["service"]
         assert data["amount"] == created_order_position["amount"]
+        assert data["provision_time"] == created_order_position["provision_time"]
 
     def test_retrieve_nonexistent_returns_404(self, api_session, base_url):
         response = api_session.get(
@@ -267,6 +282,7 @@ class TestOrderPositionsUpdate:
             "order": created_order["id"],
             "service": created_service["id"],
             "amount": 42,
+            "provision_time": "2030-05-05T05:05:05",
         }
         response = api_session.put(
             f"{base_url}/api/order_positions/{position_id}/", json=payload
@@ -309,6 +325,7 @@ class TestOrderPositionsDelete:
                 "order": created_order["id"],
                 "service": created_service["id"],
                 "amount": 1,
+                "provision_time": "2030-05-05T05:05:05",
             }
         )
         assert create_resp.status_code == 201

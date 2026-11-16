@@ -332,5 +332,7 @@ class OrderPosition(models.Model):
 
     amount = models.PositiveIntegerField()
 
+    provision_time = models.DateTimeField(verbose_name='Дата и время оказания')
+
     class Meta:
         db_table = 'order_positions'

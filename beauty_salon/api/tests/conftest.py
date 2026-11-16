@@ -490,7 +490,8 @@ def order_position_data(created_order, created_service):
     return {
         "order": created_order["id"],
         "service": created_service["id"],
-        "amount": 5
+        "amount": 5,
+        "provision_time": "2030-05-05T05:05:05",
     }
 
 

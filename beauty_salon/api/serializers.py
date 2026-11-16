@@ -416,4 +416,5 @@ class OrderPositionSerializer(serializers.ModelSerializer):
             'order',
             'service',
             'amount',
+            'provision_time',
         )
