@@ -391,18 +391,18 @@ class AddToOrderView(APIView):
 
         with connection.cursor() as cursor:
             cursor.callproc(
-                "add_to_order",
+                'add_to_order',
                 [
-                    data["order_id"],
-                    data["service_id"],
-                    data["amount"],
-                    data["provision_time"],
+                    data['order_id'],
+                    data['service_id'],
+                    data['amount'],
+                    data['provision_time'],
                 ],
             )
             position_id = cursor.fetchone()[0]
 
         return Response(
-            {"position_id": position_id},
+            {'position_id': position_id},
             status=status.HTTP_201_CREATED,
         )
 
