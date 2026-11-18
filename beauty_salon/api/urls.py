@@ -14,7 +14,6 @@ base_router.register('qualifications', views.QualificationView, 'qualifications'
 base_router.register('economic_activity_subjects',
                      views.EconomicActivitySubjectView, 'economic_activity_subjects')
 base_router.register('orders', views.OrderView, 'orders')
-base_router.register('order_positions', views.OrderPositionView, 'order_positions')
 
 classifier_nested_router = routers.NestedDefaultRouter(
     base_router, r'classifier', lookup='node',
@@ -26,6 +25,11 @@ standard_node_nested_router = routers.NestedDefaultRouter(
 )
 standard_node_nested_router.register('services', views.ServiceView, 'services')
 standard_node_nested_router.register('parameters', views.ParameterNodeView, 'parameters')
+
+order_nested_router = routers.NestedDefaultRouter(
+    base_router, r'orders', lookup='order',
+)
+order_nested_router.register('positions', views.OrderPositionView, 'positions')
 
 app_name = 'api'
 
@@ -99,5 +103,6 @@ urlpatterns = [
     path(r'', include('api.enumerations.urls')),
     path(r'', include('api.technological_routes.urls')),
     path(r'', include(classifier_nested_router.urls)),
+    path(r'', include(order_nested_router.urls)),
     path(r'', include(standard_node_nested_router.urls)),
 ]

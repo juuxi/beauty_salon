@@ -353,11 +353,27 @@ class EconomicActivitySubjectView(viewsets.ModelViewSet):
 class OrderView(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
+    lookup_url_kwarg = 'id'
 
 
 class OrderPositionView(viewsets.ModelViewSet):
     serializer_class = OrderPositionSerializer
     queryset = OrderPosition.objects.all()
+
+    def get_order(self):
+        return get_object_or_404(
+            Order,
+            pk=self.kwargs['order_id'],
+        )
+
+    def get_queryset(self):
+        order_id = self.kwargs['order_id']
+        return OrderPosition.objects.filter(
+            order_id=order_id
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(order=self.get_order())
 
 
 class AddToOrderView(APIView):

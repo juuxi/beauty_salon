@@ -418,6 +418,7 @@ class OrderPositionSerializer(serializers.ModelSerializer):
             'amount',
             'provision_time',
         )
+        read_only_fields = ('order',)
 
 
 class AddToOrderSerializer(serializers.Serializer):
