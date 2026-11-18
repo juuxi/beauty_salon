@@ -425,3 +425,7 @@ class AddToOrderSerializer(serializers.Serializer):
     service_id = serializers.IntegerField(min_value=1)
     amount = serializers.IntegerField(min_value=1)
     provision_time = serializers.DateTimeField()
+
+
+class CalcSumSerializer(serializers.Serializer):
+    calc_sum = serializers.DecimalField(max_digits=20, decimal_places=2)

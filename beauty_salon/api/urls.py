@@ -93,6 +93,7 @@ urlpatterns = [
         name='tr_to_n',
     ),
     path('orders/add_position/', views.AddToOrderView.as_view(), name='add-to-order'),
+    path('orders/<int:order_id>/sum/', views.CalcSumView.as_view(), name='calc_sum'),
     path(r'', include(base_router.urls)),
     path(r'', include('api.materials.urls')),
     path(r'', include('api.enumerations.urls')),

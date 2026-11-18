@@ -44,6 +44,7 @@ from .serializers import (
     OrderSerializer,
     OrderPositionSerializer,
     AddToOrderSerializer,
+    CalcSumSerializer,
 )
 
 
@@ -388,3 +389,14 @@ class AddToOrderView(APIView):
             {"position_id": position_id},
             status=status.HTTP_201_CREATED,
         )
+
+
+class CalcSumView(APIView):
+    """
+    GET /orders/{order_id}/sum/
+    """
+
+    def get(self, request, order_id):
+        results = call_stored_procedure('calc_sum', [order_id])
+        serializer = CalcSumSerializer(results, many=True)
+        return Response(serializer.data)
