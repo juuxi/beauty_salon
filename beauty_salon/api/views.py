@@ -17,9 +17,6 @@ from .models import (
     Service,
     ParameterNode,
     StandardNode,
-    Tool,
-    Profession,
-    Qualification,
     MeasuringUnit,
     EconomicActivitySubject,
     Order,
@@ -34,9 +31,6 @@ from .serializers import (
     StandardNodeSerializer,
     CalcBomSerializer,
     FindBomSerializer,
-    ToolSerializer,
-    ProfessionSerializer,
-    QualificationSerializer,
     MeasuringUnitSerializer,
     FindTmSerializer,
     TrToSerializer,
@@ -251,27 +245,6 @@ class CalcBomView(APIView):
             return Response(
                 {'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
-class ToolView(viewsets.ModelViewSet):
-    """CRUD для инструментов"""
-
-    serializer_class = ToolSerializer
-    queryset = Tool.objects.all()
-
-
-class ProfessionView(viewsets.ModelViewSet):
-    """CRUD для профессий"""
-
-    serializer_class = ProfessionSerializer
-    queryset = Profession.objects.all()
-
-
-class QualificationView(viewsets.ModelViewSet):
-    """CRUD для квалификаций"""
-
-    serializer_class = QualificationSerializer
-    queryset = Qualification.objects.all()
 
 
 def call_stored_procedure(proc_name, params):

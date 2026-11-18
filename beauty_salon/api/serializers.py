@@ -11,9 +11,6 @@ from .models import (
     ParameterNode,
     StandardNode,
     ServiceComponent,
-    Tool,
-    Profession,
-    Qualification,
     EconomicActivitySubject,
     Order,
     OrderPosition,
@@ -337,39 +334,6 @@ class FindBomSerializer(serializers.Serializer):
 class CalcBomSerializer(serializers.Serializer):
     material_name = serializers.CharField(max_length=200)
     total_amount = serializers.IntegerField()
-
-
-class ToolSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Tool
-        fields = (
-            'id',
-            'name',
-            'code',
-        )
-
-
-class ProfessionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profession
-        fields = (
-            'id',
-            'name',
-            'code',
-        )
-
-
-class QualificationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Qualification
-        fields = (
-            'id',
-            'name',
-            'code',
-        )
 
 
 class FindTmSerializer(serializers.Serializer):

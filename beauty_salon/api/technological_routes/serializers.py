@@ -10,6 +10,9 @@ from .models import (
     TypicalTechnologicalRoute,
     TypicalTechnologicalRouteOperation,
     OperationComponent,
+    Tool,
+    Profession,
+    Qualification,
 )
 
 
@@ -140,3 +143,36 @@ class TypicalTechnologicalRouteSerializer(serializers.ModelSerializer):
                 )
 
         return instance
+
+
+class ToolSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tool
+        fields = (
+            'id',
+            'name',
+            'code',
+        )
+
+
+class ProfessionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profession
+        fields = (
+            'id',
+            'name',
+            'code',
+        )
+
+
+class QualificationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Qualification
+        fields = (
+            'id',
+            'name',
+            'code',
+        )
