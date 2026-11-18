@@ -418,3 +418,10 @@ class OrderPositionSerializer(serializers.ModelSerializer):
             'amount',
             'provision_time',
         )
+
+
+class AddToOrderSerializer(serializers.Serializer):
+    order_id = serializers.IntegerField(min_value=1)
+    service_id = serializers.IntegerField(min_value=1)
+    amount = serializers.IntegerField(min_value=1)
+    provision_time = serializers.DateTimeField()

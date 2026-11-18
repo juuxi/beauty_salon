@@ -43,6 +43,7 @@ from .serializers import (
     EconomicActivitySubjectSerializer,
     OrderSerializer,
     OrderPositionSerializer,
+    AddToOrderSerializer,
 )
 
 
@@ -356,3 +357,34 @@ class OrderView(viewsets.ModelViewSet):
 class OrderPositionView(viewsets.ModelViewSet):
     serializer_class = OrderPositionSerializer
     queryset = OrderPosition.objects.all()
+
+
+class AddToOrderView(APIView):
+    """
+    POST /orders/add-position/
+    body: {"order_id": 7, "service_id": 15, "amount": 3,
+           "provision_time": "2026-12-01T10:00:00+03:00"}
+    resp: {"position_id": 42}
+    """
+
+    def post(self, request):
+        serializer = AddToOrderSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        with connection.cursor() as cursor:
+            cursor.callproc(
+                "add_to_order",
+                [
+                    data["order_id"],
+                    data["service_id"],
+                    data["amount"],
+                    data["provision_time"],
+                ],
+            )
+            position_id = cursor.fetchone()[0]
+
+        return Response(
+            {"position_id": position_id},
+            status=status.HTTP_201_CREATED,
+        )

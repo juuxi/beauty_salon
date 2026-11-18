@@ -92,6 +92,7 @@ urlpatterns = [
         views.TrToNView.as_view(),
         name='tr_to_n',
     ),
+    path('orders/add_position/', views.AddToOrderView.as_view(), name='add-to-order'),
     path(r'', include(base_router.urls)),
     path(r'', include('api.materials.urls')),
     path(r'', include('api.enumerations.urls')),
