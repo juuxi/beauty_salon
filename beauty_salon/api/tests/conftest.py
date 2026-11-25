@@ -512,3 +512,85 @@ def created_order_position(api_session, base_url, order_position_data):
         )
     except Exception:
         pass
+
+
+@pytest.fixture
+def predicate_data(created_parameter):
+    """Sample predicate data for testing"""
+    return {
+        "parameter": created_parameter["id"],
+        "operator": "eq",
+        "value": "5"
+    }
+
+
+@pytest.fixture
+def created_predicate(api_session, base_url, predicate_data):
+    """Create a predicate and return its data, then clean up after test"""
+    response = api_session.post(
+        f"{base_url}/api/predicates/",
+        json=predicate_data
+    )
+    assert response.status_code == 201
+    predicate = response.json()
+
+    yield predicate
+
+    try:
+        api_session.delete(f"{base_url}/api/predicates/{predicate['id']}/")
+    except Exception:
+        pass
+
+
+@pytest.fixture
+def conjunct_data(created_predicate):
+    """Sample conjunct data for testing"""
+    return {
+        "conjunction_id": 1,
+        "predicate": created_predicate["id"]
+    }
+
+
+@pytest.fixture
+def created_conjunct(api_session, base_url, conjunct_data):
+    """Create a conjunct and return its data, then clean up after test"""
+    response = api_session.post(
+        f"{base_url}/api/conjuncts/",
+        json=conjunct_data
+    )
+    assert response.status_code == 201
+    conjunct = response.json()
+
+    yield conjunct
+
+    try:
+        api_session.delete(f"{base_url}/api/conjuncts/{conjunct['id']}/")
+    except Exception:
+        pass
+
+
+@pytest.fixture
+def function_constraint_data(created_parameter_node, created_conjunct):
+    """Sample function constraint data for testing"""
+    return {
+        "parameter_node": created_parameter_node["id"],
+        "conjunct": created_conjunct["id"]
+    }
+
+
+@pytest.fixture
+def created_function_constraint(api_session, base_url, function_constraint_data):
+    """Create a function constraint and return its data, then clean up after test"""
+    response = api_session.post(
+        f"{base_url}/api/constraints/",
+        json=function_constraint_data
+    )
+    assert response.status_code == 201
+    constraint = response.json()
+
+    yield constraint
+
+    try:
+        api_session.delete(f"{base_url}/api/constraints/{constraint['id']}/")
+    except Exception:
+        pass
