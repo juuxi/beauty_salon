@@ -16,6 +16,7 @@ from .models import (
     OrderPosition,
     Predicate,
     Conjunct,
+    FunctionConstraint,
 )
 
 from .enumerations.models import Enumeration, Value
@@ -418,4 +419,15 @@ class ConjunctSerializer(serializers.ModelSerializer):
             'id',
             'conjunction_id',
             'predicate',
+        )
+
+
+class FunctionConstraintSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FunctionConstraint
+        fields = (
+            'id',
+            'parameter_node',
+            'conjunct',
         )

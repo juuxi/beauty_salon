@@ -23,6 +23,7 @@ from .models import (
     OrderPosition,
     Predicate,
     Conjunct,
+    FunctionConstraint,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -43,6 +44,7 @@ from .serializers import (
     CalcSumSerializer,
     PredicateSerializer,
     ConjunctSerializer,
+    FunctionConstraintSerializer,
 )
 
 
@@ -403,3 +405,8 @@ class PredicateView(viewsets.ModelViewSet):
 class ConjunctView(viewsets.ModelViewSet):
     serializer_class = ConjunctSerializer
     queryset = Conjunct.objects.all()
+
+
+class FunctionConstraintView(viewsets.ModelViewSet):
+    serializer_class = FunctionConstraintSerializer
+    queryset = FunctionConstraint.objects.all()

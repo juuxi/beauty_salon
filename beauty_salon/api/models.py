@@ -365,3 +365,22 @@ class Conjunct(models.Model):
 
     class Meta:
         db_table = 'conjuncts'
+
+
+class FunctionConstraint(models.Model):
+    parameter_node = models.ForeignKey(
+        ParameterNode,
+        on_delete=models.CASCADE,
+        related_name='constraints',
+        verbose_name='Параметр-Типовой узел'
+    )
+
+    conjunct = models.ForeignKey(
+        Conjunct,
+        on_delete=models.CASCADE,
+        related_name='functions',
+        verbose_name='Конъюнкт',
+    )
+
+    class Meta:
+        db_table = 'constraints'
