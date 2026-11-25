@@ -222,8 +222,6 @@ def parameter_node_data(created_standard_node, created_parameter):
     """Sample parameter node data for testing"""
     return {
         "parameter": created_parameter["id"],
-        "min_param_value": 0,
-        "max_param_value": 100,
         "num": 1
     }
 

@@ -270,8 +270,6 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
             'id',
             'parameter',
             'standardnode',
-            'min_param_value',
-            'max_param_value',
             'num',
         )
         read_only_fields = ('standardnode',)

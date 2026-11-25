@@ -58,11 +58,6 @@ class ServiceValueForm(forms.ModelForm):
             classifiernode=classifiernode,
             parameter=self.parameter
         )
-
-        if parameter_node.min_param_value and form_value < parameter_node.min_param_value:
-            form_value = parameter_node.min_param_value
-        if parameter_node.max_param_value and form_value > parameter_node.max_param_value:
-            form_value = parameter_node.max_param_value
         return form_value
 
     def save(self, commit=True):
@@ -145,7 +140,7 @@ class EnumerationValueForm(forms.ModelForm):
 class ParameterNodeForm(forms.ModelForm):
     class Meta:
         model = ParameterNode
-        fields = ('parameter', 'num', 'min_param_value', 'max_param_value')
+        fields = ('parameter', 'num')
 
     def __init__(self, *args, **kwargs):
         self.classifier_node = ClassifierNode.objects.get(pk=kwargs.pop('node_id', None))
@@ -210,18 +205,5 @@ def get_parameter_node_ordering_formset():
         form=ParameterNodeOrderingForm,
         formset=BaseOrderingFormSet,
         extra=0,
-        can_delete=False
-    )
-
-
-class ServiceFilterForm(forms.Form):
-    min_value = forms.CharField(label='Мин. значение', required=False)
-    max_value = forms.CharField(label='Макс. значение', required=False)
-
-
-def get_service_filter_formset(extra=0):
-    return forms.formset_factory(
-        form=ServiceFilterForm,
-        extra=extra,
         can_delete=False
     )

@@ -147,14 +147,6 @@ class ParameterNode(models.Model):
         verbose_name='Типовой класс',
     )
 
-    min_param_value = models.IntegerField(
-        null=True, blank=True, verbose_name='Минимальное значение'
-    )
-
-    max_param_value = models.IntegerField(
-        null=True, blank=True, verbose_name='Максимальное значение'
-    )
-
     num = models.PositiveIntegerField(verbose_name='Позиция', validators=[MinValueValidator(1)])
 
     class Meta:

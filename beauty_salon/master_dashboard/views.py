@@ -30,7 +30,6 @@ from .forms import (
     ServiceValueForm,
     get_enumeration_value_ordering_formset,
     get_parameter_node_ordering_formset,
-    get_service_filter_formset,
 )
 
 from .utils import (

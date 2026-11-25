@@ -253,8 +253,6 @@ class TestParameterNodesCRUD:
 
         updated_data = {
             "parameter": created_parameter_node["parameter"],
-            "min_param_value": 10,
-            "max_param_value": 200,
             "num": 2
         }
 
@@ -264,8 +262,6 @@ class TestParameterNodesCRUD:
         )
         assert response.status_code == 200
         data = response.json()
-        assert data["min_param_value"] == 10
-        assert data["max_param_value"] == 200
 
     def test_partial_update_parameter_node(self, api_session, base_url, created_classifier_node,
                                            created_standard_node, created_parameter_node):
