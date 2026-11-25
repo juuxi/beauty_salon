@@ -262,50 +262,6 @@ class ServiceComponent(ModelWithTimestamp):
         ]
 
 
-class EconomicActivitySubject(ModelWithName):
-    address = models.CharField(max_length=200, null=True, blank=True)
-
-    class Meta:
-        db_table = 'economic_activity_subjects'
-
-
-class Order(models.Model):
-    client = models.ForeignKey(
-        EconomicActivitySubject,
-        on_delete=models.CASCADE,
-        related_name='orders',
-        verbose_name='Заказчик',
-    )
-
-    agreed = models.BooleanField(default=False, verbose_name='Согласован')
-
-    class Meta:
-        db_table = 'orders'
-
-
-class OrderPosition(models.Model):
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.CASCADE,
-        related_name='positions',
-        verbose_name='Заказ',
-    )
-
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.CASCADE,
-        related_name='order_positions',
-        verbose_name='Услуга',
-    )
-
-    amount = models.PositiveIntegerField()
-
-    provision_time = models.DateTimeField(verbose_name='Дата и время оказания')
-
-    class Meta:
-        db_table = 'order_positions'
-
-
 class Operator(models.TextChoices):
         EQ = "eq", "="
         NE = "ne", "!="

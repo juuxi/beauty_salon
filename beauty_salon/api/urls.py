@@ -8,9 +8,6 @@ base_router = routers.DefaultRouter()
 base_router.register('classifier', views.ClassifierNodeView, 'classifier')
 base_router.register('parameters', views.ParameterView, 'parameters')
 base_router.register('measuring_units', views.MeasuringUnitView, 'measuring_units')
-base_router.register('economic_activity_subjects',
-                     views.EconomicActivitySubjectView, 'economic_activity_subjects')
-base_router.register('orders', views.OrderView, 'orders')
 base_router.register('predicates', views.PredicateView, 'predicates')
 base_router.register('conjuncts', views.ConjunctView, 'conjuncts')
 base_router.register('constraints', views.FunctionConstraintView, 'constraints')
@@ -25,11 +22,6 @@ standard_node_nested_router = routers.NestedDefaultRouter(
 )
 standard_node_nested_router.register('services', views.ServiceView, 'services')
 standard_node_nested_router.register('parameters', views.ParameterNodeView, 'parameters')
-
-order_nested_router = routers.NestedDefaultRouter(
-    base_router, r'orders', lookup='order',
-)
-order_nested_router.register('positions', views.OrderPositionView, 'positions')
 
 app_name = 'api'
 
@@ -96,13 +88,11 @@ urlpatterns = [
         views.TrToNView.as_view(),
         name='tr_to_n',
     ),
-    path('orders/add_position/', views.AddToOrderView.as_view(), name='add-to-order'),
-    path('orders/<int:order_id>/sum/', views.CalcSumView.as_view(), name='calc_sum'),
     path(r'', include(base_router.urls)),
     path(r'', include('api.materials.urls')),
     path(r'', include('api.enumerations.urls')),
     path(r'', include('api.technological_routes.urls')),
+    path(r'', include('api.orders.urls')),
     path(r'', include(classifier_nested_router.urls)),
-    path(r'', include(order_nested_router.urls)),
     path(r'', include(standard_node_nested_router.urls)),
 ]
