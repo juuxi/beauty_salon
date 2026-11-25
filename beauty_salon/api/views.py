@@ -21,6 +21,7 @@ from .models import (
     EconomicActivitySubject,
     Order,
     OrderPosition,
+    Predicate,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -39,6 +40,7 @@ from .serializers import (
     OrderPositionSerializer,
     AddToOrderSerializer,
     CalcSumSerializer,
+    PredicateSerializer,
 )
 
 
@@ -389,3 +391,8 @@ class CalcSumView(APIView):
         results = call_stored_procedure('calc_sum', [order_id])
         serializer = CalcSumSerializer(results, many=True)
         return Response(serializer.data)
+
+
+class PredicateView(viewsets.ModelViewSet):
+    serializer_class = PredicateSerializer
+    queryset = Predicate.objects.all()

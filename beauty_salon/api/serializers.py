@@ -14,6 +14,7 @@ from .models import (
     EconomicActivitySubject,
     Order,
     OrderPosition,
+    Predicate,
 )
 
 from .enumerations.models import Enumeration, Value
@@ -394,3 +395,15 @@ class AddToOrderSerializer(serializers.Serializer):
 
 class CalcSumSerializer(serializers.Serializer):
     calc_sum = serializers.DecimalField(max_digits=20, decimal_places=2)
+
+
+class PredicateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Predicate
+        fields = (
+            'id',
+            'parameter',
+            'operator',
+            'value',
+        )

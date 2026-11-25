@@ -312,3 +312,43 @@ class OrderPosition(models.Model):
 
     class Meta:
         db_table = 'order_positions'
+
+
+class Operator(models.TextChoices):
+        EQ = "eq", "="
+        NE = "ne", "!="
+        GT = "gt", ">"
+        GTE = "gte", ">="
+        LT = "lt", "<"
+        LTE = "lte", "<="
+
+
+class Predicate(models.Model):
+    parameter = models.ForeignKey(
+        Parameter,
+        on_delete=models.CASCADE,
+        related_name='predicates',
+        verbose_name='Параметр',
+    )
+
+    operator = models.CharField(
+        max_length=20,
+        choices=Operator.choices,
+        default=Operator.EQ,
+        verbose_name="Оператор сравнения",
+    )
+
+    value = models.CharField(
+        max_length=200,
+        verbose_name='Значение'
+    )
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(operator__in=Operator.values),
+                name="predicate_operator_valid",
+            ),
+        ]
+
+        db_table = 'predicates'
