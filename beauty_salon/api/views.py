@@ -22,6 +22,7 @@ from .models import (
     Order,
     OrderPosition,
     Predicate,
+    Conjunct,
 )
 from .serializers import (
     ClassifierNodeSerializer,
@@ -41,6 +42,7 @@ from .serializers import (
     AddToOrderSerializer,
     CalcSumSerializer,
     PredicateSerializer,
+    ConjunctSerializer,
 )
 
 
@@ -396,3 +398,8 @@ class CalcSumView(APIView):
 class PredicateView(viewsets.ModelViewSet):
     serializer_class = PredicateSerializer
     queryset = Predicate.objects.all()
+
+
+class ConjunctView(viewsets.ModelViewSet):
+    serializer_class = ConjunctSerializer
+    queryset = Conjunct.objects.all()

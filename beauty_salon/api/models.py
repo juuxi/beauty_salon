@@ -352,3 +352,16 @@ class Predicate(models.Model):
         ]
 
         db_table = 'predicates'
+
+
+class Conjunct(models.Model):
+    conjunction_id = models.IntegerField(verbose_name='Идентификатор конъюнкции')
+    predicate = models.OneToOneField(
+        Predicate,
+        on_delete=models.CASCADE,
+        related_name='conjunct',
+        verbose_name='Предикат',
+    )
+
+    class Meta:
+        db_table = 'conjuncts'

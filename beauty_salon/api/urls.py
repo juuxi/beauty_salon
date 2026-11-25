@@ -12,6 +12,7 @@ base_router.register('economic_activity_subjects',
                      views.EconomicActivitySubjectView, 'economic_activity_subjects')
 base_router.register('orders', views.OrderView, 'orders')
 base_router.register('predicates', views.PredicateView, 'predicates')
+base_router.register('conjuncts', views.ConjunctView, 'conjuncts')
 
 classifier_nested_router = routers.NestedDefaultRouter(
     base_router, r'classifier', lookup='node',

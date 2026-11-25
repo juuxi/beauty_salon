@@ -15,6 +15,7 @@ from .models import (
     Order,
     OrderPosition,
     Predicate,
+    Conjunct,
 )
 
 from .enumerations.models import Enumeration, Value
@@ -406,4 +407,15 @@ class PredicateSerializer(serializers.ModelSerializer):
             'parameter',
             'operator',
             'value',
+        )
+
+
+class ConjunctSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Conjunct
+        fields = (
+            'id',
+            'conjunction_id',
+            'predicate',
         )
