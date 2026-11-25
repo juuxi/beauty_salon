@@ -125,18 +125,11 @@ class TestOrdersDelete:
 
 
 class TestOrderPositionsList:
-    def test_list_returns_200_and_list(self, api_session, base_url):
-        response = api_session.get(f"{base_url}/api/order_positions/")
+    def test_list_returns_200_and_list(self, api_session, base_url, created_order):
+        order_id = created_order['id']
+        response = api_session.get(f"{base_url}/api/orders/{order_id}/positions/")
         assert response.status_code == 200
         assert isinstance(response.json(), list)
-
-    def test_list_includes_created_position(
-        self, api_session, base_url, created_order_position
-    ):
-        response = api_session.get(f"{base_url}/api/order_positions/")
-        assert response.status_code == 200
-        ids = [item["id"] for item in response.json()]
-        assert created_order_position["id"] in ids
 
 
 class TestOrderPositionsCreate:
@@ -144,48 +137,39 @@ class TestOrderPositionsCreate:
         self, api_session, base_url, created_order, created_service
     ):
         payload = {
-            "order": created_order["id"],
             "service": created_service["id"],
             "amount": 3,
             "provision_time": "2030-05-05T05:05:05",
         }
+        order_id = created_order['id']
         response = api_session.post(
-            f"{base_url}/api/order_positions/", json=payload
+            f"{base_url}/api/orders/{order_id}/positions/", json=payload
         )
         assert response.status_code == 201
         data = response.json()
-        assert data["order"] == payload["order"]
         assert data["service"] == payload["service"]
         assert data["amount"] == payload["amount"]
         assert "id" in data
 
-        api_session.delete(f"{base_url}/api/order_positions/{data['id']}/")
-
-    def test_create_without_order_returns_400(
-        self, api_session, base_url, created_service
-    ):
-        response = api_session.post(
-            f"{base_url}/api/order_positions/",
-            json={"service": created_service["id"], "amount": 1, "provision_time": "2030-05-05T05:05:05"}
-        )
-        assert response.status_code == 400
+        api_session.delete(f"{base_url}/api/orders/{order_id}/positions/{data['id']}/")
 
     def test_create_without_service_returns_400(
         self, api_session, base_url, created_order
     ):
+        order_id = created_order["id"]
         response = api_session.post(
-            f"{base_url}/api/order_positions/",
-            json={"order": created_order["id"], "amount": 1, "provision_time": "2030-05-05T05:05:05"}
+            f"{base_url}/api/orders/{order_id}/positions/",
+            json={"amount": 1, "provision_time": "2030-05-05T05:05:05"}
         )
         assert response.status_code == 400
 
     def test_create_without_amount_returns_400(
         self, api_session, base_url, created_order, created_service
     ):
+        order_id = created_order["id"]
         response = api_session.post(
-            f"{base_url}/api/order_positions/",
+            f"{base_url}/api/orders/{order_id}/positions/",
             json={
-                "order": created_order["id"],
                 "service": created_service["id"],
                 "provision_time": "2030-05-05T05:05:05",
             }
@@ -195,10 +179,10 @@ class TestOrderPositionsCreate:
     def test_create_with_negative_amount_returns_400(
         self, api_session, base_url, created_order, created_service
     ):
+        order_id = created_order["id"]
         response = api_session.post(
-            f"{base_url}/api/order_positions/",
+            f"{base_url}/api/orders/{order_id}/positions/",
             json={
-                "order": created_order["id"],
                 "service": created_service["id"],
                 "amount": -1,
                 "provision_time": "2030-05-05T05:05:05",
@@ -209,10 +193,10 @@ class TestOrderPositionsCreate:
     def test_create_with_amount_over_max_returns_400(
         self, api_session, base_url, created_order, created_service
     ):
+        order_id = created_order["id"]
         response = api_session.post(
-            f"{base_url}/api/order_positions/",
+            f"{base_url}/api/orders/{order_id}/positions/",
             json={
-                "order": created_order["id"],
                 "service": created_service["id"],
                 "amount": 2147483648,  # max int32 + 1
                 "provision_time": "2030-05-05T05:05:05",
@@ -220,27 +204,26 @@ class TestOrderPositionsCreate:
         )
         assert response.status_code == 400
 
-    def test_create_with_nonexistent_order_returns_400(
+    def test_create_with_nonexistent_order_returns_404(
         self, api_session, base_url, created_service
     ):
         response = api_session.post(
-            f"{base_url}/api/order_positions/",
+            f"{base_url}/api/orders/999999/positions/",
             json={
-                "order": 999999,
                 "service": created_service["id"],
                 "amount": 1,
                 "provision_time": "2030-05-05T05:05:05",
             }
         )
-        assert response.status_code == 400
+        assert response.status_code == 404
 
     def test_create_with_nonexistent_service_returns_400(
         self, api_session, base_url, created_order
     ):
+        order_id = created_order["id"]
         response = api_session.post(
-            f"{base_url}/api/order_positions/",
+            f"{base_url}/api/orders/{order_id}/positions/",
             json={
-                "order": created_order["id"],
                 "service": 999999,
                 "amount": 1,
                 "provision_time": "2030-05-05T05:05:05",
@@ -253,9 +236,10 @@ class TestOrderPositionsRetrieve:
     def test_retrieve_returns_200(
         self, api_session, base_url, created_order_position
     ):
+        order_id = created_order_position["order"]
         position_id = created_order_position["id"]
         response = api_session.get(
-            f"{base_url}/api/order_positions/{position_id}/"
+            f"{base_url}/api/orders/{order_id}/positions/{position_id}/"
         )
         assert response.status_code == 200
         data = response.json()
@@ -265,9 +249,10 @@ class TestOrderPositionsRetrieve:
         assert data["amount"] == created_order_position["amount"]
         assert data["provision_time"] == created_order_position["provision_time"]
 
-    def test_retrieve_nonexistent_returns_404(self, api_session, base_url):
+    def test_retrieve_nonexistent_returns_404(self, api_session, base_url, created_order):
+        order_id = created_order['id']
         response = api_session.get(
-            f"{base_url}/api/order_positions/999999/"
+            f"{base_url}/api/orders/{order_id}/positions/9999999/"
         )
         assert response.status_code == 404
 
@@ -279,26 +264,27 @@ class TestOrderPositionsUpdate:
     ):
         position_id = created_order_position["id"]
         payload = {
-            "order": created_order["id"],
             "service": created_service["id"],
             "amount": 42,
             "provision_time": "2030-05-05T05:05:05",
         }
+        order_id = created_order['id']
         response = api_session.put(
-            f"{base_url}/api/order_positions/{position_id}/", json=payload
+            f"{base_url}/api/orders/{order_id}/positions/{position_id}/", json=payload
         )
         assert response.status_code == 200
         data = response.json()
         assert data["amount"] == 42
-        assert data["order"] == payload["order"]
+        assert data["order"] == created_order['id']
         assert data["service"] == payload["service"]
 
     def test_partial_update_amount(
         self, api_session, base_url, created_order_position
     ):
         position_id = created_order_position["id"]
+        order_id = created_order_position["order"]
         response = api_session.patch(
-            f"{base_url}/api/order_positions/{position_id}/",
+            f"{base_url}/api/orders/{order_id}/positions/{position_id}/",
             json={"amount": 7}
         )
         assert response.status_code == 200
@@ -308,8 +294,9 @@ class TestOrderPositionsUpdate:
         self, api_session, base_url, created_order_position
     ):
         position_id = created_order_position["id"]
+        order_id = created_order_position["order"]
         response = api_session.patch(
-            f"{base_url}/api/order_positions/{position_id}/",
+            f"{base_url}/api/orders/{order_id}/positions/{position_id}/",
             json={"amount": -5}
         )
         assert response.status_code == 400
@@ -319,10 +306,10 @@ class TestOrderPositionsDelete:
     def test_delete_returns_204(
         self, api_session, base_url, created_order, created_service
     ):
+        order_id = created_order['id']
         create_resp = api_session.post(
-            f"{base_url}/api/order_positions/",
+            f"{base_url}/api/orders/{order_id}/positions/",
             json={
-                "order": created_order["id"],
                 "service": created_service["id"],
                 "amount": 1,
                 "provision_time": "2030-05-05T05:05:05",
@@ -332,11 +319,11 @@ class TestOrderPositionsDelete:
         position_id = create_resp.json()["id"]
 
         response = api_session.delete(
-            f"{base_url}/api/order_positions/{position_id}/"
+            f"{base_url}/api/orders/{order_id}/positions/{position_id}/"
         )
         assert response.status_code == 204
 
         get_resp = api_session.get(
-            f"{base_url}/api/order_positions/{position_id}/"
+            f"{base_url}/api/orders/{order_id}/positions/{position_id}/"
         )
         assert get_resp.status_code == 404

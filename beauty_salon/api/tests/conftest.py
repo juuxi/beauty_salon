@@ -496,8 +496,9 @@ def order_position_data(created_order, created_service):
 @pytest.fixture
 def created_order_position(api_session, base_url, order_position_data):
     """Create an order position and return its data, then clean up"""
+    order_id = order_position_data['order']
     response = api_session.post(
-        f"{base_url}/api/order_positions/",
+        f"{base_url}/api/orders/{order_id}/positions/",
         json=order_position_data
     )
     assert response.status_code == 201
@@ -507,7 +508,7 @@ def created_order_position(api_session, base_url, order_position_data):
 
     try:
         api_session.delete(
-            f"{base_url}/api/order_positions/{position['id']}/"
+            f"{base_url}/api/orders/{order_id}/positions/{position['id']}/"
         )
     except Exception:
         pass
