@@ -39,8 +39,6 @@ from .utils import (
     get_form_obj,
 )
 
-from .api_client import BackendClient
-
 
 class PaginatedListView(ListView):
     paginate_by = 12
@@ -51,11 +49,7 @@ class ServiceListView(FilterView):
     template_name = 'service/services.html'
     context_object_name = 'services'
     filterset_class = ServiceFilter
-    paginate_by = 12
-
-    def get_queryset(self):
-        client = BackendClient()
-        return client.get_services()
+    ordering = 'id'
 
 
 def create_update_service(request, service_id=None):
@@ -79,8 +73,22 @@ class ServiceValuesListView(PaginatedListView):
     context_object_name = 'parameters_values'
 
     def get_queryset(self):
-        client = BackendClient()
-        return client.get_service_values(self.kwargs['service_id'])
+        service = get_object_or_404(Service, pk=self.kwargs['service_id'])
+        parameter_nodes = (
+            ParameterNode.objects.filter(classifiernode=service.base_class).order_by('num')
+        )
+        parameters = []
+        for parameter_node in parameter_nodes:
+            parameters.append(parameter_node.parameter)
+        values = []
+        for parameter in parameters:
+            try:
+                values.append(
+                    ParameterValueService.objects.get(service=service, parameter=parameter)
+                )
+            except ParameterValueService.DoesNotExist:
+                values.append(None)
+        return zip(parameters, values)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -157,10 +165,7 @@ class ClassifierNodeView(PaginatedListView):
     model = ClassifierNode
     template_name = 'classifier_node/classifier_nodes.html'
     context_object_name = 'classifier_nodes'
-
-    def get_queryset(self):
-        client = BackendClient()
-        return client.get_classifier_nodes()
+    ordering = 'id'
 
 
 def create_update_classifier_node(request, node_id=None):
@@ -189,8 +194,9 @@ class ParameterNodeListView(PaginatedListView):
         return context
 
     def get_queryset(self):
-        client = BackendClient()
-        return client.get_node_parameters(self.kwargs['node_id'])
+        return ParameterNode.objects.filter(
+            classifiernode_id=self.kwargs['node_id']
+            ).order_by('num')
 
 
 def create_classifier_node_parameters(request, node_id):
@@ -237,10 +243,7 @@ class ParameterView(PaginatedListView):
     model = Parameter
     template_name = 'parameter/parameters.html'
     context_object_name = 'parameters'
-
-    def get_queryset(self):
-        client = BackendClient()
-        return client.get_parameters()
+    ordering = 'id'
 
 
 def create_update_parameter(request, param_id=None):
@@ -263,10 +266,7 @@ class EnumerationView(PaginatedListView):
     model = Enumeration
     template_name = 'enumeration/enumerations.html'
     context_object_name = 'enumerations'
-
-    def get_queryset(self):
-        client = BackendClient()
-        return client.get_enumerations()
+    ordering = 'id'
 
 
 def create_update_enumeration(request, enumeration_id=None):
@@ -295,8 +295,7 @@ class ValueListView(PaginatedListView):
         return context
 
     def get_queryset(self):
-        client = BackendClient()
-        return client.get_values(self.kwargs['enumeration_id'])
+        return Value.objects.filter(enumeration_id=self.kwargs['enumeration_id']).order_by('num')
 
 
 def create_update_enumeration_values(request, enumeration_id, value_id=None):
@@ -345,12 +344,10 @@ def order_enumeration_values(request, enumeration_id):
 
 
 class MeasuringUnitView(PaginatedListView):
+    model = MeasuringUnit
     template_name = 'measuring_unit/measuring_units.html'
     context_object_name = 'measuring_units'
-
-    def get_queryset(self):
-        client = BackendClient()
-        return client.get_measuring_units()
+    ordering = 'id'
 
 
 def create_update_measuring_unit(request, unit_id=None):
