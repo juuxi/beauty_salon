@@ -9,16 +9,23 @@ from django_filters.views import FilterView
 from api.models import (
     Service,
     ClassifierNode,
+    StandardNode,
     Parameter,
     MeasuringUnit,
     ParameterNode,
     ParameterValueService,
+    Predicate,
+    Conjunct,
+    FunctionConstraint,
 )
 
 from api.enumerations.models import Enumeration, Value
 from api.materials.models import Material
-from api.orders.models import EconomicActivitySubject
-from api.technological_routes.models import TechnologicalOperation
+from api.orders.models import EconomicActivitySubject, Order, OrderPosition
+from api.technological_routes.models import (
+    TechnologicalOperation,
+    TypicalTechnologicalRoute,
+)
 
 from .filters import ServiceFilter
 
@@ -31,6 +38,12 @@ from .forms import (
     MaterialForm,
     TechnologicalOperationForm,
     EconomicActivitySubjectForm,
+    StandardNodeForm,
+    TypicalTechnologicalRouteForm,
+    StandardNodeParameterForm,
+    FunctionConstraintForm,
+    OrderForm,
+    OrderPositionForm,
     EnumerationValueForm,
     ParameterNodeForm,
     ServiceValueForm,
@@ -81,7 +94,7 @@ class ServiceValuesListView(PaginatedListView):
     def get_queryset(self):
         service = get_object_or_404(Service, pk=self.kwargs['service_id'])
         parameter_nodes = (
-            ParameterNode.objects.filter(classifiernode=service.base_class).order_by('num')
+            ParameterNode.objects.filter(standardnode=service.base_class).order_by('num')
         )
         parameters = []
         for parameter_node in parameter_nodes:
@@ -465,3 +478,314 @@ class EconomicActivitySubjectDeleteView(DeleteView):
     template_name = (
         'economic_activity_subject/economic_activity_subject-create.html'
     )
+
+
+class StandardNodeView(PaginatedListView):
+    model = StandardNode
+    template_name = 'standard_node/standard_nodes.html'
+    context_object_name = 'standard_nodes'
+    ordering = 'id'
+
+
+def create_update_standard_node(request, standard_node_id=None):
+    form = get_form_obj(
+        request,
+        standard_node_id,
+        StandardNode,
+        StandardNodeForm,
+    )
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:standard_nodes')
+    context = {'form': form}
+    return render(
+        request,
+        'standard_node/standard_node-create.html',
+        context,
+    )
+
+
+class StandardNodeDeleteView(DeleteView):
+    model = StandardNode
+    success_url = reverse_lazy('master_dashboard:standard_nodes')
+    pk_url_kwarg = 'standard_node_id'
+    template_name = 'standard_node/standard_node-create.html'
+
+
+class TypicalTechnologicalRouteListView(PaginatedListView):
+    template_name = 'standard_node/typical_route.html'
+    context_object_name = 'typical_routes'
+
+    def get_queryset(self):
+        return TypicalTechnologicalRoute.objects.filter(
+            standard_node_id=self.kwargs['standard_node_id']
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['standard_node'] = get_object_or_404(
+            StandardNode,
+            pk=self.kwargs['standard_node_id'],
+        )
+        return context
+
+
+def create_update_typical_route(request, standard_node_id, route_id=None):
+    standard_node = get_object_or_404(StandardNode, pk=standard_node_id)
+    instance = None
+    if route_id:
+        instance = get_object_or_404(
+            TypicalTechnologicalRoute,
+            pk=route_id,
+            standard_node=standard_node,
+        )
+    form = TypicalTechnologicalRouteForm(
+        request.POST or None,
+        instance=instance,
+    )
+    if form.is_valid():
+        route = form.save(commit=False)
+        route.standard_node = standard_node
+        route.save()
+        form.save_m2m()
+        return redirect(
+            'master_dashboard:typical_routes',
+            standard_node_id=standard_node_id,
+        )
+    context = {'form': form, 'standard_node': standard_node}
+    return render(
+        request,
+        'standard_node/typical_route-create.html',
+        context,
+    )
+
+
+class TypicalTechnologicalRouteDeleteView(DeleteView):
+    pk_url_kwarg = 'route_id'
+    template_name = 'standard_node/typical_route-create.html'
+
+    def get_queryset(self):
+        return TypicalTechnologicalRoute.objects.filter(
+            standard_node_id=self.kwargs['standard_node_id']
+        )
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'master_dashboard:typical_routes',
+            kwargs={'standard_node_id': self.kwargs['standard_node_id']},
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['standard_node'] = get_object_or_404(
+            StandardNode,
+            pk=self.kwargs['standard_node_id'],
+        )
+        return context
+
+
+class StandardNodeParameterListView(PaginatedListView):
+    template_name = 'standard_node/standard_node_parameters.html'
+    context_object_name = 'parameter_nodes'
+
+    def get_queryset(self):
+        return ParameterNode.objects.filter(
+            standardnode_id=self.kwargs['standard_node_id']
+        ).order_by('num')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['standard_node'] = get_object_or_404(
+            StandardNode,
+            pk=self.kwargs['standard_node_id'],
+        )
+        return context
+
+
+def create_standard_node_parameter(request, standard_node_id):
+    standard_node = get_object_or_404(StandardNode, pk=standard_node_id)
+    form = StandardNodeParameterForm(request.POST or None)
+    if form.is_valid():
+        parameter_node = form.save(commit=False)
+        parameter_node.standardnode = standard_node
+        parameter_node.save()
+        return redirect(
+            'master_dashboard:standard_node_parameters',
+            standard_node_id=standard_node_id,
+        )
+    context = {'form': form, 'standard_node': standard_node}
+    return render(
+        request,
+        'standard_node/standard_node_parameter-create.html',
+        context,
+    )
+
+
+class StandardNodeParameterDeleteView(DeleteView):
+    pk_url_kwarg = 'parameter_node_id'
+    template_name = 'standard_node/standard_node_parameter-create.html'
+
+    def get_queryset(self):
+        return ParameterNode.objects.filter(
+            standardnode_id=self.kwargs['standard_node_id']
+        )
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'master_dashboard:standard_node_parameters',
+            kwargs={'standard_node_id': self.kwargs['standard_node_id']},
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['standard_node'] = get_object_or_404(
+            StandardNode,
+            pk=self.kwargs['standard_node_id'],
+        )
+        return context
+
+
+class FunctionConstraintListView(PaginatedListView):
+    template_name = 'standard_node/function_constraints.html'
+    context_object_name = 'constraints'
+
+    def get_queryset(self):
+        return FunctionConstraint.objects.filter(
+            parameter_node__standardnode_id=self.kwargs['standard_node_id']
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['standard_node'] = get_object_or_404(
+            StandardNode,
+            pk=self.kwargs['standard_node_id'],
+        )
+        return context
+
+
+def create_function_constraint(request, standard_node_id):
+    standard_node = get_object_or_404(StandardNode, pk=standard_node_id)
+    form = FunctionConstraintForm(
+        request.POST or None,
+        standard_node_id=standard_node_id,
+    )
+    if form.is_valid():
+        form.save()
+        return redirect(
+            'master_dashboard:function_constraints',
+            standard_node_id=standard_node_id,
+        )
+    context = {'form': form, 'standard_node': standard_node}
+    return render(
+        request,
+        'standard_node/function_constraint-create.html',
+        context,
+    )
+
+
+class FunctionConstraintDeleteView(DeleteView):
+    pk_url_kwarg = 'constraint_id'
+    template_name = 'standard_node/function_constraint-create.html'
+
+    def get_queryset(self):
+        return FunctionConstraint.objects.filter(
+            parameter_node__standardnode_id=self.kwargs['standard_node_id']
+        )
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'master_dashboard:function_constraints',
+            kwargs={'standard_node_id': self.kwargs['standard_node_id']},
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['standard_node'] = get_object_or_404(
+            StandardNode,
+            pk=self.kwargs['standard_node_id'],
+        )
+        return context
+
+
+class OrderView(PaginatedListView):
+    model = Order
+    template_name = 'order/orders.html'
+    context_object_name = 'orders'
+    ordering = 'id'
+
+
+def create_update_order(request, order_id=None):
+    form = get_form_obj(request, order_id, Order, OrderForm)
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:orders')
+    context = {'form': form}
+    return render(request, 'order/order-create.html', context)
+
+
+class OrderDeleteView(DeleteView):
+    model = Order
+    success_url = reverse_lazy('master_dashboard:orders')
+    pk_url_kwarg = 'order_id'
+    template_name = 'order/order-create.html'
+
+
+class OrderPositionListView(PaginatedListView):
+    template_name = 'order/order_positions.html'
+    context_object_name = 'positions'
+
+    def get_queryset(self):
+        return OrderPosition.objects.filter(order_id=self.kwargs['order_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = get_object_or_404(Order, pk=self.kwargs['order_id'])
+        return context
+
+
+def create_update_order_position(request, order_id, position_id=None):
+    order = get_object_or_404(Order, pk=order_id)
+    instance = None
+    if position_id:
+        instance = get_object_or_404(
+            OrderPosition,
+            pk=position_id,
+            order=order,
+        )
+    form = OrderPositionForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        position = form.save(commit=False)
+        position.order = order
+        position.save()
+        return redirect(
+            'master_dashboard:order_positions',
+            order_id=order_id,
+        )
+    context = {'form': form, 'order': order}
+    return render(
+        request,
+        'order/order_position-create.html',
+        context,
+    )
+
+
+class OrderPositionDeleteView(DeleteView):
+    pk_url_kwarg = 'position_id'
+    template_name = 'order/order_position-create.html'
+
+    def get_queryset(self):
+        return OrderPosition.objects.filter(order_id=self.kwargs['order_id'])
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'master_dashboard:order_positions',
+            kwargs={'order_id': self.kwargs['order_id']},
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = get_object_or_404(
+            Order,
+            pk=self.kwargs['order_id'],
+        )
+        return context

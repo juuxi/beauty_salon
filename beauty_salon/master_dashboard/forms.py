@@ -4,16 +4,25 @@ from django.core.exceptions import ValidationError
 from api.models import (
     Service,
     ClassifierNode,
+    StandardNode,
     Parameter,
     MeasuringUnit,
     ParameterNode,
     ParameterValueService,
+    Predicate,
+    Conjunct,
+    FunctionConstraint,
 )
 
 from api.enumerations.models import Enumeration, Value
 from api.materials.models import Material
 from api.orders.models import EconomicActivitySubject
 from api.technological_routes.models import TechnologicalOperation
+from api.technological_routes.models import (
+    TypicalTechnologicalRoute,
+    TypicalTechnologicalRouteOperation,
+)
+from api.orders.models import Order, OrderPosition
 
 from .utils import (
     validate_value,
@@ -26,7 +35,7 @@ from .utils import (
 class ServiceForm(forms.ModelForm):
     class Meta:
         model = Service
-        fields = ('name', 'base_class', 'code')
+        fields = ('name', 'base_class', 'is_variant', 'cost', 'code')
 
 
 class ServiceValueForm(forms.ModelForm):
@@ -56,9 +65,9 @@ class ServiceValueForm(forms.ModelForm):
     def clean_form_value(self):
         form_value = self.cleaned_data['form_value']
         form_value = validate_value(form_value, self.parameter)
-        classifiernode = self.service.base_class
+        standard_node = self.service.base_class
         parameter_node = ParameterNode.objects.get(
-            classifiernode=classifiernode,
+            standardnode=standard_node,
             parameter=self.parameter
         )
         return form_value
@@ -184,6 +193,50 @@ class EconomicActivitySubjectForm(forms.ModelForm):
     class Meta:
         model = EconomicActivitySubject
         fields = ('name', 'address')
+
+
+class StandardNodeForm(forms.ModelForm):
+    class Meta:
+        model = StandardNode
+        fields = ('name', 'base_class', 'code')
+
+
+class TypicalTechnologicalRouteForm(forms.ModelForm):
+    class Meta:
+        model = TypicalTechnologicalRoute
+        fields = ('name', 'parameters')
+
+
+class StandardNodeParameterForm(forms.ModelForm):
+    class Meta:
+        model = ParameterNode
+        fields = ('parameter', 'num')
+
+
+class FunctionConstraintForm(forms.ModelForm):
+    class Meta:
+        model = FunctionConstraint
+        fields = ('parameter_node', 'conjunct')
+
+    def __init__(self, *args, **kwargs):
+        standard_node_id = kwargs.pop('standard_node_id', None)
+        super().__init__(*args, **kwargs)
+        if standard_node_id:
+            self.fields['parameter_node'].queryset = ParameterNode.objects.filter(
+                standardnode_id=standard_node_id
+            )
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('client', 'agreed')
+
+
+class OrderPositionForm(forms.ModelForm):
+    class Meta:
+        model = OrderPosition
+        fields = ('service', 'amount', 'provision_time')
 
 
 class BaseOrderingFormSet(forms.BaseModelFormSet):
