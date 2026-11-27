@@ -22,9 +22,9 @@
                             <li><a href="{% url 'master_dashboard:classifier_nodes' %}" class="nav__submenu-link">Классификатор</a></li>
                         </ul>
                     </li>
-                    <li><a href="#" class="nav__link">Типовые услуги</a></li>
+                    <li><a href="{% url 'master_dashboard:standard_nodes' %}" class="nav__link {% if view_name == 'master_dashboard:standard_nodes' %}nav__link--active{% endif %}">Типовые услуги</a></li>
                     <li><a href="{% url 'master_dashboard:services' %}" class="nav__link {% if view_name == 'master_dashboard:services' %}nav__link--active{% endif %}">Услуги</a></li>
-                    <li><a href="#" class="nav__link">Заказы</a></li>
+                    <li><a href="{% url 'master_dashboard:orders' %}" class="nav__link {% if view_name == 'master_dashboard:orders' %}nav__link--active{% endif %}">Заказы</a></li>
                     <li><a href="{% url 'pages:about' %}" class="nav__link {% if view_name == 'pages:about' %}nav__link--active{% endif %}">О системе</a></li>
                 </ul>
                 {% endwith %}

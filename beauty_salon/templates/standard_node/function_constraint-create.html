@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Ограничение типовой услуги{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">Ограничение: {{ standard_node.name }}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+            {% for field in form %}<div class="form-group">{{ field.label_tag }} {{ field }}</div>{% endfor %}
+            {% endif %}
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:function_constraints' standard_node_id=standard_node.id %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

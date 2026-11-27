@@ -26,6 +26,16 @@
                 {{ form.code }}
             </div>
 
+            <div class="form-group">
+                {{ form.is_variant.label_tag }}
+                {{ form.is_variant }}
+            </div>
+
+            <div class="form-group">
+                {{ form.cost.label_tag }}
+                {{ form.cost }}
+            </div>
+
             {% if form.errors %}
             <div class="form-errors">
                 {% for field, errors in form.errors.items %}

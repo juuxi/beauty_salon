@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Позиции заказа №{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Позиции заказа №{{ order.id }}</h1>
+    <a href="{% url 'master_dashboard:order_position-create' order_id=order.id %}" class="btn btn--primary">+ Добавить позицию</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for position in positions %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ position.service.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:order_position-edit' order_id=order.id position_id=position.id %}" class="btn btn--icon btn-edit">✏️</a>
+                    <a href="{% url 'master_dashboard:order_position-delete' order_id=order.id position_id=position.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+            <div class="card__body">
+                <p>Количество: <strong>{{ position.amount }}</strong></p>
+                <p>Время оказания: <strong>{{ position.provision_time|date:"d.m.Y H:i" }}</strong></p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Позиции заказа пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

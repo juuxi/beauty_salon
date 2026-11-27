@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if '/edit/' in request.path %}Редактирование типовой услуги{% elif '/delete/' in request.path %}Удаление типовой услуги{% else %}Создание типовой услуги{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование типовой услуги{% elif '/delete/' in request.path %}Удаление типовой услуги{% else %}Создание типовой услуги{% endif %}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+            {% for field in form %}
+            <div class="form-group">{{ field.label_tag }} {{ field }}</div>
+            {% endfor %}
+            {% else %}
+            <p><strong>Название:</strong> {{ object.name }}</p>
+            {% endif %}
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:standard_nodes' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">{% if '/delete/' in request.path %}Удалить{% else %}Сохранить{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

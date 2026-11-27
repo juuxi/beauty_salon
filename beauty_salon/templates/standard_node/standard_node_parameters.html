@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Параметры типовой услуги{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Параметры: {{ standard_node.name }}</h1>
+    <a href="{% url 'master_dashboard:standard_node_parameter-create' standard_node_id=standard_node.id %}" class="btn btn--primary">+ Добавить параметр</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for parameter_node in parameter_nodes %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ parameter_node.parameter.name }}</h3>
+                <a href="{% url 'master_dashboard:standard_node_parameter-delete' standard_node_id=standard_node.id parameter_node_id=parameter_node.id %}" class="btn btn--icon btn-delete">🗑️</a>
+            </div>
+            <div class="card__body"><p>Позиция: <strong>{{ parameter_node.num }}</strong></p></div>
+        </div>
+        {% empty %}
+        <p>Параметры пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

@@ -43,6 +43,18 @@
                 <h3>Перечисления</h3>
                 <p>Справочники фиксированных значений (типы кожи, цвета)</p>
             </a>
+            <a href="{% url 'master_dashboard:standard_nodes' %}" class="admin-card">
+                <h3>Типовые услуги</h3>
+                <p>Маршруты, параметры и ограничения типовых услуг</p>
+            </a>
+            <a href="{% url 'master_dashboard:services' %}" class="admin-card">
+                <h3>Услуги</h3>
+                <p>Конкретные услуги и значения их параметров</p>
+            </a>
+            <a href="{% url 'master_dashboard:orders' %}" class="admin-card">
+                <h3>Заказы</h3>
+                <p>Заказы и позиции оказанных услуг</p>
+            </a>
         </div>
     </div>
 </section>

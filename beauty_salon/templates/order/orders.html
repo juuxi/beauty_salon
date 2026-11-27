@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Заказы - Flora{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Заказы</h1>
+    <a href="{% url 'master_dashboard:order-create' %}" class="btn btn--primary">+ Добавить заказ</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for order in orders %}
+        <div class="card">
+            <div class="card__header">
+                <h3>Заказ №{{ order.id }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:order-edit' order_id=order.id %}" class="btn btn--icon btn-edit">✏️</a>
+                    <a href="{% url 'master_dashboard:order-delete' order_id=order.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+            <div class="card__body">
+                <p>Заказчик: <strong>{{ order.client.name }}</strong></p>
+                <p>Согласован: <strong>{% if order.agreed %}Да{% else %}Нет{% endif %}</strong></p>
+                <p><a href="{% url 'master_dashboard:order_positions' order_id=order.id %}" class="btn-link btn--beauty">Позиции заказа</a></p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Заказы пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

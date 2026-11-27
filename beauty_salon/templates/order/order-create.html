@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if '/edit/' in request.path %}Редактирование заказа{% elif '/delete/' in request.path %}Удаление заказа{% else %}Создание заказа{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование заказа{% elif '/delete/' in request.path %}Удаление заказа{% else %}Создание заказа{% endif %}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+            {% for field in form %}<div class="form-group">{{ field.label_tag }} {{ field }}</div>{% endfor %}
+            {% else %}
+            <p><strong>Заказ:</strong> №{{ object.id }}</p>
+            {% endif %}
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:orders' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">{% if '/delete/' in request.path %}Удалить{% else %}Сохранить{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Маршруты - {{ standard_node.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Технологические маршруты: {{ standard_node.name }}</h1>
+    <a href="{% url 'master_dashboard:typical_route-create' standard_node_id=standard_node.id %}" class="btn btn--primary">+ Добавить маршрут</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for route in typical_routes %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ route.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:typical_route-edit' standard_node_id=standard_node.id route_id=route.id %}" class="btn btn--icon btn-edit">✏️</a>
+                    <a href="{% url 'master_dashboard:typical_route-delete' standard_node_id=standard_node.id route_id=route.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Типовые технологические маршруты пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

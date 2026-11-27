@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Ограничения типовой услуги{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Ограничения: {{ standard_node.name }}</h1>
+    <a href="{% url 'master_dashboard:function_constraint-create' standard_node_id=standard_node.id %}" class="btn btn--primary">+ Добавить ограничение</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for constraint in constraints %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ constraint.parameter_node.parameter.name }}</h3>
+                <a href="{% url 'master_dashboard:function_constraint-delete' standard_node_id=standard_node.id constraint_id=constraint.id %}" class="btn btn--icon btn-delete">🗑️</a>
+            </div>
+            <div class="card__body"><p>Конъюнкт: <strong>{{ constraint.conjunct.conjunction_id }}</strong></p></div>
+        </div>
+        {% empty %}
+        <p>Ограничения пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

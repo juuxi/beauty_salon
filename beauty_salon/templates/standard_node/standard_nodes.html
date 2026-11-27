@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Типовые услуги - Flora{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Типовые услуги</h1>
+    <a href="{% url 'master_dashboard:standard_node-create' %}" class="btn btn--primary">+ Добавить типовую услугу</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for standard_node in standard_nodes %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ standard_node.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:standard_node-edit' standard_node_id=standard_node.id %}" class="btn btn--icon btn-edit">✏️</a>
+                    <a href="{% url 'master_dashboard:standard_node-delete' standard_node_id=standard_node.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+            <div class="card__body">
+                <p>Базовый класс: <strong>{{ standard_node.base_class }}</strong></p>
+                {% if standard_node.code %}<p>Обозначение: <strong>{{ standard_node.code }}</strong></p>{% endif %}
+                <p><a href="{% url 'master_dashboard:typical_routes' standard_node_id=standard_node.id %}" class="btn-link btn--beauty">Типовые технологические маршруты</a></p>
+                <p><a href="{% url 'master_dashboard:function_constraints' standard_node_id=standard_node.id %}" class="btn-link btn--beauty">Ограничения</a></p>
+                <p><a href="{% url 'master_dashboard:standard_node_parameters' standard_node_id=standard_node.id %}" class="btn-link btn--beauty">Параметры</a></p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Типовые услуги пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}
