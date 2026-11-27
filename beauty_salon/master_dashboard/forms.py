@@ -11,6 +11,9 @@ from api.models import (
 )
 
 from api.enumerations.models import Enumeration, Value
+from api.materials.models import Material
+from api.orders.models import EconomicActivitySubject
+from api.technological_routes.models import TechnologicalOperation
 
 from .utils import (
     validate_value,
@@ -155,6 +158,32 @@ class MeasuringUnitForm(forms.ModelForm):
     class Meta:
         model = MeasuringUnit
         fields = ('name',)
+
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = Material
+        fields = ('name', 'code', 'measuring_unit')
+
+
+class TechnologicalOperationForm(forms.ModelForm):
+    class Meta:
+        model = TechnologicalOperation
+        fields = (
+            'name',
+            'profession',
+            'qualification',
+            'tool',
+            'time',
+            'time_unit',
+            'parent',
+        )
+
+
+class EconomicActivitySubjectForm(forms.ModelForm):
+    class Meta:
+        model = EconomicActivitySubject
+        fields = ('name', 'address')
 
 
 class BaseOrderingFormSet(forms.BaseModelFormSet):

@@ -16,6 +16,9 @@ from api.models import (
 )
 
 from api.enumerations.models import Enumeration, Value
+from api.materials.models import Material
+from api.orders.models import EconomicActivitySubject
+from api.technological_routes.models import TechnologicalOperation
 
 from .filters import ServiceFilter
 
@@ -25,6 +28,9 @@ from .forms import (
     ParameterForm,
     EnumerationForm,
     MeasuringUnitForm,
+    MaterialForm,
+    TechnologicalOperationForm,
+    EconomicActivitySubjectForm,
     EnumerationValueForm,
     ParameterNodeForm,
     ServiceValueForm,
@@ -364,3 +370,98 @@ class MeasuringUnitDeleteView(DeleteView):
     success_url = reverse_lazy('master_dashboard:measuring_units')
     pk_url_kwarg = 'unit_id'
     template_name = 'measuring_unit/measuring_unit-create.html'
+
+
+class MaterialView(PaginatedListView):
+    model = Material
+    template_name = 'material/materials.html'
+    context_object_name = 'materials'
+    ordering = 'id'
+
+
+def create_update_material(request, material_id=None):
+    form = get_form_obj(request, material_id, Material, MaterialForm)
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:materials')
+    context = {'form': form}
+    return render(request, 'material/material-create.html', context)
+
+
+class MaterialDeleteView(DeleteView):
+    model = Material
+    success_url = reverse_lazy('master_dashboard:materials')
+    pk_url_kwarg = 'material_id'
+    template_name = 'material/material-create.html'
+
+
+class TechnologicalOperationView(PaginatedListView):
+    model = TechnologicalOperation
+    template_name = 'technological_operation/technological_operations.html'
+    context_object_name = 'technological_operations'
+    ordering = 'id'
+
+
+def create_update_technological_operation(request, operation_id=None):
+    form = get_form_obj(
+        request,
+        operation_id,
+        TechnologicalOperation,
+        TechnologicalOperationForm,
+    )
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:technological_operations')
+    context = {'form': form}
+    return render(
+        request,
+        'technological_operation/technological_operation-create.html',
+        context,
+    )
+
+
+class TechnologicalOperationDeleteView(DeleteView):
+    model = TechnologicalOperation
+    success_url = reverse_lazy('master_dashboard:technological_operations')
+    pk_url_kwarg = 'operation_id'
+    template_name = (
+        'technological_operation/technological_operation-create.html'
+    )
+
+
+class EconomicActivitySubjectView(PaginatedListView):
+    model = EconomicActivitySubject
+    template_name = (
+        'economic_activity_subject/economic_activity_subjects.html'
+    )
+    context_object_name = 'economic_activity_subjects'
+    ordering = 'id'
+
+
+def create_update_economic_activity_subject(request, subject_id=None):
+    form = get_form_obj(
+        request,
+        subject_id,
+        EconomicActivitySubject,
+        EconomicActivitySubjectForm,
+    )
+    if form.is_valid():
+        form.save()
+        return redirect('master_dashboard:economic_activity_subjects')
+    context = {'form': form}
+    return render(
+        request,
+        'economic_activity_subject/economic_activity_subject-create.html',
+        context,
+    )
+
+
+class EconomicActivitySubjectDeleteView(DeleteView):
+    model = EconomicActivitySubject
+    success_url = reverse_lazy(
+        'master_dashboard:economic_activity_subjects'
+    )
+    pk_url_kwarg = 'subject_id'
+    template_name = (
+        'economic_activity_subject/economic_activity_subject-create.html'
+    )
