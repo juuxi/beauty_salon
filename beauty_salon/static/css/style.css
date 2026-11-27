@@ -985,6 +985,77 @@ a {
     flex-wrap: nowrap; /* Запрещаем перенос пунктов меню */
 }
 
+.nav__item--dropdown {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.nav__dropdown-toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: center;
+    cursor: pointer;
+}
+
+.nav__dropdown-toggle:hover {
+    background-color: var(--pink-bg);
+    color: var(--pink-dark);
+}
+
+.nav__submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    display: block;
+    margin: 8px 0 0;
+    min-width: 280px;
+    list-style: none;
+    padding: 8px;
+    border: 1px solid var(--pink-main);
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow-hover);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: var(--transition);
+}
+
+.nav__item--dropdown:hover .nav__submenu,
+.nav__item--dropdown:focus-within .nav__submenu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.nav__submenu li {
+    display: block;
+    width: 100%;
+}
+
+.nav__submenu-link {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.nav__submenu-link:hover {
+    background: var(--pink-bg);
+    color: var(--pink-dark);
+}
+
 /* Блок авторизации — тоже в одну линию */
 .auth-block {
     display: flex;

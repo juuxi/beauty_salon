@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if '/edit/' in request.path %}Редактирование материала{% elif '/delete/' in request.path %}Удаление материала{% else %}Создание материала{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="form-card">
+        <h2 class="form-title">{% if '/edit/' in request.path %}Редактирование материала{% elif '/delete/' in request.path %}Удаление материала{% else %}Создание материала{% endif %}</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {% if not '/delete/' in request.path %}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="form-group"><p><strong>Название:</strong> {{ object.name }}</p></div>
+            {% endif %}
+            <div class="form-actions">
+                <a href="{% url 'master_dashboard:materials' %}" class="btn btn-cancel">Отмена</a>
+                <button type="submit" class="btn btn-save">{% if '/delete/' in request.path %}Удалить{% else %}Сохранить{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

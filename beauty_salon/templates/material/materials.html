@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Материалы - Flora{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Материалы</h1>
+    <a href="{% url 'master_dashboard:material-create' %}" class="btn btn--primary">+ Добавить материал</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for material in materials %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ material.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:material-edit' material_id=material.id %}" class="btn btn--icon btn-edit">✏️</a>
+                    <a href="{% url 'master_dashboard:material-delete' material_id=material.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+            <div class="card__body">
+                {% if material.code %}<p>Обозначение: <strong>{{ material.code }}</strong></p>{% endif %}
+                {% if material.measuring_unit %}<p>Ед. изм.: <strong>{{ material.measuring_unit.name }}</strong></p>{% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p>Материалы пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

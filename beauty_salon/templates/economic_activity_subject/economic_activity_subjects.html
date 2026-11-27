@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Субъекты хозяйственной деятельности - Flora{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Субъекты хозяйственной деятельности</h1>
+    <a href="{% url 'master_dashboard:economic_activity_subject-create' %}" class="btn btn--primary">+ Добавить субъекта</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for subject in economic_activity_subjects %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ subject.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:economic_activity_subject-edit' subject_id=subject.id %}" class="btn btn--icon btn-edit">✏️</a>
+                    <a href="{% url 'master_dashboard:economic_activity_subject-delete' subject_id=subject.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+            {% if subject.address %}<div class="card__body"><p>Адрес: <strong>{{ subject.address }}</strong></p></div>{% endif %}
+        </div>
+        {% empty %}
+        <p>Субъекты хозяйственной деятельности пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

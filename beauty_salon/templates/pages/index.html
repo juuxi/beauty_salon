@@ -15,25 +15,33 @@
     <div class="container">
         <h2 class="section-title">Управление справочниками</h2>
         <div class="admin-grid">
-            <a href="{% url 'master_dashboard:classifier_nodes' %}" class="admin-card">
-                <h3>Классификатор услуг</h3>
-                <p>Создание иерархии категорий и подкатегорий услуг</p>
+            <a href="{% url 'master_dashboard:technological_operations' %}" class="admin-card">
+                <h3>Технические операции</h3>
+                <p>Управление технологическими операциями</p>
             </a>
-            <a href="{% url 'master_dashboard:services' %}" class="admin-card">
-                <h3>Услуги</h3>
-                <p>Добавление конкретных услуг с настройкой параметров</p>
+            <a href="{% url 'master_dashboard:materials' %}" class="admin-card">
+                <h3>Материалы</h3>
+                <p>Управление материалами и единицами их измерения</p>
+            </a>
+            <a href="{% url 'master_dashboard:measuring_units' %}" class="admin-card">
+                <h3>Единицы измерения</h3>
+                <p>Управление единицами (мин, шт, мл, см)</p>
             </a>
             <a href="{% url 'master_dashboard:parameters' %}" class="admin-card">
                 <h3>Параметры</h3>
                 <p>Настройка характеристик (длительность, цена и др.)</p>
             </a>
+            <a href="{% url 'master_dashboard:economic_activity_subjects' %}" class="admin-card">
+                <h3>Субъекты хозяйственной деятельности</h3>
+                <p>Управление заказчиками и другими субъектами</p>
+            </a>
+            <a href="{% url 'master_dashboard:classifier_nodes' %}" class="admin-card">
+                <h3>Классификатор услуг</h3>
+                <p>Создание иерархии категорий и подкатегорий услуг</p>
+            </a>
             <a href="{% url 'master_dashboard:enumerations' %}" class="admin-card">
                 <h3>Перечисления</h3>
                 <p>Справочники фиксированных значений (типы кожи, цвета)</p>
-            </a>
-            <a href="{% url 'master_dashboard:measuring_units' %}" class="admin-card">
-                <h3>Единицы измерения</h3>
-                <p>Управление единицами (мин, шт, мл, см)</p>
             </a>
         </div>
     </div>

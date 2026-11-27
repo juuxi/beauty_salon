@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Технические операции - Flora{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Технические операции</h1>
+    <a href="{% url 'master_dashboard:technological_operation-create' %}" class="btn btn--primary">+ Добавить операцию</a>
+</div>
+<div class="container">
+    <div class="list-grid">
+        {% for operation in technological_operations %}
+        <div class="card">
+            <div class="card__header">
+                <h3>{{ operation.name }}</h3>
+                <div class="card__actions">
+                    <a href="{% url 'master_dashboard:technological_operation-edit' operation_id=operation.id %}" class="btn btn--icon btn-edit">✏️</a>
+                    <a href="{% url 'master_dashboard:technological_operation-delete' operation_id=operation.id %}" class="btn btn--icon btn-delete">🗑️</a>
+                </div>
+            </div>
+            <div class="card__body">
+                <p>Профессия: <strong>{{ operation.profession.name }}</strong></p>
+                {% if operation.qualification %}<p>Квалификация: <strong>{{ operation.qualification.name }}</strong></p>{% endif %}
+                <p>Время: <strong>{{ operation.time }}{% if operation.time_unit %} {{ operation.time_unit.name }}{% endif %}</strong></p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Технические операции пока не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'includes/paginator.html' %}
+{% endblock %}

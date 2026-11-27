@@ -11,11 +11,20 @@
                 {% with request.resolver_match.view_name as view_name %}
                 <ul class="nav__list">
                     <li><a href="{% url 'pages:index' %}" class="nav__link {% if view_name == 'pages:index' %}nav__link--active {% endif %}">Главная</a></li>
-                    <li><a href="{% url 'master_dashboard:classifier_nodes' %}" class="nav__link {% if view_name == 'master_dashboard:classifier_nodes' %}nav__link--active{% endif %}">Классификатор</a></li>
+                    <li class="nav__item nav__item--dropdown">
+                        <button type="button" class="nav__link nav__dropdown-toggle" aria-expanded="false">Справочники</button>
+                        <ul class="nav__submenu">
+                            <li><a href="{% url 'master_dashboard:technological_operations' %}" class="nav__submenu-link">Технические операции</a></li>
+                            <li><a href="{% url 'master_dashboard:materials' %}" class="nav__submenu-link">Материалы</a></li>
+                            <li><a href="{% url 'master_dashboard:measuring_units' %}" class="nav__submenu-link">Единицы измерения</a></li>
+                            <li><a href="{% url 'master_dashboard:parameters' %}" class="nav__submenu-link">Параметры</a></li>
+                            <li><a href="{% url 'master_dashboard:economic_activity_subjects' %}" class="nav__submenu-link">Субъекты хозяйственной деятельности</a></li>
+                            <li><a href="{% url 'master_dashboard:classifier_nodes' %}" class="nav__submenu-link">Классификатор</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" class="nav__link">Типовые услуги</a></li>
                     <li><a href="{% url 'master_dashboard:services' %}" class="nav__link {% if view_name == 'master_dashboard:services' %}nav__link--active{% endif %}">Услуги</a></li>
-                    <li><a href="{% url 'master_dashboard:parameters' %}" class="nav__link {% if view_name == 'master_dashboard:parameters' %}nav__link--active{% endif %}">Параметры</a></li>
-                    <li><a href="{% url 'master_dashboard:enumerations' %}" class="nav__link {% if view_name == 'master_dashboard:enumerations' %}nav__link--active{% endif %}">Перечисления</a></li>
-                    <li><a href="{% url 'master_dashboard:measuring_units' %}" class="nav__link {% if view_name == 'master_dashboard:measuring_units' %}nav__link--active{% endif %}">Единицы</a></li>
+                    <li><a href="#" class="nav__link">Заказы</a></li>
                     <li><a href="{% url 'pages:about' %}" class="nav__link {% if view_name == 'pages:about' %}nav__link--active{% endif %}">О системе</a></li>
                 </ul>
                 {% endwith %}
