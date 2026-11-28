@@ -186,6 +186,9 @@ class Service(ModelWithTimestamp, CodedModel, ModelWithName):
         verbose_name = 'Услуга'
         verbose_name_plural = 'Услуги'
 
+    def __str__(self):
+        return self.name
+
 
 class ParameterValueService(models.Model):
     value = models.CharField(verbose_name='Значение')

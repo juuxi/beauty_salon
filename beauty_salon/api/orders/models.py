@@ -2,11 +2,15 @@ from django.db import models
 
 from api.models import ModelWithName, Service
 
+
 class EconomicActivitySubject(ModelWithName):
     address = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         db_table = 'economic_activity_subjects'
+
+    def __str__(self):
+        return self.name
 
 
 class Order(models.Model):
@@ -21,6 +25,9 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'orders'
+
+    def __str__(self):
+        return f'Заказ №{self.id} от {self.client.name}'
 
 
 class OrderPosition(models.Model):
