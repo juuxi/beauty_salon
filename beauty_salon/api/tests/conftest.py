@@ -570,10 +570,10 @@ def created_conjunct(api_session, base_url, conjunct_data):
 
 
 @pytest.fixture
-def function_constraint_data(created_parameter_node, created_conjunct):
+def function_constraint_data(created_standard_node, created_conjunct):
     """Sample function constraint data for testing"""
     return {
-        "parameter_node": created_parameter_node["id"],
+        "standard_node": created_standard_node["id"],
         "conjunct": created_conjunct["id"]
     }
 

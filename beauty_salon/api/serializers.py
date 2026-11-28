@@ -404,6 +404,6 @@ class FunctionConstraintSerializer(serializers.ModelSerializer):
         model = FunctionConstraint
         fields = (
             'id',
-            'parameter_node',
+            'standard_node',
             'conjunct',
         )

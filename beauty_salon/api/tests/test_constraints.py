@@ -238,7 +238,7 @@ class TestFunctionConstraintCRUD:
 
     def test_create_constraint(self, api_session, base_url,
                                function_constraint_data,
-                               created_parameter_node, created_conjunct):
+                               created_standard_node, created_conjunct):
         """Test POST /api/constraints/ - create a new function constraint"""
         response = api_session.post(
             f"{base_url}/api/constraints/",
@@ -246,7 +246,7 @@ class TestFunctionConstraintCRUD:
         )
         assert response.status_code == 201
         data = response.json()
-        assert data["parameter_node"] == function_constraint_data["parameter_node"]
+        assert data["standard_node"] == function_constraint_data["standard_node"]
         assert data["conjunct"] == function_constraint_data["conjunct"]
         assert "id" in data
 
@@ -261,7 +261,7 @@ class TestFunctionConstraintCRUD:
         assert response.status_code == 200
         data = response.json()
         assert data["id"] == constraint_id
-        assert data["parameter_node"] == created_function_constraint["parameter_node"]
+        assert data["standard_node"] == created_function_constraint["standard_node"]
         assert data["conjunct"] == created_function_constraint["conjunct"]
 
     def test_update_constraint(self, api_session, base_url,
@@ -269,7 +269,7 @@ class TestFunctionConstraintCRUD:
         """Test PUT /api/constraints/{id}/ - update a constraint"""
         constraint_id = created_function_constraint["id"]
         updated_data = {
-            "parameter_node": created_function_constraint["parameter_node"],
+            "standard_node": created_function_constraint["standard_node"],
             "conjunct": created_function_constraint["conjunct"],
         }
 
@@ -297,7 +297,7 @@ class TestFunctionConstraintCRUD:
 
     def test_delete_constraint(self, api_session, base_url,
                                function_constraint_data,
-                               created_parameter_node, created_conjunct):
+                               created_standard_node, created_conjunct):
         """Test DELETE /api/constraints/{id}/ - delete a constraint"""
         create_response = api_session.post(
             f"{base_url}/api/constraints/",
@@ -311,10 +311,9 @@ class TestFunctionConstraintCRUD:
         get_response = api_session.get(f"{base_url}/api/constraints/{constraint_id}/")
         assert get_response.status_code == 404
 
-    def test_constraint_cascade_on_parameter_node_delete(
+    def test_constraint_cascade_on_standard_node_delete(
         self, api_session, base_url, function_constraint_data,
-        created_parameter_node, created_conjunct, created_classifier_node,
-        created_standard_node
+        created_conjunct, created_classifier_node, created_standard_node
     ):
         """Test that deleting a parameter node cascades to its constraints"""
         create_response = api_session.post(
@@ -325,12 +324,9 @@ class TestFunctionConstraintCRUD:
 
         node_id = created_classifier_node["id"]
         std_node_id = created_standard_node["id"]
-        param_node_id = created_parameter_node["id"]
-
-        # Delete the parameter node - constraint should be removed too
+        # Delete the standard node - its constraint should be removed too.
         api_session.delete(
-            f"{base_url}/api/classifier/{node_id}/standard_nodes/"
-            f"{std_node_id}/parameters/{param_node_id}/"
+            f"{base_url}/api/classifier/{node_id}/standard_nodes/{std_node_id}/"
         )
 
         get_response = api_session.get(f"{base_url}/api/constraints/{constraint_id}/")
@@ -338,7 +334,7 @@ class TestFunctionConstraintCRUD:
 
     def test_constraint_cascade_on_conjunct_delete(
         self, api_session, base_url, function_constraint_data,
-        created_parameter_node, created_conjunct
+        created_standard_node, created_conjunct
     ):
         """Test that deleting a conjunct cascades to its constraints"""
         create_response = api_session.post(
@@ -359,7 +355,7 @@ class TestConstraintRelationships:
     """Test relationships between constraints, predicates, and parameter nodes"""
 
     def test_full_chain_creation(
-        self, api_session, base_url, created_parameter, created_parameter_node
+        self, api_session, base_url, created_parameter, created_standard_node
     ):
         """Test creating the full Predicate -> Conjunct -> Constraint chain"""
         # 1. Create predicate
@@ -386,7 +382,7 @@ class TestConstraintRelationships:
         constr_response = api_session.post(
             f"{base_url}/api/constraints/",
             json={
-                "parameter_node": created_parameter_node["id"],
+                "standard_node": created_standard_node["id"],
                 "conjunct": conjunct["id"]
             }
         )
@@ -399,7 +395,7 @@ class TestConstraintRelationships:
         )
         assert get_response.status_code == 200
         data = get_response.json()
-        assert data["parameter_node"] == created_parameter_node["id"]
+        assert data["standard_node"] == created_standard_node["id"]
         assert data["conjunct"] == conjunct["id"]
 
         # Cleanup
@@ -407,8 +403,8 @@ class TestConstraintRelationships:
         api_session.delete(f"{base_url}/api/conjuncts/{conjunct['id']}/")
         api_session.delete(f"{base_url}/api/predicates/{predicate['id']}/")
 
-    def test_parameter_node_has_multiple_constraints(
-        self, api_session, base_url, created_parameter_node, created_parameter
+    def test_standard_node_can_have_multiple_disjuncts(
+        self, api_session, base_url, created_standard_node, created_parameter
     ):
         """Test that a parameter node can hold multiple function constraints"""
         created_ids = {"predicates": [], "conjuncts": [], "constraints": []}
@@ -441,7 +437,7 @@ class TestConstraintRelationships:
                 constr_resp = api_session.post(
                     f"{base_url}/api/constraints/",
                     json={
-                        "parameter_node": created_parameter_node["id"],
+                        "standard_node": created_standard_node["id"],
                         "conjunct": conj["id"]
                     }
                 )
@@ -450,7 +446,7 @@ class TestConstraintRelationships:
 
             # Verify both constraints are linked to the parameter node
             listing = api_session.get(
-                f"{base_url}/api/constraints/?parameter_node={created_parameter_node['id']}"
+                f"{base_url}/api/constraints/?standard_node={created_standard_node['id']}"
             )
             assert listing.status_code == 200
             results = listing.json()

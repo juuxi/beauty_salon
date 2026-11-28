@@ -322,11 +322,11 @@ class Conjunct(models.Model):
 
 
 class FunctionConstraint(models.Model):
-    parameter_node = models.ForeignKey(
-        ParameterNode,
+    standard_node = models.ForeignKey(
+        StandardNode,
         on_delete=models.CASCADE,
         related_name='constraints',
-        verbose_name='Параметр'
+        verbose_name='Типовая услуга',
     )
 
     conjunct = models.ForeignKey(
