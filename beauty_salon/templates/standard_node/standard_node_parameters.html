@@ -15,7 +15,12 @@
                 <h3>{{ parameter_node.parameter.name }}</h3>
                 <a href="{% url 'master_dashboard:standard_node_parameter-delete' standard_node_id=standard_node.id parameter_node_id=parameter_node.id %}" class="btn btn--icon btn-delete">🗑️</a>
             </div>
-            <div class="card__body"><p>Позиция: <strong>{{ parameter_node.num }}</strong></p></div>
+            <div class="card__body">
+                <p>Позиция: <strong>{{ parameter_node.num }}</strong></p>
+                <p>Тип: <span class="card__tag">{{ parameter_node.parameter.get_data_type_display }}</span></p>
+                {% if parameter_node.parameter.enumeration %}<p>Перечисление: <strong>{{ parameter_node.parameter.enumeration.name }}</strong></p>{% endif %}
+                {% if parameter_node.parameter.measuring_unit %}<p>Ед. изм: <span class="card__tag">{{ parameter_node.parameter.measuring_unit.name }}</span></p> {% endif %}
+            </div>
         </div>
         {% empty %}
         <p>Параметры пока не добавлены</p>
