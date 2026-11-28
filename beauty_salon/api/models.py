@@ -163,6 +163,9 @@ class ParameterNode(models.Model):
             ),
         ]
 
+    def __str__(self):
+        return f'{self.parameter.name} для {self.standardnode.name}'
+
 
 class Service(ModelWithTimestamp, CodedModel, ModelWithName):
     base_class = models.ForeignKey(
