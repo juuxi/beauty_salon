@@ -32,7 +32,7 @@
                 {% if service.code %}<p>Обозначение: <strong>{{ service.code }}</strong></p>{% endif %}
                 <p>Значения параметров: <a href="{% url 'master_dashboard:service_values' service_id=service.id %}" 
                     class="btn-link btn--beauty">
-                    см. параметры
+                    см. значения
                 </a></p>
             </div>
         </div>
