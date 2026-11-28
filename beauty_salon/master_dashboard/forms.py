@@ -355,6 +355,21 @@ class OrderForm(forms.ModelForm):
 
 
 class OrderPositionForm(forms.ModelForm):
+    provision_time = forms.DateTimeField(
+        label='Дата и время оказания',
+        input_formats=['%Y-%m-%dT%H:%M'],
+        error_messages={
+            'invalid': (
+                'Введите дату и время в формате ГГГГ-ММ-ДДTЧЧ:ММ, '
+                'например, 2026-10-10T14:30.'
+            ),
+        },
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%dT%H:%M',
+            attrs={'type': 'datetime-local'},
+        ),
+    )
+
     class Meta:
         model = OrderPosition
         fields = ('service', 'amount', 'provision_time')
