@@ -642,6 +642,10 @@ class StandardNodeParameterDeleteView(DeleteView):
             StandardNode,
             pk=self.kwargs['standard_node_id'],
         )
+        context['parameter_node'] = get_object_or_404(
+            ParameterNode,
+            pk=self.kwargs['parameter_node_id'],
+        )
         return context
 
 
