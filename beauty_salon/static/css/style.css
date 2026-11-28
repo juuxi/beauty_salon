@@ -692,6 +692,51 @@ a {
     margin-bottom: 15px;
 }
 
+.route-operations {
+    margin-top: 28px;
+    padding: 22px;
+    border: 2px solid var(--pink-main);
+    border-radius: var(--radius);
+    background: var(--pink-bg);
+}
+
+.route-operations__header {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--pink-main);
+}
+
+.route-operations__header h3,
+.route-operation h4 {
+    margin: 0 0 6px;
+    color: var(--pink-dark);
+}
+
+.route-operations__header p {
+    margin: 0;
+    color: #555;
+}
+
+.route-operation {
+    margin-bottom: 14px;
+    padding: 16px;
+    border: 1px solid #ead3dc;
+    border-radius: 12px;
+    background: var(--white);
+}
+
+.route-operation__delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a33;
+    cursor: pointer;
+}
+
+.route-operation__delete input {
+    width: auto;
+}
+
 .form-group label {
     display: block;
     margin-bottom: 8px;

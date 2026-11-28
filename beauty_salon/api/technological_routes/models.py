@@ -149,6 +149,7 @@ class TypicalTechnologicalRouteOperation(models.Model):
                 deferrable=Deferrable.DEFERRED,
             )
         ]
+        ordering = ['num']
 
 
 class OperationComponent(ModelWithTimestamp):

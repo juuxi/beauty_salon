@@ -12,6 +12,78 @@
             {% for field in form %}
             <div class="form-group">{{ field.label_tag }} {{ field }}</div>
             {% endfor %}
+            <section class="route-operations" aria-labelledby="route-operations-title">
+                <div class="route-operations__header">
+                    <h3 id="route-operations-title">Технологические операции</h3>
+                    <p>Укажите операции маршрута и их порядок выполнения.</p>
+                </div>
+                {{ operations_formset.management_form }}
+                <div id="route-operation-forms">
+                    {% for operation_form in operations_formset %}
+                    <div class="route-operation">
+                        {% for hidden in operation_form.hidden_fields %}{{ hidden }}{% endfor %}
+                        <h4>
+                            {% if forloop.counter0 < operations_formset.initial_form_count %}
+                            Операция {{ forloop.counter }}
+                            {% else %}
+                            Новая операция
+                            {% endif %}
+                        </h4>
+                        {% for field in operation_form.visible_fields %}
+                        {% if field.name != 'DELETE' %}
+                        <div class="form-group">
+                            {{ field.label_tag }} {{ field }}
+                            {% for error in field.errors %}<p class="form-errors">{{ error }}</p>{% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% if operation_form.DELETE %}
+                        <label class="route-operation__delete">
+                            {{ operation_form.DELETE }} Удалить операцию
+                        </label>
+                        {% endif %}
+                        {% if operation_form.non_field_errors %}
+                        <div class="form-errors">
+                            {% for error in operation_form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if operations_formset.non_form_errors %}
+                <div class="form-errors">
+                    {% for error in operations_formset.non_form_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+                {% endif %}
+                <button type="button" class="btn btn--primary" id="add-route-operation">
+                    + Добавить операцию
+                </button>
+                <template id="empty-route-operation">
+                    <div class="route-operation">
+                        {% for hidden in operations_formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
+                        <h4>Новая операция</h4>
+                        {% for field in operations_formset.empty_form.visible_fields %}
+                        {% if field.name != 'DELETE' %}
+                        <div class="form-group">
+                            {{ field.label_tag }} {{ field }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% if operations_formset.empty_form.DELETE %}
+                        <label class="route-operation__delete">
+                            {{ operations_formset.empty_form.DELETE }} Удалить операцию
+                        </label>
+                        {% endif %}
+                    </div>
+                </template>
+            </section>
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}<p>{{ error }}</p>{% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
             {% else %}
             <p><strong>Название:</strong> {{ object.name }}</p>
             {% endif %}
@@ -22,4 +94,25 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if not '/delete/' in request.path %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('add-route-operation');
+    const formsContainer = document.getElementById('route-operation-forms');
+    const template = document.getElementById('empty-route-operation');
+    const totalForms = document.getElementById('id_operations-TOTAL_FORMS');
+
+    addButton.addEventListener('click', function() {
+        const index = Number(totalForms.value);
+        const row = document.createElement('div');
+        row.innerHTML = template.innerHTML.replace(/__prefix__/g, index);
+        formsContainer.appendChild(row.firstElementChild);
+        totalForms.value = index + 1;
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

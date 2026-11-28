@@ -40,6 +40,7 @@ from .forms import (
     EconomicActivitySubjectForm,
     StandardNodeForm,
     TypicalTechnologicalRouteForm,
+    TypicalTechnologicalRouteOperationFormSet,
     StandardNodeParameterForm,
     FunctionConstraintForm,
     OrderForm,
@@ -572,16 +573,27 @@ def create_update_typical_route(request, standard_node_id, route_id=None):
         request.POST or None,
         instance=instance,
     )
-    if form.is_valid():
-        route = form.save(commit=False)
-        route.standard_node = standard_node
-        route.save()
-        form.save_m2m()
+    operations_formset = TypicalTechnologicalRouteOperationFormSet(
+        request.POST or None,
+        instance=instance,
+        prefix='operations',
+    )
+    if form.is_valid() and operations_formset.is_valid():
+        with transaction.atomic():
+            route = form.save(commit=False)
+            route.standard_node = standard_node
+            route.save()
+            operations_formset.instance = route
+            operations_formset.save()
         return redirect(
             'master_dashboard:typical_routes',
             standard_node_id=standard_node_id,
         )
-    context = {'form': form, 'standard_node': standard_node}
+    context = {
+        'form': form,
+        'operations_formset': operations_formset,
+        'standard_node': standard_node,
+    }
     return render(
         request,
         'standard_node/typical_route-create.html',

@@ -239,6 +239,21 @@ class TypicalTechnologicalRouteForm(forms.ModelForm):
         fields = ('name',)
 
 
+class TypicalTechnologicalRouteOperationForm(forms.ModelForm):
+    class Meta:
+        model = TypicalTechnologicalRouteOperation
+        fields = ('technological_operation', 'num')
+
+
+TypicalTechnologicalRouteOperationFormSet = forms.inlineformset_factory(
+    TypicalTechnologicalRoute,
+    TypicalTechnologicalRouteOperation,
+    form=TypicalTechnologicalRouteOperationForm,
+    extra=1,
+    can_delete=True,
+)
+
+
 class StandardNodeParameterForm(forms.ModelForm):
     class Meta:
         model = ParameterNode
