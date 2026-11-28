@@ -1011,11 +1011,11 @@ a {
 
 .nav__submenu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     left: 0;
     z-index: 100;
     display: block;
-    margin: 8px 0 0;
+    margin: 0;
     min-width: 280px;
     list-style: none;
     padding: 8px;
@@ -1028,6 +1028,15 @@ a {
     pointer-events: none;
     transform: translateY(-4px);
     transition: var(--transition);
+}
+
+.nav__submenu::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -8px;
+    height: 8px;
 }
 
 .nav__item--dropdown:hover .nav__submenu,
