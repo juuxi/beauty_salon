@@ -19,6 +19,11 @@ urlpatterns = [
         name='service_values'
     ),
     path(
+        'services/<int:service_id>/components/',
+        views.service_components,
+        name='service_components',
+    ),
+    path(
         'services/<int:service_id>/values/<int:param_id>/create/',
         views.create_service_values,
         name='service_value-create'
@@ -158,6 +163,11 @@ urlpatterns = [
         name='technological_operation-delete',
     ),
     path(
+        'technological_operations/<int:operation_id>/components/',
+        views.technological_operation_details,
+        name='operation_components',
+    ),
+    path(
         'materials/list/',
         views.MaterialView.as_view(),
         name='materials',
@@ -226,6 +236,16 @@ urlpatterns = [
         'typical_services/<int:standard_node_id>/routes/list/',
         views.TypicalTechnologicalRouteListView.as_view(),
         name='typical_routes',
+    ),
+    path(
+        'typical_services/<int:standard_node_id>/components/',
+        views.standard_node_components,
+        name='standard_node_components',
+    ),
+    path(
+        'typical_services/<int:standard_node_id>/routes/<int:route_id>/operations/',
+        views.typical_route_operations,
+        name='typical_route_operations',
     ),
     path(
         'typical_services/<int:standard_node_id>/routes/create/',

@@ -10,12 +10,16 @@ from api.models import (
     ParameterNode,
     ParameterValueService,
     Predicate,
+    ServiceComponent,
 )
 
 from api.enumerations.models import Enumeration, Value
 from api.materials.models import Material
 from api.orders.models import EconomicActivitySubject
-from api.technological_routes.models import TechnologicalOperation
+from api.technological_routes.models import (
+    OperationComponent,
+    TechnologicalOperation,
+)
 from api.technological_routes.models import (
     TypicalTechnologicalRoute,
     TypicalTechnologicalRouteOperation,
@@ -217,6 +221,79 @@ class TechnologicalOperationForm(forms.ModelForm):
             'time_unit',
             'parent',
         )
+
+
+class ComponentFormMixin:
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('DELETE'):
+            return cleaned_data
+
+        has_service = cleaned_data.get('component_service') is not None
+        has_material = cleaned_data.get('component_material') is not None
+        if (
+            not has_service
+            and not has_material
+            and cleaned_data.get('amount') is None
+        ):
+            return cleaned_data
+        if has_service == has_material:
+            raise ValidationError(
+                'Выберите для компонента ровно одну услугу или один материал.'
+            )
+        return cleaned_data
+
+
+class OperationComponentForm(ComponentFormMixin, forms.ModelForm):
+    class Meta:
+        model = OperationComponent
+        fields = ('component_service', 'component_material', 'amount')
+        labels = {
+            'component_service': 'Услуга-компонент',
+            'component_material': 'Материал',
+            'amount': 'Количество',
+        }
+
+
+class ServiceComponentForm(ComponentFormMixin, forms.ModelForm):
+    class Meta:
+        model = ServiceComponent
+        fields = ('component_service', 'component_material', 'amount')
+        labels = {
+            'component_service': 'Услуга-компонент',
+            'component_material': 'Материал',
+            'amount': 'Количество',
+        }
+
+
+OperationComponentFormSet = forms.inlineformset_factory(
+    TechnologicalOperation,
+    OperationComponent,
+    form=OperationComponentForm,
+    fields=('component_service', 'component_material', 'amount'),
+    extra=1,
+    can_delete=True,
+)
+
+StandardNodeComponentFormSet = forms.inlineformset_factory(
+    StandardNode,
+    ServiceComponent,
+    form=ServiceComponentForm,
+    fk_name='standard_node',
+    fields=('component_service', 'component_material', 'amount'),
+    extra=1,
+    can_delete=True,
+)
+
+ServiceComponentFormSet = forms.inlineformset_factory(
+    Service,
+    ServiceComponent,
+    form=ServiceComponentForm,
+    fk_name='service',
+    fields=('component_service', 'component_material', 'amount'),
+    extra=1,
+    can_delete=True,
+)
 
 
 class EconomicActivitySubjectForm(forms.ModelForm):

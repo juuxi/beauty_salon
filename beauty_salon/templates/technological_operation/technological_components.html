@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Компоненты операции — {{ operation.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        Компоненты операции «{{ operation.name }}»
+    </h1>
+    <a href="{% url 'master_dashboard:technological_operations' %}" class="btn btn-cancel">Назад к операциям</a>
+</div>
+
+<div class="container">
+    <div class="list-grid">
+        {% for item in components %}
+        <div class="card">
+            <div class="card__header">
+                <h3>
+                    {% if item.component_service %}
+                    {{ item.component_service.name }}
+                    {% else %}
+                    {{ item.component_material.name }}
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card__body">
+                {% if item.component_service %}
+                <p>Тип: <strong>Услуга</strong></p>
+                {% else %}
+                <p>Тип: <strong>Материал</strong></p>
+                {% endif %}
+                <p>Количество:
+                    <strong>
+                        {{ item.amount }}
+                        {% if item.component_material.measuring_unit %}
+                        {{ item.component_material.measuring_unit.name }}
+                        {% endif %}
+                    </strong>
+                </p>
+                {% if item.origin %}<p>Источник: <strong>{{ item.origin }}</strong></p>{% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p>Компоненты не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

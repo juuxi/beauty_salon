@@ -36,6 +36,28 @@
                 {{ form.cost }}
             </div>
 
+            <section class="route-operations service-inherited-components">
+                <div class="route-operations__header">
+                    <h3>Компоненты типовой услуги</h3>
+                    <p>Компоненты выбранной типовой услуги будут добавлены автоматически.</p>
+                </div>
+                {% if inherited_components %}
+                <ul>
+                    {% for component in inherited_components %}
+                    <li>
+                        {% if component.component_service %}
+                            {{ component.component_service.name }}
+                        {% else %}
+                            {{ component.component_material.name }}
+                        {% endif %}
+                        — {{ component.amount }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </section>
+            {% include 'includes/component_formset.html' with components_formset=components_formset components_title='Дополнительные компоненты услуги' %}
+
             {% if form.errors %}
             <div class="form-errors">
                 {% for field, errors in form.errors.items %}

@@ -1,0 +1,79 @@
+<section
+    class="route-operations component-formset"
+    id="component-formset-{{ components_formset.prefix }}"
+    data-component-formset
+>
+    <div class="route-operations__header">
+        <h3>{{ components_title }}</h3>
+        <p>В каждой строке укажите услугу-компонент или материал и количество.</p>
+    </div>
+    {{ components_formset.management_form }}
+
+    <div data-component-forms>
+        {% for component_form in components_formset %}
+        <div class="route-operation component-form">
+            {% for hidden in component_form.hidden_fields %}{{ hidden }}{% endfor %}
+            {% for field in component_form.visible_fields %}
+                {% if field.name == 'DELETE' %}
+                <label class="route-operation__delete">{{ field }} Удалить компонент</label>
+                {% else %}
+                <div class="form-group">
+                    {{ field.label_tag }} {{ field }}
+                    {% for error in field.errors %}
+                    <p class="form-errors">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% if component_form.non_field_errors %}
+            <div class="form-errors">
+                {% for error in component_form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if components_formset.non_form_errors %}
+    <div class="form-errors">
+        {% for error in components_formset.non_form_errors %}<p>{{ error }}</p>{% endfor %}
+    </div>
+    {% endif %}
+
+    <button type="button" class="btn btn--primary" data-add-component>
+        + Добавить компонент
+    </button>
+
+    <template data-empty-component>
+        <div class="route-operation component-form">
+            {% for hidden in components_formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
+            {% for field in components_formset.empty_form.visible_fields %}
+                {% if field.name == 'DELETE' %}
+                <label class="route-operation__delete">{{ field }} Удалить компонент</label>
+                {% else %}
+                <div class="form-group">
+                    {{ field.label_tag }} {{ field }}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </template>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formset = document.getElementById('component-formset-{{ components_formset.prefix }}');
+    const addButton = formset.querySelector('[data-add-component]');
+    const formsContainer = formset.querySelector('[data-component-forms]');
+    const template = formset.querySelector('[data-empty-component]');
+    const totalForms = document.getElementById('id_{{ components_formset.prefix }}-TOTAL_FORMS');
+
+    addButton.addEventListener('click', function() {
+        const index = Number(totalForms.value);
+        const row = document.createElement('div');
+        row.innerHTML = template.innerHTML.replace(/__prefix__/g, index);
+        formsContainer.appendChild(row.firstElementChild);
+        totalForms.value = index + 1;
+    });
+});
+</script>

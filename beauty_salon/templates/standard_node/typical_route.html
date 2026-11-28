@@ -18,6 +18,13 @@
                     <a href="{% url 'master_dashboard:typical_route-delete' standard_node_id=standard_node.id route_id=route.id %}" class="btn btn--icon btn-delete">🗑️</a>
                 </div>
             </div>
+            <div class="card__body">
+                <p>
+                    <a href="{% url 'master_dashboard:typical_route_operations' standard_node_id=standard_node.id route_id=route.id %}" class="btn-link btn--beauty">
+                        Просмотр операций маршрута
+                    </a>
+                </p>
+            </div>
         </div>
         {% empty %}
         <p>Типовые технологические маршруты пока не добавлены</p>

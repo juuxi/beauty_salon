@@ -12,6 +12,7 @@
             {% for field in form %}
             <div class="form-group">{{ field.label_tag }} {{ field }}</div>
             {% endfor %}
+            {% include 'includes/component_formset.html' with components_formset=components_formset components_title='Компоненты типовой услуги' %}
             {% else %}
             <p><strong>Название:</strong> {{ object.name }}</p>
             {% endif %}

@@ -21,6 +21,7 @@
             <div class="card__body">
                 <p>Базовый класс: <strong>{{ standard_node.base_class }}</strong></p>
                 {% if standard_node.code %}<p>Обозначение: <strong>{{ standard_node.code }}</strong></p>{% endif %}
+                <p><a href="{% url 'master_dashboard:standard_node_components' standard_node_id=standard_node.id %}" class="btn-link btn--beauty">Компоненты типовой услуги</a></p>
                 <p><a href="{% url 'master_dashboard:typical_routes' standard_node_id=standard_node.id %}" class="btn-link btn--beauty">Типовые технологические маршруты</a></p>
                 <p><a href="{% url 'master_dashboard:function_constraints' standard_node_id=standard_node.id %}" class="btn-link btn--beauty">Ограничения</a></p>
                 <p><a href="{% url 'master_dashboard:standard_node_parameters' standard_node_id=standard_node.id %}" class="btn-link btn--beauty">Параметры</a></p>

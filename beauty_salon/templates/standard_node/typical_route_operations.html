@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Операции маршрута — {{ route.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Операции маршрута «{{ route.name }}»</h1>
+    <a href="{% url 'master_dashboard:typical_routes' standard_node_id=standard_node.id %}" class="btn btn-cancel">Назад к маршрутам</a>
+</div>
+
+<div class="container">
+    <section class="route-operations" aria-labelledby="route-operations-title">
+        <div class="route-operations__header">
+            <h2 id="route-operations-title">{{ standard_node.name }}</h2>
+            <p>Операции представлены в порядке выполнения.</p>
+        </div>
+        <div class="list-grid">
+            {% for route_operation in operations %}
+            <div class="card">
+                <div class="card__header">
+                    <h3>{{ route_operation.num }}. {{ route_operation.technological_operation.name }}</h3>
+                </div>
+                <div class="card__body">
+                    <p>Профессия:
+                        <strong>{{ route_operation.technological_operation.profession.name }}</strong>
+                    </p>
+                    {% if route_operation.technological_operation.qualification %}
+                    <p>Квалификация:
+                        <strong>{{ route_operation.technological_operation.qualification.name }}</strong>
+                    </p>
+                    {% endif %}
+                    <p>Время выполнения:
+                        <strong>
+                            {{ route_operation.technological_operation.time }}
+                            {% if route_operation.technological_operation.time_unit %}
+                            {{ route_operation.technological_operation.time_unit.name }}
+                            {% else %}мин.{% endif %}
+                        </strong>
+                    </p>
+                    <p>
+                        <a
+                            href="{% url 'master_dashboard:technological_operation-details' operation_id=route_operation.technological_operation.id %}"
+                            class="btn-link btn--beauty"
+                        >Просмотр операции</a>
+                    </p>
+                </div>
+            </div>
+            {% empty %}
+            <p>Операции в маршрут не добавлены</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

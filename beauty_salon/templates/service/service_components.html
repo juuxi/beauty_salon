@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if service %}Компоненты услуги — {{ service.name }}{% else %}Компоненты типовой услуги — {{ standard_node.name }}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        {% if service %}
+        Компоненты услуги «{{ service.name }}»
+        {% else %}
+        Компоненты типовой услуги «{{ standard_node.name }}»
+        {% endif %}
+    </h1>
+    {% if service %}
+    <a href="{% url 'master_dashboard:services' %}" class="btn btn-cancel">Назад к услугам</a>
+    {% else %}
+    <a href="{% url 'master_dashboard:standard_nodes' %}" class="btn btn-cancel">Назад к типовым услугам</a>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div class="list-grid">
+        {% for item in components %}
+        <div class="card">
+            <div class="card__header">
+                <h3>
+                    {% if item.component.component_service %}
+                    {{ item.component.component_service.name }}
+                    {% else %}
+                    {{ item.component.component_material.name }}
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card__body">
+                {% if item.component.component_service %}
+                <p>Тип: <strong>Услуга</strong></p>
+                {% else %}
+                <p>Тип: <strong>Материал</strong></p>
+                {% endif %}
+                <p>Количество:
+                    <strong>
+                        {{ item.component.amount }}
+                        {% if item.component.component_material.measuring_unit %}
+                        {{ item.component.component_material.measuring_unit.name }}
+                        {% endif %}
+                    </strong>
+                </p>
+                {% if item.origin %}<p>Источник: <strong>{{ item.origin }}</strong></p>{% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p>Компоненты не добавлены</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -19,6 +19,7 @@ from api.models import (
     Predicate,
     Conjunct,
     FunctionConstraint,
+    ServiceComponent,
 )
 
 from api.enumerations.models import Enumeration, Value
@@ -39,6 +40,9 @@ from .forms import (
     MeasuringUnitForm,
     MaterialForm,
     TechnologicalOperationForm,
+    OperationComponentFormSet,
+    StandardNodeComponentFormSet,
+    ServiceComponentFormSet,
     EconomicActivitySubjectForm,
     StandardNodeForm,
     TypicalTechnologicalRouteForm,
@@ -66,6 +70,95 @@ class PaginatedListView(ListView):
     paginate_by = 12
 
 
+def _component_key(component_service_id, component_material_id):
+    if component_service_id is not None:
+        return ('service', component_service_id)
+    if component_material_id is not None:
+        return ('material', component_material_id)
+    return None
+
+
+def _service_component_formset(instance, data, inherited_components):
+    queryset = ServiceComponent.objects.none()
+    if instance.pk:
+        inherited_keys = {
+            (
+                _component_key(
+                    component.component_service_id,
+                    component.component_material_id,
+                ),
+                component.amount,
+            )
+            for component in inherited_components
+        }
+        existing_components = ServiceComponent.objects.filter(service=instance)
+        own_ids = [
+            component.pk
+            for component in existing_components
+            if (
+                _component_key(
+                    component.component_service_id,
+                    component.component_material_id,
+                ),
+                component.amount,
+            ) not in inherited_keys
+        ]
+        queryset = ServiceComponent.objects.filter(pk__in=own_ids)
+
+    return ServiceComponentFormSet(
+        data,
+        instance=instance,
+        queryset=queryset,
+        prefix='components',
+    )
+
+
+def _replace_service_components(
+    service,
+    component_formset,
+    inherited_components,
+):
+    components = []
+    seen_keys = set()
+
+    def add_component(component_service, component_material, amount):
+        key = _component_key(
+            component_service.pk if component_service else None,
+            component_material.pk if component_material else None,
+        )
+        if key not in seen_keys:
+            seen_keys.add(key)
+            components.append(ServiceComponent(
+                service=service,
+                component_service=component_service,
+                component_material=component_material,
+                amount=amount,
+            ))
+
+    for component_form in component_formset.forms:
+        data = component_form.cleaned_data
+        if data.get('DELETE'):
+            continue
+        component_service = data.get('component_service')
+        component_material = data.get('component_material')
+        if component_service or component_material:
+            add_component(
+                component_service,
+                component_material,
+                data['amount'],
+            )
+
+    for inherited_component in inherited_components:
+        add_component(
+            inherited_component.component_service,
+            inherited_component.component_material,
+            inherited_component.amount,
+        )
+
+    ServiceComponent.objects.filter(service=service).delete()
+    ServiceComponent.objects.bulk_create(components)
+
+
 class ServiceListView(FilterView):
     model = Service
     template_name = 'service/services.html'
@@ -90,11 +183,49 @@ class ServiceListView(FilterView):
 
 
 def create_update_service(request, service_id=None):
-    form = get_form_obj(request, service_id, Service, ServiceForm)
-    if form.is_valid():
-        form.save()
+    instance = None
+    if service_id:
+        instance = get_object_or_404(Service, pk=service_id)
+    original_base_class = instance.base_class if instance else None
+    form = ServiceForm(request.POST or None, instance=instance)
+    form_is_valid = form.is_valid()
+    selected_base_class = (
+        form.cleaned_data.get('base_class') if form.is_bound else None
+    )
+    base_class = selected_base_class or original_base_class
+    inherited_components = list(
+        base_class.components.select_related(
+            'component_service',
+            'component_material',
+        )
+    ) if base_class else []
+    components_to_exclude = list(inherited_components)
+    if original_base_class and original_base_class != base_class:
+        components_to_exclude.extend(
+            original_base_class.components.select_related(
+                'component_service',
+                'component_material',
+            )
+        )
+    components_formset = _service_component_formset(
+        form.instance,
+        request.POST or None,
+        components_to_exclude,
+    )
+    if form_is_valid and components_formset.is_valid():
+        with transaction.atomic():
+            service = form.save()
+            _replace_service_components(
+                service,
+                components_formset,
+                inherited_components,
+            )
         return redirect('master_dashboard:services')
-    context = {'form': form}
+    context = {
+        'form': form,
+        'components_formset': components_formset,
+        'inherited_components': inherited_components,
+    }
     return render(request, 'service/service-create.html', context)
 
 
@@ -103,6 +234,63 @@ class ServiceDeleteView(DeleteView):
     success_url = reverse_lazy('master_dashboard:services')
     pk_url_kwarg = 'service_id'
     template_name = 'service/service-create.html'
+
+
+def service_components(request, service_id):
+    service = get_object_or_404(
+        Service.objects.select_related('base_class'),
+        pk=service_id,
+    )
+    own_components = service.components.select_related(
+        'component_service',
+        'component_material__measuring_unit',
+    ).order_by('pk')
+    inherited_components = service.base_class.components.select_related(
+        'component_service',
+        'component_material__measuring_unit',
+    ).order_by('pk')
+    inherited_by_key = {
+        _component_key(
+            component.component_service_id,
+            component.component_material_id,
+        ): component
+        for component in inherited_components
+    }
+
+    components = []
+    seen_keys = set()
+    for component in own_components:
+        key = _component_key(
+            component.component_service_id,
+            component.component_material_id,
+        )
+        inherited_component = inherited_by_key.get(key)
+        components.append({
+            'component': component,
+            'origin': (
+                'Типовая услуга'
+                if inherited_component and inherited_component.amount == component.amount
+                else 'Нетиповая услуга'
+            ),
+        })
+        seen_keys.add(key)
+
+    for component in inherited_components:
+        key = _component_key(
+            component.component_service_id,
+            component.component_material_id,
+        )
+        if key not in seen_keys:
+            components.append({
+                'component': component,
+                'origin': 'Типовая услуга',
+            })
+
+    return render(
+        request,
+        'service/service_components.html',
+        {'service': service, 'components': components},
+    )
 
 
 class ServiceValuesListView(PaginatedListView):
@@ -462,17 +650,51 @@ class TechnologicalOperationView(PaginatedListView):
     ordering = 'id'
 
 
-def create_update_technological_operation(request, operation_id=None):
-    form = get_form_obj(
-        request,
-        operation_id,
-        TechnologicalOperation,
-        TechnologicalOperationForm,
+def technological_operation_details(request, operation_id):
+    operation = get_object_or_404(
+        TechnologicalOperation.objects.select_related(
+            'profession',
+            'qualification',
+            'tool',
+            'time_unit',
+            'parent',
+        ),
+        pk=operation_id,
     )
-    if form.is_valid():
-        form.save()
+    components = operation.components.select_related(
+        'component_service',
+        'component_material__measuring_unit',
+    ).order_by('pk')
+    return render(
+        request,
+        'technological_operation/technological_components.html',
+        {'operation': operation, 'components': components},
+    )
+
+
+def create_update_technological_operation(request, operation_id=None):
+    instance = None
+    if operation_id:
+        instance = get_object_or_404(TechnologicalOperation, pk=operation_id)
+    form = TechnologicalOperationForm(
+        request.POST or None,
+        instance=instance,
+    )
+    components_formset = OperationComponentFormSet(
+        request.POST or None,
+        instance=form.instance,
+        prefix='components',
+    )
+    if form.is_valid() and components_formset.is_valid():
+        with transaction.atomic():
+            operation = form.save()
+            components_formset.instance = operation
+            components_formset.save()
         return redirect('master_dashboard:technological_operations')
-    context = {'form': form}
+    context = {
+        'form': form,
+        'components_formset': components_formset,
+    }
     return render(
         request,
         'technological_operation/technological_operation-create.html',
@@ -534,17 +756,48 @@ class StandardNodeView(PaginatedListView):
     ordering = 'id'
 
 
-def create_update_standard_node(request, standard_node_id=None):
-    form = get_form_obj(
+def standard_node_components(request, standard_node_id):
+    standard_node = get_object_or_404(StandardNode, pk=standard_node_id)
+    components = standard_node.components.select_related(
+        'component_service',
+        'component_material__measuring_unit',
+    ).order_by('pk')
+    return render(
         request,
-        standard_node_id,
-        StandardNode,
-        StandardNodeForm,
+        'service/service_components.html',
+        {
+            'standard_node': standard_node,
+            'components': [
+                {'component': component, 'origin': None}
+                for component in components
+            ],
+        },
     )
-    if form.is_valid():
-        form.save()
+
+
+def create_update_standard_node(request, standard_node_id=None):
+    instance = None
+    if standard_node_id:
+        instance = get_object_or_404(StandardNode, pk=standard_node_id)
+    form = StandardNodeForm(
+        request.POST or None,
+        instance=instance,
+    )
+    components_formset = StandardNodeComponentFormSet(
+        request.POST or None,
+        instance=form.instance,
+        prefix='components',
+    )
+    if form.is_valid() and components_formset.is_valid():
+        with transaction.atomic():
+            standard_node = form.save()
+            components_formset.instance = standard_node
+            components_formset.save()
         return redirect('master_dashboard:standard_nodes')
-    context = {'form': form}
+    context = {
+        'form': form,
+        'components_formset': components_formset,
+    }
     return render(
         request,
         'standard_node/standard_node-create.html',
@@ -575,6 +828,30 @@ class TypicalTechnologicalRouteListView(PaginatedListView):
             pk=self.kwargs['standard_node_id'],
         )
         return context
+
+
+def typical_route_operations(request, standard_node_id, route_id):
+    standard_node = get_object_or_404(StandardNode, pk=standard_node_id)
+    route = get_object_or_404(
+        TypicalTechnologicalRoute.objects.select_related('standard_node'),
+        pk=route_id,
+        standard_node=standard_node,
+    )
+    operations = route.operations.select_related(
+        'technological_operation__profession',
+        'technological_operation__qualification',
+        'technological_operation__tool',
+        'technological_operation__time_unit',
+    ).order_by('num')
+    return render(
+        request,
+        'standard_node/typical_route_operations.html',
+        {
+            'standard_node': standard_node,
+            'route': route,
+            'operations': operations,
+        },
+    )
 
 
 def create_update_typical_route(request, standard_node_id, route_id=None):

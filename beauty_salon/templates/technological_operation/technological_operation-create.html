@@ -15,6 +15,7 @@
                 {{ field }}
             </div>
             {% endfor %}
+            {% include 'includes/component_formset.html' with components_formset=components_formset components_title='Компоненты технологической операции' %}
             {% else %}
             <div class="form-group"><p><strong>Название:</strong> {{ object.name }}</p></div>
             {% endif %}
