@@ -114,14 +114,6 @@ class TypicalTechnologicalRoute(ModelWithTimestamp, ModelWithName):
         verbose_name='Типовая услуга',
     )
 
-    parameters = models.ManyToManyField(
-        Parameter,
-        db_table='typical_technological_route_parameters',
-        blank=True,
-        related_name='technological_routes',
-        verbose_name='Параметры',
-    )
-
     class Meta:
         db_table = 'typical_technological_routes'
         verbose_name = 'Типовой технологический маршрут'

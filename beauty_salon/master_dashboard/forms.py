@@ -236,7 +236,7 @@ class StandardNodeForm(forms.ModelForm):
 class TypicalTechnologicalRouteForm(forms.ModelForm):
     class Meta:
         model = TypicalTechnologicalRoute
-        fields = ('name', 'parameters')
+        fields = ('name',)
 
 
 class StandardNodeParameterForm(forms.ModelForm):
