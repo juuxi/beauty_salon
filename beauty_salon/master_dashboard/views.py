@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView
 from django.db import IntegrityError, transaction
+from django.db.models import Max
 from django.core.exceptions import ValidationError
+from django.http import HttpResponseRedirect
 
 from django_filters.views import FilterView
 
@@ -42,7 +44,7 @@ from .forms import (
     TypicalTechnologicalRouteForm,
     TypicalTechnologicalRouteOperationFormSet,
     StandardNodeParameterForm,
-    FunctionConstraintForm,
+    PredicateFormSet,
     OrderForm,
     OrderPositionForm,
     EnumerationValueForm,
@@ -701,13 +703,33 @@ class StandardNodeParameterDeleteView(DeleteView):
         return context
 
 
-class FunctionConstraintListView(PaginatedListView):
+def delete_function_constraint_rows(queryset):
+    conjunct_ids = list(queryset.values_list('conjunct_id', flat=True))
+    queryset.delete()
+    orphaned_conjuncts = Conjunct.objects.filter(
+        pk__in=conjunct_ids,
+        functions__isnull=True,
+    )
+    predicate_ids = list(
+        orphaned_conjuncts.values_list('predicate_id', flat=True)
+    )
+    orphaned_conjuncts.delete()
+    Predicate.objects.filter(pk__in=predicate_ids).delete()
+
+
+class FunctionConstraintListView(ListView):
     template_name = 'standard_node/function_constraints.html'
-    context_object_name = 'constraints'
+    context_object_name = 'function_constraints'
+    paginate_by = None
 
     def get_queryset(self):
         return FunctionConstraint.objects.filter(
-            parameter_node__standardnode_id=self.kwargs['standard_node_id']
+            standard_node_id=self.kwargs['standard_node_id']
+        ).select_related(
+            'conjunct__predicate__parameter',
+        ).order_by(
+            'conjunct__conjunction_id',
+            'id',
         )
 
     def get_context_data(self, **kwargs):
@@ -716,22 +738,115 @@ class FunctionConstraintListView(PaginatedListView):
             StandardNode,
             pk=self.kwargs['standard_node_id'],
         )
+        groups = {}
+        for function_constraint in context['function_constraints']:
+            conjunction_id = function_constraint.conjunct.conjunction_id
+            groups.setdefault(conjunction_id, []).append(function_constraint)
+        context['disjuncts'] = [
+            {
+                'conjunction_id': conjunction_id,
+                'constraints': function_constraints,
+            }
+            for conjunction_id, function_constraints in groups.items()
+        ]
+        context['has_constraint'] = bool(groups)
         return context
 
 
 def create_function_constraint(request, standard_node_id):
     standard_node = get_object_or_404(StandardNode, pk=standard_node_id)
-    form = FunctionConstraintForm(
-        request.POST or None,
-        standard_node_id=standard_node_id,
+    existing_constraints = FunctionConstraint.objects.filter(
+        standard_node=standard_node,
+    ).select_related(
+        'conjunct__predicate',
+    ).order_by(
+        'conjunct__conjunction_id',
+        'id',
     )
-    if form.is_valid():
-        form.save()
+    existing_disjuncts = {}
+    for constraint in existing_constraints:
+        existing_disjuncts.setdefault(
+            constraint.conjunct.conjunction_id,
+            [],
+        ).append(constraint)
+
+    initial = []
+    for disjunct_number, conjunction_id in enumerate(
+        sorted(existing_disjuncts),
+        start=1,
+    ):
+        for constraint in existing_disjuncts[conjunction_id]:
+            predicate = constraint.conjunct.predicate
+            initial.append({
+                'parameter': predicate.parameter_id,
+                'operator': predicate.operator,
+                'value': predicate.value,
+                'disjunct_number': disjunct_number,
+            })
+
+    predicate_formset = PredicateFormSet(
+        request.POST or None,
+        initial=initial,
+        prefix='predicates',
+        form_kwargs={'standard_node_id': standard_node_id},
+    )
+    if predicate_formset.is_valid():
+        predicate_data = [
+            predicate_form.cleaned_data.copy()
+            for predicate_form in predicate_formset
+            if predicate_form.cleaned_data
+            and not predicate_form.cleaned_data.get('DELETE', False)
+        ]
+        with transaction.atomic():
+            last_conjunction_id = Conjunct.objects.aggregate(
+                max_id=Max('conjunction_id')
+            )['max_id'] or 0
+            disjunct_numbers = sorted({
+                data['disjunct_number'] for data in predicate_data
+            })
+            conjunction_ids = {
+                number: last_conjunction_id + index
+                for index, number in enumerate(disjunct_numbers, start=1)
+            }
+            delete_function_constraint_rows(existing_constraints)
+
+            for data in predicate_data:
+                disjunct_number = data.pop('disjunct_number')
+                predicate = Predicate.objects.create(
+                    parameter=data['parameter'],
+                    operator=data['operator'],
+                    value=data['value'],
+                )
+                conjunct = Conjunct.objects.create(
+                    conjunction_id=conjunction_ids[disjunct_number],
+                    predicate=predicate,
+                )
+                FunctionConstraint.objects.create(
+                    standard_node=standard_node,
+                    conjunct=conjunct,
+                )
         return redirect(
             'master_dashboard:function_constraints',
             standard_node_id=standard_node_id,
         )
-    context = {'form': form, 'standard_node': standard_node}
+    grouped_forms = {}
+    for predicate_form in predicate_formset:
+        value = predicate_form['disjunct_number'].value()
+        try:
+            disjunct_number = int(value)
+        except (TypeError, ValueError):
+            disjunct_number = 1
+        grouped_forms.setdefault(disjunct_number, []).append(predicate_form)
+
+    context = {
+        'predicate_formset': predicate_formset,
+        'disjunct_form_groups': [
+            {'number': number, 'forms': forms}
+            for number, forms in sorted(grouped_forms.items())
+        ],
+        'is_editing': bool(existing_disjuncts),
+        'standard_node': standard_node,
+    }
     return render(
         request,
         'standard_node/function_constraint-create.html',
@@ -745,7 +860,7 @@ class FunctionConstraintDeleteView(DeleteView):
 
     def get_queryset(self):
         return FunctionConstraint.objects.filter(
-            parameter_node__standardnode_id=self.kwargs['standard_node_id']
+            standard_node_id=self.kwargs['standard_node_id']
         )
 
     def get_success_url(self):
@@ -753,6 +868,15 @@ class FunctionConstraintDeleteView(DeleteView):
             'master_dashboard:function_constraints',
             kwargs={'standard_node_id': self.kwargs['standard_node_id']},
         )
+
+    @transaction.atomic
+    def form_valid(self, form):
+        delete_function_constraint_rows(
+            FunctionConstraint.objects.filter(
+                standard_node_id=self.kwargs['standard_node_id'],
+            )
+        )
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

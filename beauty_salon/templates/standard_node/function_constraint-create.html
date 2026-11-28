@@ -5,17 +5,170 @@
 {% block content %}
 <div class="form-page">
     <div class="form-card">
-        <h2 class="form-title">Ограничение: {{ standard_node.name }}</h2>
+        <h2 class="form-title">
+            {% if is_editing %}Ограничение{% else %}Новое ограничение{% endif %}: {{ standard_node.name }}
+        </h2>
         <form method="post" class="styled-form">
             {% csrf_token %}
             {% if not '/delete/' in request.path %}
-            {% for field in form %}<div class="form-group">{{ field.label_tag }} {{ field }}</div>{% endfor %}
+            <section class="constraint-disjunction">
+                <h3>Дизъюнкция</h3>
+                <p>Ограничение выполняется, если выполняется хотя бы один дизъюнкт.</p>
+                {{ predicate_formset.management_form }}
+                <div id="disjunct-groups">
+                    {% for group in disjunct_form_groups %}
+                    <section class="constraint-disjunct" data-disjunct-number="{{ group.number }}">
+                        <div class="constraint-disjunct__header">
+                            <h4>Дизъюнкт {{ group.number }}</h4>
+                            <button type="button" class="btn btn-cancel" data-remove-disjunct>
+                                Удалить дизъюнкт
+                            </button>
+                        </div>
+                        <div class="constraint-conjuncts">
+                            {% for predicate_form in group.forms %}
+                            <div class="constraint-conjunct">
+                                {% for hidden in predicate_form.hidden_fields %}{{ hidden }}{% endfor %}
+                                <h5>Конъюнкт {{ forloop.counter }}</h5>
+                                {% for field in predicate_form.visible_fields %}
+                                {% if field.name != 'DELETE' %}
+                                <div class="form-group">
+                                    {{ field.label_tag }} {{ field }}
+                                    {% for error in field.errors %}<p class="form-errors">{{ error }}</p>{% endfor %}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                {% if predicate_form.DELETE %}
+                                <label class="constraint-conjunct__delete">
+                                    {{ predicate_form.DELETE }} Удалить конъюнкт
+                                </label>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn--primary" data-add-conjunct>
+                            + Добавить конъюнкт
+                        </button>
+                    </section>
+                    {% endfor %}
+                </div>
+                {% if predicate_formset.non_form_errors %}
+                <div class="form-errors">
+                    {% for error in predicate_formset.non_form_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+                {% endif %}
+                <button type="button" class="btn btn--primary" id="add-disjunct">
+                    + Добавить дизъюнкт
+                </button>
+                <template id="empty-conjunct-form">
+                    <div class="constraint-conjunct">
+                        {% for hidden in predicate_formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
+                        <h5>Новый конъюнкт</h5>
+                        {% for field in predicate_formset.empty_form.visible_fields %}
+                        {% if field.name != 'DELETE' %}
+                        <div class="form-group">{{ field.label_tag }} {{ field }}</div>
+                        {% endif %}
+                        {% endfor %}
+                        {% if predicate_formset.empty_form.DELETE %}
+                        <label class="constraint-conjunct__delete">
+                            {{ predicate_formset.empty_form.DELETE }} Удалить конъюнкт
+                        </label>
+                        {% endif %}
+                    </div>
+                </template>
+                <template id="empty-disjunct-group">
+                    <section class="constraint-disjunct" data-disjunct-number="__disjunct__">
+                        <div class="constraint-disjunct__header">
+                            <h4>Дизъюнкт __disjunct__</h4>
+                            <button type="button" class="btn btn-cancel" data-remove-disjunct>
+                                Удалить дизъюнкт
+                            </button>
+                        </div>
+                        <div class="constraint-conjuncts"></div>
+                        <button type="button" class="btn btn--primary" data-add-conjunct>
+                            + Добавить конъюнкт
+                        </button>
+                    </section>
+                </template>
+            </section>
             {% endif %}
             <div class="form-actions">
                 <a href="{% url 'master_dashboard:function_constraints' standard_node_id=standard_node.id %}" class="btn btn-cancel">Отмена</a>
-                <button type="submit" class="btn btn-save">Сохранить</button>
+                {% if not '/delete/' in request.path %}
+                <button type="submit" class="btn btn-save">
+                    {% if is_editing %}Сохранить ограничение{% else %}Создать ограничение{% endif %}
+                </button>
+                {% else %}
+                <button type="submit" class="btn btn-save">Удалить ограничение</button>
+                {% endif %}
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if not '/delete/' in request.path %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const groups = document.getElementById('disjunct-groups');
+    const totalForms = document.getElementById('id_predicates-TOTAL_FORMS');
+    const conjunctTemplate = document.getElementById('empty-conjunct-form');
+    const disjunctTemplate = document.getElementById('empty-disjunct-group');
+    const addDisjunctButton = document.getElementById('add-disjunct');
+    let nextDisjunctNumber = Math.max(
+        ...Array.from(groups.querySelectorAll('[data-disjunct-number]'))
+            .map(group => Number(group.dataset.disjunctNumber)),
+        0
+    ) + 1;
+
+    function addConjunct(group) {
+        const index = Number(totalForms.value);
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = conjunctTemplate.innerHTML.replace(/__prefix__/g, index);
+        const conjunct = wrapper.firstElementChild;
+        conjunct.querySelector('input[name$="-disjunct_number"]').value =
+            group.dataset.disjunctNumber;
+        group.querySelector('.constraint-conjuncts').appendChild(conjunct);
+        totalForms.value = index + 1;
+    }
+
+    groups.addEventListener('click', function(event) {
+        const button = event.target.closest('button');
+        if (!button) return;
+
+        if (button.hasAttribute('data-add-conjunct')) {
+            addConjunct(button.closest('.constraint-disjunct'));
+        } else if (button.hasAttribute('data-remove-disjunct')) {
+            const group = button.closest('.constraint-disjunct');
+            const deleteFields = group.querySelectorAll('input[name$="-DELETE"]');
+            const shouldDelete = Array.from(deleteFields).some(field => !field.checked);
+            deleteFields.forEach(field => {
+                field.checked = shouldDelete;
+            });
+            group.classList.toggle('is-deleted', shouldDelete);
+            button.textContent = shouldDelete ? 'Восстановить дизъюнкт' : 'Удалить дизъюнкт';
+        }
+    });
+
+    groups.addEventListener('change', function(event) {
+        if (!event.target.matches('input[name$="-DELETE"]')) return;
+        const conjunct = event.target.closest('.constraint-conjunct');
+        conjunct.classList.toggle('is-deleted', event.target.checked);
+    });
+
+    addDisjunctButton.addEventListener('click', function() {
+        const number = nextDisjunctNumber++;
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = disjunctTemplate.innerHTML.replace(/__disjunct__/g, number);
+        const group = wrapper.firstElementChild;
+        groups.appendChild(group);
+        addConjunct(group);
+    });
+
+    groups.querySelectorAll('.constraint-conjunct__delete input:checked').forEach(field => {
+        field.closest('.constraint-conjunct').classList.add('is-deleted');
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

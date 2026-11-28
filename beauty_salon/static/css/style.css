@@ -737,6 +737,69 @@ a {
     width: auto;
 }
 
+.constraint-disjunction {
+    margin-top: 28px;
+    padding: 22px;
+    border: 2px solid var(--pink-main);
+    border-radius: var(--radius);
+    background: var(--pink-bg);
+}
+
+.constraint-disjunction > h3 {
+    margin-top: 0;
+    color: var(--pink-dark);
+}
+
+.constraint-disjunct {
+    margin-bottom: 14px;
+    padding: 16px;
+    border: 1px solid #ead3dc;
+    border-radius: 12px;
+    background: var(--white);
+}
+
+.constraint-disjunct__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.constraint-disjunct__header h4,
+.constraint-conjunct h5 {
+    margin: 0;
+    color: var(--pink-dark);
+}
+
+.constraint-conjunct {
+    margin-bottom: 12px;
+    padding: 14px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+
+.constraint-conjunct h5 {
+    margin-bottom: 12px;
+}
+
+.constraint-conjunct__delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a33;
+    cursor: pointer;
+}
+
+.constraint-conjunct__delete input {
+    width: auto;
+}
+
+.constraint-disjunct.is-deleted,
+.constraint-conjunct.is-deleted {
+    opacity: 0.5;
+}
+
 .form-group label {
     display: block;
     margin-bottom: 8px;

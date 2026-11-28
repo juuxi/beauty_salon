@@ -10,8 +10,6 @@ from api.models import (
     ParameterNode,
     ParameterValueService,
     Predicate,
-    Conjunct,
-    FunctionConstraint,
 )
 
 from api.enumerations.models import Enumeration, Value
@@ -297,18 +295,57 @@ class StandardNodeParameterForm(forms.ModelForm):
         return cleaned_data
 
 
-class FunctionConstraintForm(forms.ModelForm):
-    class Meta:
-        model = FunctionConstraint
-        fields = ('parameter_node', 'conjunct')
+class PredicateForm(forms.Form):
+    parameter = forms.ModelChoiceField(
+        queryset=Parameter.objects.none(),
+        label='Параметр',
+    )
+    operator = forms.ChoiceField(
+        choices=Predicate._meta.get_field('operator').choices,
+        label='Оператор сравнения',
+    )
+    value = forms.CharField(max_length=200, label='Значение')
+    disjunct_number = forms.IntegerField(
+        min_value=1,
+        initial=1,
+        widget=forms.HiddenInput,
+    )
 
     def __init__(self, *args, **kwargs):
         standard_node_id = kwargs.pop('standard_node_id', None)
         super().__init__(*args, **kwargs)
         if standard_node_id:
-            self.fields['parameter_node'].queryset = ParameterNode.objects.filter(
-                standardnode_id=standard_node_id
+            self.fields['parameter'].queryset = Parameter.objects.filter(
+                parameters_nodes__standardnode_id=standard_node_id
+            ).distinct().order_by('name')
+
+
+class PredicateBaseFormSet(forms.BaseFormSet):
+    def clean(self):
+        super().clean()
+        if any(self.errors):
+            return
+
+        disjuncts = set()
+        for form in self.forms:
+            if not form.cleaned_data or form.cleaned_data.get('DELETE', False):
+                continue
+            disjuncts.add(form.cleaned_data['disjunct_number'])
+
+        if not disjuncts:
+            raise forms.ValidationError(
+                'Добавьте хотя бы один дизъюнкт с конъюнктом.'
             )
+
+
+PredicateFormSet = forms.formset_factory(
+    PredicateForm,
+    formset=PredicateBaseFormSet,
+    extra=0,
+    min_num=1,
+    validate_min=True,
+    can_delete=True,
+)
 
 
 class OrderForm(forms.ModelForm):

@@ -1,26 +1,41 @@
 {% extends 'base.html' %}
 
-{% block title %}Ограничения типовой услуги{% endblock %}
+{% block title %}Ограничение типовой услуги{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h1 class="page-title">Ограничения: {{ standard_node.name }}</h1>
-    <a href="{% url 'master_dashboard:function_constraint-create' standard_node_id=standard_node.id %}" class="btn btn--primary">+ Добавить ограничение</a>
+    <h1 class="page-title">Ограничение: {{ standard_node.name }}</h1>
+    <a href="{% url 'master_dashboard:function_constraint-create' standard_node_id=standard_node.id %}" class="btn btn--primary">
+        {% if has_constraint %}Редактировать ограничение{% else %}+ Добавить ограничение{% endif %}
+    </a>
 </div>
 <div class="container">
-    <div class="list-grid">
-        {% for constraint in constraints %}
-        <div class="card">
-            <div class="card__header">
-                <h3>{{ constraint.parameter_node.parameter.name }}</h3>
-                <a href="{% url 'master_dashboard:function_constraint-delete' standard_node_id=standard_node.id constraint_id=constraint.id %}" class="btn btn--icon btn-delete">🗑️</a>
-            </div>
-            <div class="card__body"><p>Конъюнкт: <strong>{{ constraint.conjunct.conjunction_id }}</strong></p></div>
+    {% if has_constraint %}
+    <div class="card">
+        <div class="card__header">
+            <h3>Дизъюнкция</h3>
+            <a href="{% url 'master_dashboard:function_constraint-delete' standard_node_id=standard_node.id constraint_id=function_constraints.0.id %}" class="btn btn--icon btn-delete">🗑️</a>
         </div>
-        {% empty %}
-        <p>Ограничения пока не добавлены</p>
-        {% endfor %}
+        <div class="card__body">
+            <p>Ограничение выполнено, если истинно хотя бы одно из условий ниже.</p>
+            {% for disjunct in disjuncts %}
+            <section class="constraint-disjunct">
+                <h4>Дизъюнкт {{ forloop.counter }}</h4>
+                <ul>
+                    {% for constraint in disjunct.constraints %}
+                    <li>
+                        {{ constraint.conjunct.predicate.parameter.name }}
+                        {{ constraint.conjunct.predicate.get_operator_display }}
+                        {{ constraint.conjunct.predicate.value }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endfor %}
+        </div>
     </div>
+    {% else %}
+    <p>Ограничение пока не задано.</p>
+    {% endif %}
 </div>
-{% include 'includes/paginator.html' %}
 {% endblock %}
