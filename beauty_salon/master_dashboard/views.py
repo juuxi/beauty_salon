@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.core.exceptions import ValidationError
 
 from django_filters.views import FilterView
@@ -214,19 +214,33 @@ class ParameterNodeListView(PaginatedListView):
 
     def get_queryset(self):
         return ParameterNode.objects.filter(
-            classifiernode_id=self.kwargs['node_id']
-            ).order_by('num')
+            standardnode__base_class_id=self.kwargs['node_id']
+        ).order_by('num')
 
 
 def create_classifier_node_parameters(request, node_id):
-    if node_id:
-        classifier = get_object_or_404(ClassifierNode, pk=node_id)
+    classifier = get_object_or_404(ClassifierNode, pk=node_id)
+    standard_node = StandardNode.objects.filter(base_class=classifier).first()
     form = ParameterNodeForm(request.POST or None, node_id=node_id)
     if form.is_valid():
-        parameter_node = form.save(commit=False)
-        parameter_node.classifiernode_id = node_id
-        parameter_node.save()
-        return redirect('master_dashboard:classifier_parameters', node_id=node_id)
+        if standard_node is None:
+            form.add_error(None, 'Для этого класса не создана типовая услуга')
+        else:
+            try:
+                with transaction.atomic():
+                    parameter_node = form.save(commit=False)
+                    parameter_node.standardnode = standard_node
+                    parameter_node.save()
+            except IntegrityError:
+                form.add_error(
+                    None,
+                    'Параметр или позиция конфликтуют с уже существующей записью',
+                )
+            else:
+                return redirect(
+                    'master_dashboard:classifier_parameters',
+                    node_id=node_id,
+                )
     parameters = Parameter.objects.all()
     context = {'form': form, 'parameters': parameters, 'classifier': classifier}
     return render(request, 'classifier_node/classifier_parameter-create.html', context)
@@ -238,22 +252,37 @@ class ParameterNodeDeleteView(DeleteView):
     template_name = 'classifier_node/classifier_parameter-create.html'
 
     def get_queryset(self):
-        return ParameterNode.objects.filter(classifiernode_id=self.kwargs['node_id'])
+        return ParameterNode.objects.filter(
+            standardnode__base_class_id=self.kwargs['node_id']
+        )
 
 
 @transaction.atomic
 def order_classifier_parameters(request, node_id):
     classifier_node = get_object_or_404(ClassifierNode, pk=node_id)
 
-    queryset = ParameterNode.objects.filter(classifiernode=classifier_node).order_by('num')
+    queryset = ParameterNode.objects.filter(
+        standardnode__base_class=classifier_node
+    ).order_by('num')
     ParameterNodeOrderingFormSet = get_parameter_node_ordering_formset()
     formset = ParameterNodeOrderingFormSet(
         request.POST or None,
         queryset=queryset
     )
     if formset.is_valid():
-        formset.save()
-        return redirect('master_dashboard:classifier_parameters', node_id=node_id)
+        try:
+            with transaction.atomic():
+                formset.save()
+        except IntegrityError:
+            formset.add_error(
+                None,
+                'Позиции не могут быть сохранены из-за конфликта с другими параметрами'
+            )
+        else:
+            return redirect(
+                'master_dashboard:classifier_parameters',
+                node_id=node_id,
+            )
     context = {'formset': formset, 'classifier': classifier_node}
     return render(request, 'classifier_node/classifier_parameter-order.html', context)
 
@@ -604,15 +633,26 @@ class StandardNodeParameterListView(PaginatedListView):
 
 def create_standard_node_parameter(request, standard_node_id):
     standard_node = get_object_or_404(StandardNode, pk=standard_node_id)
-    form = StandardNodeParameterForm(request.POST or None)
+    form = StandardNodeParameterForm(
+        request.POST or None,
+        standard_node=standard_node,
+    )
     if form.is_valid():
-        parameter_node = form.save(commit=False)
-        parameter_node.standardnode = standard_node
-        parameter_node.save()
-        return redirect(
-            'master_dashboard:standard_node_parameters',
-            standard_node_id=standard_node_id,
-        )
+        try:
+            with transaction.atomic():
+                parameter_node = form.save(commit=False)
+                parameter_node.standardnode = standard_node
+                parameter_node.save()
+        except IntegrityError:
+            form.add_error(
+                None,
+                'Параметр или позиция конфликтуют с уже существующей записью',
+            )
+        else:
+            return redirect(
+                'master_dashboard:standard_node_parameters',
+                standard_node_id=standard_node_id,
+            )
     context = {'form': form, 'standard_node': standard_node}
     return render(
         request,

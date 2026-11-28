@@ -103,17 +103,19 @@ def service_validate_general(view, values):
                 )
 
 
-def parameter_node_validate_num(view, num):
+def parameter_node_validate_num(view, num, instance=None):
     standardnode_id = view.kwargs.get('standardnode_id')
+    if standardnode_id is None:
+        standardnode_id = view.kwargs.get('standard_node_id')
 
-    if (
-        not (
-            ParameterNode.objects.filter(
-                standardnode_id=standardnode_id, num=num
-            ).count()
-        )
-        == 0
-    ):
+    duplicate = ParameterNode.objects.filter(
+        standardnode_id=standardnode_id,
+        num=num,
+    )
+    if instance is not None:
+        duplicate = duplicate.exclude(pk=instance.pk)
+
+    if duplicate.exists():
         raise serializers.ValidationError(
             {
                 'num': f'Pair (num={num}, standardnode_id={standardnode_id}) '

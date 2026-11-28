@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
-from django.db import connection
+from django.db import connection, IntegrityError
 from django.shortcuts import get_object_or_404
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -173,6 +173,26 @@ class ParameterNodeView(OrderingUpdateMixin, viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(standardnode=self.get_node())
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            raise ValidationError({
+                'non_field_errors': [
+                    'Параметр или позиция конфликтуют с уже существующей записью',
+                ],
+            })
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except IntegrityError:
+            raise ValidationError({
+                'non_field_errors': [
+                    'Параметр или позиция конфликтуют с уже существующей записью',
+                ],
+            })
 
 
 class StandardNodeView(viewsets.ModelViewSet):

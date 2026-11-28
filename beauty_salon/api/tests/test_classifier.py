@@ -230,6 +230,31 @@ class TestParameterNodesCRUD:
             f"{base_url}/api/classifier/{node_id}/standard_nodes/{std_node_id}/parameters/{data['id']}/"
         )
 
+    def test_reject_duplicate_parameter_node(
+        self,
+        api_session,
+        base_url,
+        created_classifier_node,
+        created_standard_node,
+        parameter_node_data,
+    ):
+        node_id = created_classifier_node["id"]
+        std_node_id = created_standard_node["id"]
+        url = (
+            f"{base_url}/api/classifier/{node_id}/standard_nodes/"
+            f"{std_node_id}/parameters/"
+        )
+
+        first_response = api_session.post(url, json=parameter_node_data)
+        assert first_response.status_code == 201
+
+        duplicate_response = api_session.post(url, json=parameter_node_data)
+        assert duplicate_response.status_code == 400
+
+        api_session.delete(
+            f"{url}{first_response.json()['id']}/"
+        )
+
     def test_retrieve_parameter_node(self, api_session, base_url, created_classifier_node,
                                      created_standard_node, created_parameter_node):
         """Test GET .../parameters/{id}/"""

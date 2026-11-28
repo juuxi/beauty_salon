@@ -273,7 +273,31 @@ class ParameterNodeSerializer(serializers.ModelSerializer):
 
     def validate_num(self, num):
         view = self.context['view']
-        return parameter_node_validate_num(view, num)
+        return parameter_node_validate_num(view, num, self.instance)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        view = self.context['view']
+        standardnode_id = view.kwargs.get('standard_node_id')
+        parameter = attrs.get(
+            'parameter',
+            getattr(self.instance, 'parameter', None),
+        )
+        num = attrs.get('num', getattr(self.instance, 'num', None))
+
+        if parameter is not None and num is not None:
+            duplicate = ParameterNode.objects.filter(
+                standardnode_id=standardnode_id,
+                parameter=parameter,
+            )
+            if self.instance is not None:
+                duplicate = duplicate.exclude(pk=self.instance.pk)
+            if duplicate.exists():
+                raise serializers.ValidationError({
+                    'parameter': 'Этот параметр уже добавлен к типовой услуге',
+                })
+
+        return attrs
 
 
 class StandardNodeSerializer(serializers.ModelSerializer):

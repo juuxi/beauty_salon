@@ -10,6 +10,15 @@
             {% csrf_token %}
             {% if not '/delete/' in request.path %}
             {% for field in form %}<div class="form-group">{{ field.label_tag }} {{ field }}</div>{% endfor %}
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
             {% endif %}
             <div class="form-actions">
                 <a href="{% url 'master_dashboard:standard_node_parameters' standard_node_id=standard_node.id %}" class="btn btn-cancel">Отмена</a>

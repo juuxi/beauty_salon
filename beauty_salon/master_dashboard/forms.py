@@ -27,7 +27,6 @@ from api.orders.models import Order, OrderPosition
 from .utils import (
     validate_value,
     validate_enumeration_num,
-    validate_parameter_num,
     validate_transaction_num,
 )
 
@@ -155,12 +154,45 @@ class ParameterNodeForm(forms.ModelForm):
         fields = ('parameter', 'num')
 
     def __init__(self, *args, **kwargs):
-        self.classifier_node = ClassifierNode.objects.get(pk=kwargs.pop('node_id', None))
+        classifier_node_id = kwargs.pop('node_id', None)
+        self.classifier_node = ClassifierNode.objects.get(pk=classifier_node_id)
+        self.standard_node = StandardNode.objects.filter(
+            base_class=self.classifier_node
+        ).first()
         super().__init__(*args, **kwargs)
 
-    def clean_num(self):
-        num = self.cleaned_data['num']
-        return validate_parameter_num(num, self.classifier_node)
+    def clean(self):
+        cleaned_data = super().clean()
+        parameter = cleaned_data.get('parameter')
+        num = cleaned_data.get('num')
+
+        if self.standard_node is not None and parameter is not None:
+            duplicate_parameter = ParameterNode.objects.filter(
+                standardnode=self.standard_node,
+                parameter=parameter,
+            )
+            if self.instance.pk:
+                duplicate_parameter = duplicate_parameter.exclude(pk=self.instance.pk)
+            if duplicate_parameter.exists():
+                self.add_error(
+                    'parameter',
+                    'Этот параметр уже добавлен к данной типовой услуге',
+                )
+
+        if self.standard_node is not None and num is not None:
+            duplicate_num = ParameterNode.objects.filter(
+                standardnode=self.standard_node,
+                num=num,
+            )
+            if self.instance.pk:
+                duplicate_num = duplicate_num.exclude(pk=self.instance.pk)
+            if duplicate_num.exists():
+                self.add_error(
+                    'num',
+                    f'Позиция {num} уже занята другим параметром для данной услуги',
+                )
+
+        return cleaned_data
 
 
 class MeasuringUnitForm(forms.ModelForm):
@@ -211,6 +243,43 @@ class StandardNodeParameterForm(forms.ModelForm):
     class Meta:
         model = ParameterNode
         fields = ('parameter', 'num')
+
+    def __init__(self, *args, **kwargs):
+        self.standard_node = kwargs.pop('standard_node', None)
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        parameter = cleaned_data.get('parameter')
+        num = cleaned_data.get('num')
+
+        if self.standard_node is not None and parameter is not None:
+            duplicate_parameter = ParameterNode.objects.filter(
+                standardnode=self.standard_node,
+                parameter=parameter,
+            )
+            if self.instance.pk:
+                duplicate_parameter = duplicate_parameter.exclude(pk=self.instance.pk)
+            if duplicate_parameter.exists():
+                self.add_error(
+                    'parameter',
+                    'Этот параметр уже добавлен к данной типовой услуге',
+                )
+
+        if self.standard_node is not None and num is not None:
+            duplicate_num = ParameterNode.objects.filter(
+                standardnode=self.standard_node,
+                num=num,
+            )
+            if self.instance.pk:
+                duplicate_num = duplicate_num.exclude(pk=self.instance.pk)
+            if duplicate_num.exists():
+                self.add_error(
+                    'num',
+                    f'Позиция {num} уже занята другим параметром для данной услуги',
+                )
+
+        return cleaned_data
 
 
 class FunctionConstraintForm(forms.ModelForm):
