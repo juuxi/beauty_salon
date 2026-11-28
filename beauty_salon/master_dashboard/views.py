@@ -293,6 +293,31 @@ def service_components(request, service_id):
     )
 
 
+def service_material_usage(request, service_id):
+    service = get_object_or_404(Service, pk=service_id)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT material_name, total_amount FROM public.calc_bom(%s)',
+            [service.pk],
+        )
+        material_totals = cursor.fetchall()
+
+    return render(
+        request,
+        'material/material_usage.html',
+        {
+            'title': f'Расход материалов услуги «{service.name}»',
+            'entity': service,
+            'material_totals': material_totals,
+            'back_url': reverse(
+                'master_dashboard:service_components',
+                kwargs={'service_id': service.pk},
+            ),
+            'back_label': 'Назад к компонентам услуги',
+        },
+    )
+
+
 class ServiceValuesListView(PaginatedListView):
     template_name = 'service/service_values.html'
     context_object_name = 'parameters_values'
@@ -669,6 +694,31 @@ def technological_operation_details(request, operation_id):
         request,
         'technological_operation/technological_components.html',
         {'operation': operation, 'components': components},
+    )
+
+
+def operation_material_usage(request, operation_id):
+    operation = get_object_or_404(TechnologicalOperation, pk=operation_id)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT material_name, total_amount FROM public.mr_q(%s)',
+            [operation.pk],
+        )
+        material_totals = cursor.fetchall()
+
+    return render(
+        request,
+        'material/material_usage.html',
+        {
+            'title': f'Расход материалов операции «{operation.name}»',
+            'entity': operation,
+            'material_totals': material_totals,
+            'back_url': reverse(
+                'master_dashboard:operation_components',
+                kwargs={'operation_id': operation.pk},
+            ),
+            'back_label': 'Назад к операции',
+        },
     )
 
 

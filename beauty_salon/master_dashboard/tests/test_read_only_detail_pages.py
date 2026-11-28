@@ -97,7 +97,7 @@ class ReadOnlyDetailPageTests(TestCase):
 
         response = self.client.get(
             reverse(
-                'master_dashboard:technological_operation-details',
+                'master_dashboard:operation_components',
                 args=[self.operation.pk],
             )
         )

@@ -283,6 +283,7 @@ class URLNameCoverageTests(SimpleTestCase):
         'service-delete': [1],
         'service_values': [1],
         'service_components': [1],
+        'service_material_usage': [1],
         'service_value-create': [1, 2],
         'service_value-edit': [1, 2],
         'service_value-delete': [1, 2],
@@ -312,7 +313,8 @@ class URLNameCoverageTests(SimpleTestCase):
         'measuring_unit-create': [],
         'measuring_unit-edit': [1],
         'measuring_unit-delete': [1],
-        'technological_operation-details': [1],
+        'operation_components': [1],
+        'operation_material_usage': [1],
         'standard_node_components': [1],
         'typical_route_operations': [1, 1],
     }

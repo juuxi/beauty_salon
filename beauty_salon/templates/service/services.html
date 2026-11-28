@@ -46,6 +46,7 @@
                     см. значения
                 </a></p>
                 <p><a href="{% url 'master_dashboard:service_components' service_id=service.id %}" class="btn-link btn--beauty">Компоненты услуги</a></p>
+                <p><a href="{% url 'master_dashboard:service_material_usage' service_id=service.id %}" class="btn-link btn--beauty">Расход материалов</a></p>
             </div>
         </div>
         {% empty %}

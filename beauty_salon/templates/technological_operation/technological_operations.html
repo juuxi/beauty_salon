@@ -23,6 +23,7 @@
                 {% if operation.qualification %}<p>Квалификация: <strong>{{ operation.qualification.name }}</strong></p>{% endif %}
                 <p>Время: <strong>{{ operation.time }}{% if operation.time_unit %} {{ operation.time_unit.name }}{% endif %}</strong></p>
                 <p><a href="{% url 'master_dashboard:operation_components' operation_id=operation.id %}" class="btn-link btn--beauty">Компоненты операции</a></p>
+                <p><a href="{% url 'master_dashboard:operation_material_usage' operation_id=operation.id %}" class="btn-link btn--beauty">Расход материалов</a></p>
             </div>
         </div>
         {% empty %}

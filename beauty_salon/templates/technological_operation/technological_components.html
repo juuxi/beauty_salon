@@ -7,7 +7,10 @@
     <h1 class="page-title">
         Компоненты операции «{{ operation.name }}»
     </h1>
-    <a href="{% url 'master_dashboard:technological_operations' %}" class="btn btn-cancel">Назад к операциям</a>
+    <div class="header-actions">
+        <a href="{% url 'master_dashboard:operation_material_usage' operation_id=operation.id %}" class="btn btn--primary">Расход материалов</a>
+        <a href="{% url 'master_dashboard:technological_operations' %}" class="btn btn-cancel">Назад к операциям</a>
+    </div>
 </div>
 
 <div class="container">

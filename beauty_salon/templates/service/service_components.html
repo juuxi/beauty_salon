@@ -11,11 +11,14 @@
         Компоненты типовой услуги «{{ standard_node.name }}»
         {% endif %}
     </h1>
-    {% if service %}
-    <a href="{% url 'master_dashboard:services' %}" class="btn btn-cancel">Назад к услугам</a>
-    {% else %}
-    <a href="{% url 'master_dashboard:standard_nodes' %}" class="btn btn-cancel">Назад к типовым услугам</a>
-    {% endif %}
+    <div class="header-actions">
+        {% if service %}
+        <a href="{% url 'master_dashboard:service_material_usage' service_id=service.id %}" class="btn btn--primary">Расход материалов</a>
+        <a href="{% url 'master_dashboard:services' %}" class="btn btn-cancel">Назад к услугам</a>
+        {% else %}
+        <a href="{% url 'master_dashboard:standard_nodes' %}" class="btn btn-cancel">Назад к типовым услугам</a>
+        {% endif %}
+    </div>
 </div>
 
 <div class="container">

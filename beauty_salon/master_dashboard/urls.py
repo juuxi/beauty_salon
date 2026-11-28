@@ -24,6 +24,11 @@ urlpatterns = [
         name='service_components',
     ),
     path(
+        'services/<int:service_id>/material-usage/',
+        views.service_material_usage,
+        name='service_material_usage',
+    ),
+    path(
         'services/<int:service_id>/values/<int:param_id>/create/',
         views.create_service_values,
         name='service_value-create'
@@ -166,6 +171,11 @@ urlpatterns = [
         'technological_operations/<int:operation_id>/components/',
         views.technological_operation_details,
         name='operation_components',
+    ),
+    path(
+        'technological_operations/<int:operation_id>/material-usage/',
+        views.operation_material_usage,
+        name='operation_material_usage',
     ),
     path(
         'materials/list/',

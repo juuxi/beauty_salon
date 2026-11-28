@@ -61,6 +61,8 @@ a {
 }
 
 .header {
+    position: relative;
+    z-index: 10;
     background: rgba(255, 255, 255, 0.95);
     padding: 15px 0;
     border-bottom: 2px solid var(--pink-main);
