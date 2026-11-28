@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -37,6 +39,81 @@ class ServiceForm(forms.ModelForm):
     class Meta:
         model = Service
         fields = ('name', 'base_class', 'is_variant', 'cost', 'code')
+
+
+class ServiceParameterFilterForm(forms.Form):
+    parameter = forms.ModelChoiceField(
+        queryset=Parameter.objects.order_by('name'),
+        label='Параметр',
+    )
+    operator = forms.ChoiceField(
+        choices=(
+            ('eq', 'равно'),
+            ('gt', 'больше'),
+            ('gte', 'больше или равно'),
+            ('lt', 'меньше'),
+            ('lte', 'меньше или равно'),
+            ('contains', 'содержит'),
+        ),
+        label='Условие',
+    )
+    value = forms.CharField(label='Значение')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('DELETE'):
+            return cleaned_data
+
+        parameter = cleaned_data.get('parameter')
+        operator = cleaned_data.get('operator')
+        value = cleaned_data.get('value')
+        if parameter is None or operator is None or value is None:
+            return cleaned_data
+
+        numeric_type = parameter.data_type in ('int', 'real')
+        if parameter.data_type == 'enum' and parameter.enumeration_id:
+            numeric_type = parameter.enumeration.data_type in ('int', 'real')
+
+        if numeric_type:
+            if operator == 'contains':
+                self.add_error(
+                    'operator',
+                    'Для числового параметра выберите числовое условие.',
+                )
+                return cleaned_data
+            try:
+                numeric_value = Decimal(value)
+            except InvalidOperation:
+                self.add_error('value', 'Введите числовое значение.')
+                return cleaned_data
+            if not numeric_value.is_finite():
+                self.add_error('value', 'Введите конечное числовое значение.')
+                return cleaned_data
+            if (
+                parameter.data_type == 'int'
+                or (
+                    parameter.data_type == 'enum'
+                    and parameter.enumeration.data_type == 'int'
+                )
+            ) and numeric_value != numeric_value.to_integral_value():
+                self.add_error('value', 'Введите целое число.')
+                return cleaned_data
+            cleaned_data['numeric_value'] = numeric_value
+        elif operator not in ('eq', 'contains'):
+            self.add_error(
+                'operator',
+                'Для текстового параметра доступны только точное совпадение '
+                'и поиск по части значения.',
+            )
+
+        return cleaned_data
+
+
+ServiceParameterFilterFormSet = forms.formset_factory(
+    ServiceParameterFilterForm,
+    extra=1,
+    can_delete=True,
+)
 
 
 class ServiceValueForm(forms.ModelForm):

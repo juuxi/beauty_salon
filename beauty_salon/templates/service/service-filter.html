@@ -1,58 +1,68 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Сортировка значений{% endblock %}
+{% block title %}Фильтрация услуг{% endblock %}
 
 {% block content %}
 <div class="form-page">
     <div class="form-card">
-        <h2 class="form-title">Сортировка значений</h2>
-        <button id="openModalBtn" class="btn btn-help">?</button>
+        <h2 class="form-title">Фильтрация услуг</h2>
+        <p>Условия фильтруют нетиповые услуги по значениям параметров. Если добавлено несколько условий, должны выполняться все.</p>
+        <p>Для перечислений укажите значение из списка; числовые параметры поддерживают сравнение.</p>
 
-        <div id="myModal" class="filter-info">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h3>Как пользоваться фильрацией</h3>
-                <p>Форма состоит из блоков <strong>название-минимальное значение-максимальное значение.</strong></p>
-                <p>Чтобы не учитывать параметр при фильтрации - оставьте оба поля пустыми</p>
-                <p>Чтобы фильтровать больше/меньше какого-либо значения - заполните только одно поле</p>
-                <p>Чтобы фильтровать по конкретному значению - заполните оба поля этим значением</p>
-            </div>
-        </div>
-        <form method="post" class="styled-form">
-            {% csrf_token %}
-            
+        <form method="get" action="{% url 'master_dashboard:services' %}" class="styled-form">
             {{ formset.management_form }}
-            
-            {% for form in formset %}
-            
-            {% with forloop.counter0|add:1 as next_idx %}
-            {% with parameters|slice:next_idx|last as parameter %}
-            {{ parameter.name }}
-            {% endwith %}
-            {% endwith %}
+            {{ formset.non_form_errors }}
 
-            <div class="form-group">
-                {{ form.min_value.label_tag }}
-                {{ form.min_value }}
-            </div>
-            <div class="form-group">
-                {{ form.max_value.label_tag }}
-                {{ form.max_value }}
+            <div id="service-filter-forms">
+                {% for form in formset %}
+                <div class="route-operation filter-row">
+                    <div class="form-group">
+                        {{ form.parameter.label_tag }}
+                        {{ form.parameter }}
+                        {{ form.parameter.errors }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.operator.label_tag }}
+                        {{ form.operator }}
+                        {{ form.operator.errors }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.value.label_tag }}
+                        {{ form.value }}
+                        {{ form.value.errors }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.DELETE }}
+                        {{ form.DELETE.label_tag }}
+                    </div>
+                </div>
+                {% endfor %}
             </div>
 
-            {% if form.errors %}
-            <div class="form-errors">
-                {% for field, errors in form.errors.items %}
-                {% for error in errors %}
-                <p>{{ error }}</p>
-                {% endfor %}
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% endfor %}
+            <template id="empty-filter-form">
+                <div class="route-operation filter-row">
+                    <div class="form-group">
+                        {{ formset.empty_form.parameter.label_tag }}
+                        {{ formset.empty_form.parameter }}
+                    </div>
+                    <div class="form-group">
+                        {{ formset.empty_form.operator.label_tag }}
+                        {{ formset.empty_form.operator }}
+                    </div>
+                    <div class="form-group">
+                        {{ formset.empty_form.value.label_tag }}
+                        {{ formset.empty_form.value }}
+                    </div>
+                    <div class="form-group">
+                        {{ formset.empty_form.DELETE }}
+                        {{ formset.empty_form.DELETE.label_tag }}
+                    </div>
+                </div>
+            </template>
+
             <div class="form-actions">
                 <a href="{% url 'master_dashboard:services' %}" class="btn btn-cancel">Отмена</a>
+                <button type="button" class="btn btn-secondary" id="add-filter">Добавить условие</button>
                 <button type="submit" class="btn btn-save">Применить</button>
             </div>
         </form>
@@ -62,25 +72,19 @@
 
 {% block scripts %}
 <script>
-    const modal = document.getElementById('myModal');
-    const btn = document.getElementById('openModalBtn');
-    const span = document.getElementsByClassName('close')[0];
-    
-    // Открыть окно
-    btn.onclick = function() {
-        modal.style.display == 'none' || modal.style.display == '' ? modal.style.display = 'block' : modal.style.display = 'none';
-    }
-    
-    // Закрыть через крестик
-    span.onclick = function() {
-        modal.style.display = 'none';
-    }
-    
-    // Закрыть при клике вне окна
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.getElementById('service-filter-forms');
+    const totalForms = document.getElementById('id_filters-TOTAL_FORMS');
+    const addButton = document.getElementById('add-filter');
+    const emptyForm = document.getElementById('empty-filter-form').innerHTML;
+
+    addButton.addEventListener('click', function() {
+        const index = Number(totalForms.value);
+        const row = document.createElement('div');
+        row.innerHTML = emptyForm.replaceAll('__prefix__', index);
+        forms.appendChild(row.firstElementChild);
+        totalForms.value = index + 1;
+    });
+});
 </script>
 {% endblock %}

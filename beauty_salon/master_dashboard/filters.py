@@ -1,162 +1,81 @@
-import django_filters
-from django.db.models import FloatField
+from django.db.models import DecimalField
 from django.db.models.functions import Cast
-from api.models import Service, ParameterValueService, Parameter
-from api.enumerations.models import Enumeration, Value
 
-from django.core.exceptions import ValidationError
+from api.enumerations.models import Value
+from api.models import ParameterValueService
 
 
-class ServiceFilter(django_filters.FilterSet):
-    values = django_filters.CharFilter(method='filter_by_resolved_data')
+NUMERIC_LOOKUPS = {
+    'eq': 'exact',
+    'gt': 'gt',
+    'gte': 'gte',
+    'lt': 'lt',
+    'lte': 'lte',
+}
+DECIMAL_FIELD = DecimalField(max_digits=38, decimal_places=18)
 
-    def get_matching_ids(self, param_value, param, exp_type, mode):
-        try:
-            param_value = exp_type(param_value)
-        except ValueError:
-            raise ValidationError({'values': f'value for param \
-                                    {param.name} must \
-                                    be type {exp_type} \
-                                    got {type(param_value).__name__}'})
 
-        if mode:
-            if exp_type != int and exp_type != float:
-                raise ValidationError({'values': 'mode is only availible \
-                                        for number params'})
-            if mode == 'gte':
-                return (
-                    ParameterValueService.objects
-                    .filter(parameter=param)
-                    .annotate(value_num=Cast("value", output_field=FloatField()))
-                    .filter(value_num__gte=param_value)
-                    .values_list('service', flat=True)
-                    .distinct()
-                )
+def _filter_numeric_values(queryset, field_name, operator, value):
+    return (
+        queryset
+        .annotate(numeric_value=Cast(field_name, output_field=DECIMAL_FIELD))
+        .filter(**{f'numeric_value__{NUMERIC_LOOKUPS[operator]}': value})
+    )
 
-            if mode == 'lte':
-                return (
-                    ParameterValueService.objects
-                    .filter(parameter=param)
-                    .annotate(value_num=Cast("value", output_field=FloatField()))
-                    .filter(value_num__lte=param_value)
-                    .values_list('service', flat=True)
-                    .distinct()
-                )
 
-        return (
-            ParameterValueService.objects
-            .filter(parameter=param)
-            .filter(value=param_value)
-            .values_list('service', flat=True)
-            .distinct()
+def _enum_value_queryset(parameter, criterion):
+    values = Value.objects.filter(enumeration=parameter.enumeration)
+    enumeration_type = parameter.enumeration.data_type
+
+    if enumeration_type in ('int', 'real'):
+        values = _filter_numeric_values(
+            values,
+            'data',
+            criterion['operator'],
+            criterion['numeric_value'],
         )
+    else:
+        lookup = 'data__icontains' if criterion['operator'] == 'contains' else 'data__iexact'
+        values = values.filter(**{lookup: criterion['value']})
 
-    def get_enum_value_ids(self, param_value, param, exp_type, mode, enumeration):
-        try:
-            param_value = exp_type(param_value)
-        except ValueError:
-            raise ValidationError({'values': f'value for param \
-                                    {param.name} must \
-                                    be type {exp_type} \
-                                    got {type(param_value).__name__}'})
+    stored_values = {str(criterion['value'])}
+    for value_id, data in values.values_list('id', 'data'):
+        stored_values.add(str(value_id))
+        stored_values.add(data)
 
-        if mode:
-            if exp_type != int and exp_type != float:
-                raise ValidationError({'values': 'mode is only availible \
-                                        for number params'})
-            if mode == 'gte':
-                return (
-                    Value.objects
-                    .filter(enumeration=enumeration)
-                    .annotate(data_num=Cast("data", output_field=FloatField()))
-                    .filter(data_num__gte=param_value)
-                )
+    return ParameterValueService.objects.filter(
+        parameter=parameter,
+        value__in=stored_values,
+    ).values_list('service_id', flat=True)
 
-            if mode == 'lte':
-                return (
-                    Value.objects
-                    .filter(enumeration=enumeration)
-                    .annotate(data_num=Cast("data", output_field=FloatField()))
-                    .filter(data_num__lte=param_value)
-                )
 
-        if isinstance(param_value, float) and param_value.is_integer():
-            param_value = int(param_value)
+def filter_services_by_parameter_values(queryset, criteria):
+    for criterion in criteria:
+        if not criterion or criterion.get('DELETE'):
+            continue
 
-        return (
-            Value.objects
-            .filter(enumeration=enumeration)
-            .filter(data=param_value)
-        )
+        parameter = criterion['parameter']
+        operator = criterion['operator']
+        if parameter.data_type in ('int', 'real'):
+            matching_services = _filter_numeric_values(
+                ParameterValueService.objects.filter(parameter=parameter),
+                'value',
+                operator,
+                criterion['numeric_value'],
+            ).values_list('service_id', flat=True)
+        elif parameter.data_type == 'enum' and parameter.enumeration_id:
+            matching_services = _enum_value_queryset(parameter, criterion)
+        else:
+            lookup = (
+                'value__icontains'
+                if operator == 'contains'
+                else 'value__iexact'
+            )
+            matching_services = ParameterValueService.objects.filter(
+                parameter=parameter,
+                **{lookup: criterion['value']},
+            ).values_list('service_id', flat=True)
 
-    def format_corruption_error(self):
-        raise ValidationError({'values': 'format is param[__mode]=value'})
+        queryset = queryset.filter(pk__in=matching_services)
 
-    def filter_by_resolved_data(self, queryset, name, value):
-        if not value:
-            return queryset
-
-        items_dict = dict(self.data.items())
-        first_pair = items_dict['values']
-        try:
-            param, param_value = first_pair.split('=')
-        except ValueError:
-            self.format_corruption_error()
-        items_dict[param] = param_value
-
-        mode = None
-        for param, param_value in items_dict.items():
-            if param == 'values':
-                continue
-            if '__' in param:
-                try:
-                    param, mode = param.split('__')
-                except ValueError:
-                    self.format_corruption_error()
-            try:
-                param = Parameter.objects.get(name=param)
-            except ValueError:
-                self.format_corruption_error()
-            except Parameter.DoesNotExist:
-                raise ValidationError({'values': 'no parameter with this name'})
-
-            matching_service_ids = []
-
-            if param.data_type == 'int':
-                matching_service_ids = self.get_matching_ids(param_value, param, int, mode)
-
-            if param.data_type == 'real':
-                matching_service_ids = self.get_matching_ids(param_value, param, float, mode)
-
-            if param.data_type == 'enum':
-                enumeration = Enumeration.objects.get(id=param.enumeration_id)
-                t = None
-
-                if enumeration.data_type == 'int':
-                    t = int
-                if enumeration.data_type == 'real':
-                    t = float
-                if enumeration.data_type == 'str':
-                    t = str
-                if enumeration.data_type == 'pic':
-                    t = str
-
-                enum_values = self.get_enum_value_ids(
-                    param_value, param, t, mode, enumeration
-                )
-                for value_obj in enum_values:
-                    value_id = value_obj.id
-                    matching_service_ids = (
-                        ParameterValueService.objects
-                        .filter(value=value_id)
-                        .values_list('service', flat=True)
-                        .distinct()
-                    )
-
-            queryset = queryset.filter(id__in=matching_service_ids)
-
-        return queryset
-
-    class Meta:
-        model = Service
-        fields = []
+    return queryset

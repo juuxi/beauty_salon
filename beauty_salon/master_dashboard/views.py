@@ -3,10 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView
 from django.db import IntegrityError, connection, transaction
 from django.db.models import Max
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
-
-from django_filters.views import FilterView
 
 from api.models import (
     Service,
@@ -30,10 +27,11 @@ from api.technological_routes.models import (
     TypicalTechnologicalRoute,
 )
 
-from .filters import ServiceFilter
+from .filters import filter_services_by_parameter_values
 
 from .forms import (
     ServiceForm,
+    ServiceParameterFilterFormSet,
     ClassifierNodeForm,
     ParameterForm,
     EnumerationForm,
@@ -59,9 +57,6 @@ from .forms import (
 )
 
 from .utils import (
-    add_parameter_values_to_filter,
-    validate_filtering_data,
-    get_value_data_type,
     get_form_obj,
 )
 
@@ -159,15 +154,42 @@ def _replace_service_components(
     ServiceComponent.objects.bulk_create(components)
 
 
-class ServiceListView(FilterView):
+class ServiceListView(PaginatedListView):
     model = Service
     template_name = 'service/services.html'
     context_object_name = 'services'
-    filterset_class = ServiceFilter
     ordering = 'id'
+
+    def get_queryset(self):
+        queryset = Service.objects.all().order_by(self.ordering)
+        has_filter_form = any(
+            key.startswith('filters-') for key in self.request.GET
+        )
+        self.filter_formset = ServiceParameterFilterFormSet(
+            self.request.GET if has_filter_form else None,
+            prefix='filters',
+        )
+        if self.filter_formset.is_bound:
+            if self.filter_formset.is_valid():
+                queryset = filter_services_by_parameter_values(
+                    queryset,
+                    self.filter_formset.cleaned_data,
+                )
+            else:
+                queryset = queryset.none()
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['filter_formset'] = getattr(
+            self,
+            'filter_formset',
+            ServiceParameterFilterFormSet(prefix='filters'),
+        )
+        pagination_params = self.request.GET.copy() if hasattr(self, 'request') else None
+        if pagination_params is not None:
+            pagination_params.pop('page', None)
+            context['pagination_query'] = pagination_params.urlencode()
         with connection.cursor() as cursor:
             for service in context['services']:
                 cursor.execute(
@@ -388,27 +410,8 @@ class ServiceValueDeleteView(DeleteView):
 
 
 def filter_services(request):
-    parameters = Parameter.objects.all()
-    ServiceFilterFormSet = get_service_filter_formset(extra=len(parameters))
-    formset = ServiceFilterFormSet(request.POST or None)
-    if formset.is_valid():
-        url = reverse('master_dashboard:services')
-        filter_text = ''
-        for parameter, form in zip(parameters, formset):
-            data_type = get_value_data_type(parameter)
-            try:
-                min_value, max_value = validate_filtering_data(data_type, form, parameter)
-            except ValidationError as e:
-                form.add_error(None, '; '.join(e.messages))
-                context = {'formset': formset, 'parameters': parameters}
-                return render(request, 'service/service-filter.html', context)
-
-            filter_text = add_parameter_values_to_filter(filter_text, parameter,
-                                                         min_value, max_value)
-
-        return redirect(f'{url}?values={filter_text}')
-    context = {'formset': formset, 'parameters': parameters}
-    return render(request, 'service/service-filter.html', context)
+    formset = ServiceParameterFilterFormSet(prefix='filters')
+    return render(request, 'service/service-filter.html', {'formset': formset})
 
 
 class ClassifierNodeView(PaginatedListView):

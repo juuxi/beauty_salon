@@ -2,8 +2,6 @@ from types import SimpleNamespace
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from django_filters.views import FilterView
-
 from master_dashboard import views
 
 
@@ -15,7 +13,7 @@ class DashboardCardFunctionTests(TestCase):
 
         with (
             patch.object(
-                FilterView,
+                views.PaginatedListView,
                 'get_context_data',
                 return_value={'services': services},
             ),
