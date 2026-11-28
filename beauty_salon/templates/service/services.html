@@ -32,6 +32,15 @@
                 {% if service.code %}<p>Обозначение: <strong>{{ service.code }}</strong></p>{% endif %}
                 <p>Является вариантом исполнения: <strong>{{ service.is_variant }}</strong></p>
                 <p>Стоимость: <strong>{{ service.cost }}</strong></p>
+                <p>Время оказания:
+                    <strong>
+                        {% if service.total_time != None %}
+                            {{ service.total_time }} {{ service.time_unit_name }}
+                        {% else %}
+                            Не рассчитано
+                        {% endif %}
+                    </strong>
+                </p>
                 <p>Значения параметров: <a href="{% url 'master_dashboard:service_values' service_id=service.id %}" 
                     class="btn-link btn--beauty">
                     см. значения

@@ -21,6 +21,15 @@
             <div class="card__body">
                 <p>Заказчик: <strong>{{ order.client.name }}</strong></p>
                 <p>Согласован: <strong>{% if order.agreed %}Да{% else %}Нет{% endif %}</strong></p>
+                <p>Сумма заказа:
+                    <strong>
+                        {% if order.calc_sum != None %}
+                            {{ order.calc_sum }}
+                        {% else %}
+                            Не рассчитана
+                        {% endif %}
+                    </strong>
+                </p>
                 <p><a href="{% url 'master_dashboard:order_positions' order_id=order.id %}" class="btn-link btn--beauty">Позиции заказа</a></p>
             </div>
         </div>

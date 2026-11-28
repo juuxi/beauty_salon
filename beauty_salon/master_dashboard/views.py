@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError, connection, transaction
 from django.db.models import Max
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
@@ -72,6 +72,21 @@ class ServiceListView(FilterView):
     context_object_name = 'services'
     filterset_class = ServiceFilter
     ordering = 'id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        with connection.cursor() as cursor:
+            for service in context['services']:
+                cursor.execute(
+                    'SELECT total_time, time_unit_name FROM public.tr_to(%s)',
+                    [service.pk],
+                )
+                result = cursor.fetchone()
+                service.total_time = result[0] if result is not None else None
+                service.time_unit_name = (
+                    result[1] if result is not None else None
+                )
+        return context
 
 
 def create_update_service(request, service_id=None):
@@ -892,6 +907,15 @@ class OrderView(PaginatedListView):
     template_name = 'order/orders.html'
     context_object_name = 'orders'
     ordering = 'id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        with connection.cursor() as cursor:
+            for order in context['orders']:
+                cursor.execute('SELECT calc_sum(%s)', [order.pk])
+                result = cursor.fetchone()
+                order.calc_sum = result[0] if result is not None else None
+        return context
 
 
 def create_update_order(request, order_id=None):
