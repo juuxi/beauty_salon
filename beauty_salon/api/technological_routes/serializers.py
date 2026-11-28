@@ -106,7 +106,6 @@ class TypicalTechnologicalRouteSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'operation_ids',
-            'parameters',
             'standard_node',
         )
 
