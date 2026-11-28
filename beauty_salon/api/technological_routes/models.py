@@ -21,6 +21,9 @@ class Tool(ModelWithName, CodedModel):
         verbose_name = 'Инструмент'
         verbose_name_plural = 'Инструменты'
 
+    def __str__(self):
+        return self.name
+
 
 class Profession(ModelWithName, CodedModel):
 
@@ -29,6 +32,9 @@ class Profession(ModelWithName, CodedModel):
         verbose_name = 'Профессия'
         verbose_name_plural = 'Профессии'
 
+    def __str__(self):
+        return self.name
+
 
 class Qualification(ModelWithName, CodedModel):
 
@@ -36,6 +42,9 @@ class Qualification(ModelWithName, CodedModel):
         db_table = 'qualifications'
         verbose_name = 'Квалификация'
         verbose_name_plural = 'Квалификации'
+
+    def __str__(self):
+        return self.name
 
 
 class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
@@ -93,6 +102,9 @@ class TechnologicalOperation(ModelWithTimestamp, ModelWithName):
         verbose_name = 'Технологическая операция'
         verbose_name_plural = 'Технологические операции'
 
+    def __str__(self):
+        return self.name
+
 
 class TypicalTechnologicalRoute(ModelWithTimestamp, ModelWithName):
     standard_node = models.OneToOneField(
@@ -114,6 +126,9 @@ class TypicalTechnologicalRoute(ModelWithTimestamp, ModelWithName):
         db_table = 'typical_technological_routes'
         verbose_name = 'Типовой технологический маршрут'
         verbose_name_plural = 'Типовые технологические маршруты'
+
+    def __str__(self):
+        return self.name
 
 
 class TypicalTechnologicalRouteOperation(models.Model):
