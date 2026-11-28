@@ -51,6 +51,17 @@
                 {% if service.code %}<p>Обозначение: <strong>{{ service.code }}</strong></p>{% endif %}
                 <p>Является вариантом исполнения: <strong>{{ service.is_variant }}</strong></p>
                 <p>Стоимость: <strong>{{ service.cost }}</strong></p>
+                <p>Ограничения:
+                    <strong>
+                        {% if service.constraints_met is None %}
+                            Не удалось определить
+                        {% elif service.constraints_met %}
+                            соблюдены
+                        {% else %}
+                            не соблюдены
+                        {% endif %}
+                    </strong>
+                </p>
                 <p>Время оказания:
                     <strong>
                         {% if service.total_time != None %}

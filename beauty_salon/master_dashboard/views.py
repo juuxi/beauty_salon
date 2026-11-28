@@ -201,6 +201,14 @@ class ServiceListView(PaginatedListView):
                 service.time_unit_name = (
                     result[1] if result is not None else None
                 )
+                cursor.execute(
+                    'SELECT service_constraints_met(%s)',
+                    [service.pk],
+                )
+                result = cursor.fetchone()
+                service.constraints_met = (
+                    result[0] if result is not None else None
+                )
         return context
 
 

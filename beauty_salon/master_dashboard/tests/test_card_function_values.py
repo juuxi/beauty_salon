@@ -9,7 +9,12 @@ class DashboardCardFunctionTests(TestCase):
     def test_service_cards_show_time_and_unit_from_tr_to(self):
         services = [SimpleNamespace(pk=4), SimpleNamespace(pk=9)]
         cursor = MagicMock()
-        cursor.fetchone.side_effect = [(30, 'минут'), (2, 'часа')]
+        cursor.fetchone.side_effect = [
+            (30, 'минут'),
+            (True,),
+            (2, 'часа'),
+            (False,),
+        ]
 
         with (
             patch.object(
@@ -29,14 +34,26 @@ class DashboardCardFunctionTests(TestCase):
             for service in services
         ]
         self.assertEqual(service_times, [(30, 'минут'), (2, 'часа')])
+        self.assertEqual(
+            [service.constraints_met for service in services],
+            [True, False],
+        )
         self.assertEqual(context['services'], services)
         self.assertEqual(
             cursor.execute.call_args_list[0].args[1],
             [4],
         )
         self.assertEqual(
-            cursor.execute.call_args_list[1].args[1],
+            cursor.execute.call_args_list[1].args,
+            ('SELECT service_constraints_met(%s)', [4]),
+        )
+        self.assertEqual(
+            cursor.execute.call_args_list[2].args[1],
             [9],
+        )
+        self.assertEqual(
+            cursor.execute.call_args_list[3].args,
+            ('SELECT service_constraints_met(%s)', [9]),
         )
 
     def test_order_cards_show_calc_sum_for_each_order(self):
