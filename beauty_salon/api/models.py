@@ -323,7 +323,7 @@ class FunctionConstraint(models.Model):
         ParameterNode,
         on_delete=models.CASCADE,
         related_name='constraints',
-        verbose_name='Параметр-Типовой узел'
+        verbose_name='Параметр'
     )
 
     conjunct = models.ForeignKey(
